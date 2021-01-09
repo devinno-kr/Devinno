@@ -2,6 +2,7 @@
 using Devinno.Communications.Setting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -129,8 +130,20 @@ namespace Devinno.Communications.LS
         #region Properties
         public int Baudrate { get => ser.BaudRate; set => ser.BaudRate = value; }
         public string Port { get => ser.PortName; set => ser.PortName = value; }
-        protected override int Available => ser.BytesToRead;
-        protected override bool DeviceOpened => ser.IsOpen;
+        protected override int Available
+        {
+            get
+            {
+                try
+                {
+                    return ser.BytesToRead;
+                }
+                catch (IOException) { throw new SchedulerStopException(); }
+                catch (UnauthorizedAccessException) { throw new SchedulerStopException(); }
+                catch (InvalidOperationException) { throw new SchedulerStopException(); }
+            }
+        }
+        public override bool IsOpen => ser.IsOpen;
         #endregion
 
         #region Construct
@@ -143,22 +156,25 @@ namespace Devinno.Communications.LS
         public event EventHandler<TimeoutEventArgs> TimeoutReceived;
         public event EventHandler<BCCErrorEventArgs> BCCErrorReceived;
         public event EventHandler<NAKEventArgs> NAKReceived;
+
+        public event EventHandler DeviceOpened;
+        public event EventHandler DeviceClosed;
         #endregion
 
         #region Method
-        #region Start / Stop
         #region Start
         public override bool Start()
         {
             bool ret = false;
-            if (!DeviceOpened && !IsStartThread)
+            if (!IsOpen && !IsStart)
             {
                 try
                 {
                     ser.Open();
+                    DeviceOpened?.Invoke(this, null);
 
                     ret = StartThread();
-                    if (!ret && DeviceOpened) ser.Close();
+                    if (!ret && IsOpen) ser.Close();
                 }
                 catch (Exception) { }
             }
@@ -178,17 +194,15 @@ namespace Devinno.Communications.LS
         public override void Stop()
         {
             StopThread();
-            if (DeviceOpened) ser.Close();
         }
         #endregion
-        #endregion
-        #region Auto
-        #region AutoRSS - Single
-        public void AutoRSS(int id, int Slave, string device)
+
+        #region AutoRSS(id, slave, device)
+        public void AutoRSS(int id, int slave, string device)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("rSS");
             strbul.Append("01");
             strbul.Append(device.Length.ToString("X2"));
@@ -213,7 +227,7 @@ namespace Devinno.Communications.LS
             data = null;
         }
         #endregion
-        #region AutoRSS - Multi
+        #region AutoRSS(id, slave, devices)
         public void AutoRSS(int id, int Slave, string[] devices)
         {
             StringBuilder strbul = new StringBuilder();
@@ -280,14 +294,13 @@ namespace Devinno.Communications.LS
             data = null;
         }
         #endregion
-        #endregion
-        #region Manual
-        #region ManualRSS - Single
-        public void ManualRSS(int id, int Slave, string device)
+
+        #region ManualRSS(id, slave, device)
+        public void ManualRSS(int id, int slave, string device)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("rSS");
             strbul.Append("01");
             strbul.Append(device.Length.ToString("X2"));
@@ -312,12 +325,12 @@ namespace Devinno.Communications.LS
             data = null;
         }
         #endregion
-        #region ManualRSS - Multi
-        public void ManualRSS(int id, int Slave, string[] devices)
+        #region ManualRSS(id, slave, devices)
+        public void ManualRSS(int id, int slave, string[] devices)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("rSS");
             strbul.Append(devices.Length.ToString("X2"));
             for (int i = 0; i < devices.Length; i++)
@@ -487,7 +500,6 @@ namespace Devinno.Communications.LS
         }
         #endregion
         #endregion
-        #endregion
 
         #region Static Method
         #region FuncToString
@@ -546,7 +558,9 @@ namespace Devinno.Communications.LS
                 ser.DiscardOutBuffer();
                 ser.Write(data, offset, count);
             }
-            catch { }
+            catch (IOException) { throw new SchedulerStopException(); }
+            catch (UnauthorizedAccessException) { throw new SchedulerStopException(); }
+            catch (InvalidOperationException) { throw new SchedulerStopException(); }
         }
         #endregion
         #region OnRead
@@ -557,13 +571,29 @@ namespace Devinno.Communications.LS
                 ser.ReadTimeout = timeout;
                 return ser.Read(data, offset, count);
             }
+            catch (IOException) { throw new SchedulerStopException(); }
+            catch (UnauthorizedAccessException) { throw new SchedulerStopException(); }
+            catch (InvalidOperationException) { throw new SchedulerStopException(); }
             catch { return null; }
         }
         #endregion
         #region OnFlush
         protected override void OnFlush()
         {
-            ser.BaseStream.Flush();
+            try
+            {
+                ser.BaseStream.Flush();
+            }
+            catch (IOException) { throw new SchedulerStopException(); }
+            catch (UnauthorizedAccessException) { throw new SchedulerStopException(); }
+            catch (InvalidOperationException) { throw new SchedulerStopException(); }
+        }
+        #endregion
+        #region OnThreadEnd
+        protected override void OnThreadEnd()
+        {
+            if (IsOpen) ser.Close();
+            DeviceClosed?.Invoke(this, null);
         }
         #endregion
         #region OnTimeout

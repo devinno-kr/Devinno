@@ -12,8 +12,10 @@ namespace Devinno.Communications.Scheduler
         #region Properties
         #region Abstract Properties
         protected abstract int Available { get; }
+        public abstract bool IsOpen { get; }
         #endregion
         #region Properties
+        public bool IsStart => IsStartThread;
         protected bool IsStartThread { get; private set; } = false;
         #endregion
         #endregion
@@ -31,9 +33,10 @@ namespace Devinno.Communications.Scheduler
         #region Method
         #region Abstract Method
         protected abstract void OnWrite(byte[] data, int offset, int count, int timeout);
-        protected abstract int OnRead(byte[] data, int offset, int count, int timeout);
+        protected abstract int? OnRead(byte[] data, int offset, int count, int timeout);
         protected abstract void OnClearBuffer();
         protected abstract bool OnParsePacket(List<byte> Response);
+        protected abstract void OnThreadEnd();
 
         public abstract bool Start();
         public abstract void Stop();
@@ -63,7 +66,6 @@ namespace Devinno.Communications.Scheduler
         #endregion
         #endregion
         #region Thread
-        #region Thread
         void WorkProcess()
         {
             List<byte> lstResponse = new List<byte>();
@@ -76,41 +78,48 @@ namespace Devinno.Communications.Scheduler
 
             while (IsStartThread)
             {
-                #region DataRead
-                if (Available > 0)
+                if (IsOpen)
                 {
                     try
                     {
-                        int n = OnRead(baResponse, 0, baResponse.Length, 1000);
-                        for (int i = 0; i < n; i++) lstResponse.Add(baResponse[i]);
-                        prev = DateTime.Now;
+                        #region DataRead
+                        if (Available > 0)
+                        {
+                            var len = OnRead(baResponse, 0, baResponse.Length, 1000);
+                            if (len.HasValue)
+                            {
+                                for (int i = 0; i < len.Value; i++) lstResponse.Add(baResponse[i]);
+                                prev = DateTime.Now;
+                            }
+                        }
+                        #endregion
+
+                        #region Parse
+                        if (OnParsePacket(lstResponse))
+                        {
+                            OnClearBuffer();
+                            lstResponse.Clear();
+                        }
+                        #endregion
+
+                        #region Buffer Clear
+                        if ((DateTime.Now - prev).TotalMilliseconds >= 20 && lstResponse.Count > 0)
+                        {
+                            OnClearBuffer();
+                            lstResponse.Clear();
+                        }
+                        #endregion
                     }
-                    catch (TimeoutException) { }
+                    catch (SchedulerStopException) { }
                 }
-                #endregion
-
-                #region Parse
-                if (OnParsePacket(lstResponse))
-                {
-                    OnClearBuffer();
-                    lstResponse.Clear();
-                }
-                #endregion
-
-                #region Buffer Clear
-                if ((DateTime.Now - prev).TotalMilliseconds >= 20 && lstResponse.Count > 0)
-                {
-                    OnClearBuffer();
-                    lstResponse.Clear();
-                }
-                #endregion
-
+                else IsStartThread = false;
                 Thread.Sleep(1);
             }
 
             bFinished = true;
+
+            OnThreadEnd();
         }
-        #endregion
         #endregion
         #endregion
     }

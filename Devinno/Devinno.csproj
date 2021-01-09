@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Communications\Modbus\" />
     <Folder Include="Communications\Mqtt\" />
     <Folder Include="Communications\TextComm\" />
     <Folder Include="Communications\Restful\" />

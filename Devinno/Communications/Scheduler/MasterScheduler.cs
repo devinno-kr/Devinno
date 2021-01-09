@@ -31,7 +31,7 @@ namespace Devinno.Communications.Scheduler
         #region Properties
         #region Abstract Properties
         protected abstract int Available { get; }
-        protected abstract bool DeviceOpened { get; }
+        public abstract bool IsOpen { get; }
         #endregion
         #region Properties
         public int Timeout { get; set; } = 100;
@@ -57,6 +57,7 @@ namespace Devinno.Communications.Scheduler
         protected abstract void OnFlush();
         protected abstract bool OnCheckCollectComplete(byte[] data, int count, Work w);
         protected abstract void OnParsePacket(byte[] data, int count, Work w);
+        protected abstract void OnThreadEnd();
 
         public abstract bool Start();
         public abstract void Stop();
@@ -160,7 +161,7 @@ namespace Devinno.Communications.Scheduler
 
             while (IsStartThread)
             {
-                if (DeviceOpened)
+                if (IsOpen)
                 {
                     if (WorkQueue.Count > 0 || ManualWorkList.Count > 0)
                     {
@@ -237,7 +238,7 @@ namespace Devinno.Communications.Scheduler
                                     #endregion
                                 }
                             }
-                            catch (SchedulerStopException) { IsStartThread = false; }
+                            catch (SchedulerStopException) { }
                         }
                         #endregion
                     }
@@ -248,10 +249,13 @@ namespace Devinno.Communications.Scheduler
                         #endregion
                     }
                 }
+                else IsStartThread = false;
                 System.Threading.Thread.Sleep(Interval);
             }
 
             bFinished = true;
+
+            OnThreadEnd();
         }
         #endregion
 

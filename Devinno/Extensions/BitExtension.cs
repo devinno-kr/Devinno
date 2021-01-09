@@ -40,6 +40,7 @@ namespace Devinno.Extensions
                 case 5: r = n.Bit5(); break;
                 case 6: r = n.Bit6(); break;
                 case 7: r = n.Bit7(); break;
+                default: throw new IndexOutOfRangeException();
             }
             return r;
         }
@@ -56,6 +57,7 @@ namespace Devinno.Extensions
                 case 5: n.Bit5(v); break;
                 case 6: n.Bit6(v); break;
                 case 7: n.Bit7(v); break;
+                default: throw new IndexOutOfRangeException();
             }
         }
         #endregion
@@ -119,6 +121,7 @@ namespace Devinno.Extensions
                 case 13: r = n.Bit13(); break;
                 case 14: r = n.Bit14(); break;
                 case 15: r = n.Bit15(); break;
+                default: throw new IndexOutOfRangeException();
             }
             return r;
         }
@@ -143,6 +146,7 @@ namespace Devinno.Extensions
                 case 13: n.Bit13(v); break;
                 case 14: n.Bit14(v); break;
                 case 15: n.Bit15(v); break;
+                default: throw new IndexOutOfRangeException();
             }
         }
         #endregion
@@ -219,6 +223,7 @@ namespace Devinno.Extensions
                 case 13: r = n.Bit13(); break;
                 case 14: r = n.Bit14(); break;
                 case 15: r = n.Bit15(); break;
+                default: throw new IndexOutOfRangeException();
             }
             return r;
         }
@@ -243,6 +248,7 @@ namespace Devinno.Extensions
                 case 13: n.Bit13(v); break;
                 case 14: n.Bit14(v); break;
                 case 15: n.Bit15(v); break;
+                default: throw new IndexOutOfRangeException();
             }
         }
         #endregion
@@ -367,7 +373,7 @@ namespace Devinno.Extensions
                 case 29: r = n.Bit29(); break;
                 case 30: r = n.Bit30(); break;
                 case 31: r = n.Bit31(); break;
-
+                default: throw new IndexOutOfRangeException();
             }
             return r;
         }
@@ -408,6 +414,7 @@ namespace Devinno.Extensions
                 case 29: n.Bit29(v); break;
                 case 30: n.Bit30(v); break;
                 case 31: n.Bit31(v); break;
+                default: throw new IndexOutOfRangeException();
             }
         }
         #endregion
@@ -543,7 +550,7 @@ namespace Devinno.Extensions
                 case 29: r = n.Bit29(); break;
                 case 30: r = n.Bit30(); break;
                 case 31: r = n.Bit31(); break;
-
+                default: throw new IndexOutOfRangeException();
             }
             return r;
         }
@@ -584,6 +591,7 @@ namespace Devinno.Extensions
                 case 29: n.Bit29(v); break;
                 case 30: n.Bit30(v); break;
                 case 31: n.Bit31(v); break;
+                default: throw new IndexOutOfRangeException();
             }
         }
         #endregion
@@ -815,6 +823,7 @@ namespace Devinno.Extensions
                 case 61: r = n.Bit61(); break;
                 case 62: r = n.Bit62(); break;
                 case 63: r = n.Bit63(); break;
+                default: throw new IndexOutOfRangeException();
             }
             return r;
         }
@@ -887,6 +896,7 @@ namespace Devinno.Extensions
                 case 61: n.Bit61(v); break;
                 case 62: n.Bit62(v); break;
                 case 63: n.Bit63(v); break;
+                default: throw new IndexOutOfRangeException();
             }
         }
         #endregion
@@ -1137,6 +1147,7 @@ namespace Devinno.Extensions
                 case 61: r = n.Bit61(); break;
                 case 62: r = n.Bit62(); break;
                 case 63: r = n.Bit63(); break;
+                default: throw new IndexOutOfRangeException();
             }
             return r;
         }
@@ -1209,6 +1220,7 @@ namespace Devinno.Extensions
                 case 61: n.Bit61(v); break;
                 case 62: n.Bit62(v); break;
                 case 63: n.Bit63(v); break;
+                default: throw new IndexOutOfRangeException();
             }
         }
         #endregion

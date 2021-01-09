@@ -2,6 +2,7 @@
 using Devinno.Communications.Setting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -140,8 +141,20 @@ namespace Devinno.Communications.Mitubishi
 
         public int Baudrate { get => ser.BaudRate; set => ser.BaudRate = value; }
         public string Port { get => ser.PortName; set => ser.PortName = value; }
-        protected override int Available => ser.BytesToRead;
-        protected override bool DeviceOpened => ser.IsOpen;
+        protected override int Available
+        {
+            get
+            {
+                try
+                {
+                    return ser.BytesToRead;
+                }
+                catch (IOException) { throw new SchedulerStopException(); }
+                catch (UnauthorizedAccessException) { throw new SchedulerStopException(); }
+                catch (InvalidOperationException) { throw new SchedulerStopException(); }
+            }
+        }
+        public override bool IsOpen => ser.IsOpen;
         #endregion
 
         #region Construct
@@ -155,6 +168,9 @@ namespace Devinno.Communications.Mitubishi
         public event EventHandler<TimeoutEventArgs> TimeoutReceived;
         public event EventHandler<CheckSumErrorEventArgs> CheckSumErrorReceived;
         public event EventHandler<NakErrorEventArgs> NakErrorReceived;
+
+        public event EventHandler DeviceOpened;
+        public event EventHandler DeviceClosed;
         #endregion
 
         #region Method
@@ -162,14 +178,15 @@ namespace Devinno.Communications.Mitubishi
         public override bool Start()
         {
             bool ret = false;
-            if (!ser.IsOpen && !IsStartThread)
+            if (!IsOpen && !IsStart)
             {
                 try
                 {
                     ser.Open();
+                    DeviceOpened?.Invoke(this, null);
 
                     ret = StartThread();
-                    if (!ret && ser.IsOpen) ser.Close();
+                    if (!ret && IsOpen) ser.Close();
                 }
                 catch (Exception) { }
             }
@@ -189,11 +206,9 @@ namespace Devinno.Communications.Mitubishi
         public override void Stop()
         {
             StopThread();
-            if (ser.IsOpen) ser.Close();
         }
         #endregion
 
-        #region Auto
         #region AutoBitRead
         public void AutoBitRead(int id, int PLCNum, int Slave, int WaitTime, string device, int Length)
         {
@@ -291,8 +306,7 @@ namespace Devinno.Communications.Mitubishi
             data = null;
         }
         #endregion
-        #endregion
-        #region Manual
+
         #region ManualBitRead
         public void ManualBitRead(int id, int Slave, int WaitTime, string device, int Length)
         {
@@ -503,7 +517,6 @@ namespace Devinno.Communications.Mitubishi
         }
         #endregion
         #endregion
-        #endregion
 
         #region Static Method
         public static string FuncToString(FXFunc func)
@@ -542,6 +555,7 @@ namespace Devinno.Communications.Mitubishi
                 ser.DiscardOutBuffer();
                 ser.Write(data, offset, count);
             }
+            catch (IOException) { throw new SchedulerStopException(); }
             catch (UnauthorizedAccessException) { throw new SchedulerStopException(); }
             catch (InvalidOperationException) { throw new SchedulerStopException(); }
         }
@@ -554,9 +568,10 @@ namespace Devinno.Communications.Mitubishi
                 ser.ReadTimeout = timeout;
                 return ser.Read(data, offset, count);
             }
+            catch (IOException) { throw new SchedulerStopException(); }
             catch (UnauthorizedAccessException) { throw new SchedulerStopException(); }
             catch (InvalidOperationException) { throw new SchedulerStopException(); }
-            catch { return null;  }
+            catch { return null; }
         }
         #endregion
         #region OnFlush
@@ -566,8 +581,16 @@ namespace Devinno.Communications.Mitubishi
             {
                 ser.BaseStream.Flush();
             }
+            catch (IOException) { throw new SchedulerStopException(); }
             catch (UnauthorizedAccessException) { throw new SchedulerStopException(); }
             catch (InvalidOperationException) { throw new SchedulerStopException(); }
+        }
+        #endregion
+        #region OnThreadEnd
+        protected override void OnThreadEnd()
+        {
+            if (IsOpen) ser.Close();
+            DeviceClosed?.Invoke(this, null);
         }
         #endregion
         #region OnTimeout
@@ -809,7 +832,5 @@ namespace Devinno.Communications.Mitubishi
         }
         #endregion
         #endregion
-
-        
     }
 }

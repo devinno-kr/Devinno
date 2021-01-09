@@ -113,7 +113,7 @@ namespace Devinno.Tools
         }
         #endregion
         #region IsSocketConnected
-        public static bool IsSocketConnected(Socket s) => !((s.Poll(1000, SelectMode.SelectRead) && (s.Available == 0)) || !s.Connected);
+        public static bool IsSocketConnected(Socket s) => s == null ? false : !((s.Poll(1000, SelectMode.SelectRead) && (s.Available == 0)) || !s.Connected);
         #endregion
     }
 }
