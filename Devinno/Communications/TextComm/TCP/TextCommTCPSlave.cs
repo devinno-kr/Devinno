@@ -33,7 +33,7 @@ namespace Devinno.Communications.TextComm.TCP
         #endregion
 
         #region Properties
-        public int LocalPort { get; set; } = 502;
+        public int LocalPort { get; set; } = 7897;
         public bool IsStart { get; private set; }
         public Encoding MessageEncoding { get; set; } = Encoding.ASCII;
         #endregion
