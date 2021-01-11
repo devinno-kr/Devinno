@@ -138,17 +138,6 @@ namespace Devinno.Communications.Modbus.TCP
             }
         }
         #endregion
-
-        #region SocketEventArgs
-        public class SocketEventArgs : EventArgs
-        {
-            public Socket Socket { get; private set; }
-            public SocketEventArgs(Socket Socket)
-            {
-                this.Socket = Socket;
-            }
-        }
-        #endregion
         #endregion
 
         #region Properties
@@ -166,7 +155,7 @@ namespace Devinno.Communications.Modbus.TCP
         public event EventHandler<WordBitSetRequestArgs> WordBitSetRequest;
 
         public event EventHandler<SocketEventArgs> SocketConnected;
-        public event EventHandler<SocketEventArgs> SocketClosed;
+        public event EventHandler<SocketEventArgs> SocketDisconnected;
         #endregion
 
         #region Member Variable
@@ -210,7 +199,9 @@ namespace Devinno.Communications.Modbus.TCP
 
                 List<byte> lstResponse = new List<byte>();
                 var prev = DateTime.Now;
-                while (IsStart)
+
+                bool IsThStart = true;
+                while (IsThStart)
                 {
                     try
                     {
@@ -526,14 +517,16 @@ namespace Devinno.Communications.Modbus.TCP
                         if ((DateTime.Now - prev).TotalMilliseconds >= 20 && lstResponse.Count > 0) lstResponse.Clear();
                         #endregion
 
-                        IsStart = NetworkTool.IsSocketConnected(server);
+                        IsThStart = NetworkTool.IsSocketConnected(server);
                     }
                     catch (Exception) { }
                     Thread.Sleep(1);
                 }
 
+                #region Socket Closed
                 if (NetworkTool.IsSocketConnected(server)) server.Close();
-                SocketClosed?.Invoke(this, new SocketEventArgs(server));
+                SocketDisconnected?.Invoke(this, new SocketEventArgs(server));
+                #endregion
             }
         }
         #endregion

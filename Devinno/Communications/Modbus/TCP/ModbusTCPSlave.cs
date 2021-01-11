@@ -20,8 +20,8 @@ namespace Devinno.Communications.Modbus.TCP
         #endregion
 
         #region Event
-        public event EventHandler<ModbusTCPSlaveBase.SocketEventArgs> SocketConnected;
-        public event EventHandler<ModbusTCPSlaveBase.SocketEventArgs> SocketClosed;
+        public event EventHandler<SocketEventArgs> SocketConnected;
+        public event EventHandler<SocketEventArgs> SocketDisconnected;
         #endregion
 
         #region Member Variable
@@ -42,7 +42,7 @@ namespace Devinno.Communications.Modbus.TCP
             modbus.WordBitSetRequest += Modbus_WordBitSetRequest;
 
             modbus.SocketConnected += (o, s) => SocketConnected?.Invoke(this, s);
-            modbus.SocketClosed += (o, s) => SocketClosed?.Invoke(this, s);
+            modbus.SocketDisconnected += (o, s) => SocketDisconnected?.Invoke(this, s);
         }
         #endregion
 

@@ -191,17 +191,6 @@ namespace Devinno.Communications.Modbus.TCP
             }
         }
         #endregion
-
-        #region SocketEventArgs
-        public class SocketEventArgs : EventArgs
-        {
-            public Socket Client { get; private set; }
-            public SocketEventArgs(Socket Client)
-            {
-                this.Client = Client;
-            }
-        }
-        #endregion
         #endregion
 
         #region Properties
@@ -209,12 +198,12 @@ namespace Devinno.Communications.Modbus.TCP
         public int RemotePort { get; set; } = 502;
         protected override int Available { get => client != null ? client.Available : 0; }
         public override bool IsOpen => NetworkTool.IsSocketConnected(client);
+        public bool AutoStart { get; set; }
         #endregion
 
         #region Member Variable
-        Socket client;
-        Thread th;
-        bool bConnThread;
+        private Socket client;
+        private Thread thAutoStart;
         #endregion
 
         #region Event
@@ -228,29 +217,64 @@ namespace Devinno.Communications.Modbus.TCP
         public event EventHandler<TimeoutEventArgs> TimeoutReceived;
 
         public event EventHandler<SocketEventArgs> SocketConnected;
-        public event EventHandler<SocketEventArgs> SocketClosed;
+        public event EventHandler<SocketEventArgs> SocketDisconnected;
+        #endregion
+
+        #region Constructor
+        public ModbusTCPMaster()
+        {
+            thAutoStart = new Thread(new ThreadStart(() =>
+            {
+                while (true)
+                {
+                    if (!IsStartThread)
+                    {
+                        _Start();
+                    }
+                    Thread.Sleep(1000);
+                }
+            }))
+            { IsBackground = true };
+            thAutoStart.Start();
+        }
         #endregion
 
         #region Method
-        #region Start
+        #region Start / Stop
         public override bool Start()
         {
-            try
-            {
-                bConnThread = true;
-                th = new System.Threading.Thread(new System.Threading.ThreadStart(run));
-                th.IsBackground = true;
-                th.Start();
-            }
-            catch (Exception) { }
-            return true;
+            if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
+            return _Start();
         }
-        #endregion
-        #region Stop
         public override void Stop()
         {
-            bConnThread = false;
+            if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
+            _Stop();
         }
+
+        private bool _Start()
+        {
+            bool ret = false;
+            if (!IsOpen && !IsStart)
+            {
+                try
+                {
+                    client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    client.ReceiveTimeout = Timeout;
+                    client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, Timeout);
+                    client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
+                    client.Connect(RemoteIP, RemotePort);
+                    SocketConnected?.Invoke(this, new SocketEventArgs(client));
+
+                    ret = StartThread();
+                    if (!ret && IsOpen) client.Close();
+                }
+                catch (Exception) { }
+            }
+            return ret;
+        }
+
+        private void _Stop() => StopThread();
         #endregion
 
         #region AutoBitRead
@@ -489,35 +513,7 @@ namespace Devinno.Communications.Modbus.TCP
         }
         #endregion
         #endregion
-
-        #region Thread
-        void run()
-        {
-            StartThread();
-
-            while (bConnThread)
-            {
-                try
-                {
-                    if (!IsOpen)
-                    {
-                        client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                        client.ReceiveTimeout = Timeout;
-                        client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, Timeout);
-                        client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
-                        client.Connect(RemoteIP, RemotePort);
-                        SocketConnected?.Invoke(this, new SocketEventArgs(client));
-                    }
-                }
-                catch (Exception ex) { }
-                Thread.Sleep(1000);
-            }
-
-            StopThread();
-
-        }
-        #endregion
-
+                
         #region Override
         #region OnWrite
         protected override void OnWrite(byte[] data, int offset, int count, int timeout)
@@ -560,6 +556,13 @@ namespace Devinno.Communications.Modbus.TCP
         protected override void OnFlush()
         {
 
+        }
+        #endregion
+        #region OnThreadEnd
+        protected override void OnThreadEnd()
+        {
+            if (IsOpen) client.Close();
+            SocketDisconnected?.Invoke(this, new SocketEventArgs(client));
         }
         #endregion
         #region OnTimeout
@@ -657,11 +660,6 @@ namespace Devinno.Communications.Modbus.TCP
                         break;
                 }
             }
-        }
-
-        protected override void OnThreadEnd()
-        {
-            throw new NotImplementedException();
         }
         #endregion
         #endregion

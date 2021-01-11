@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Devinno.Communications.Modbus.RTU
@@ -208,10 +209,6 @@ namespace Devinno.Communications.Modbus.RTU
         #endregion
         #endregion
 
-        #region Member Variable
-        private SerialPort ser = new SerialPort() { PortName = "COM1", BaudRate = 115200 };
-        #endregion
-
         #region Properties
         public int Baudrate { get => ser.BaudRate; set => ser.BaudRate = value; }
         public string Port { get => ser.PortName; set => ser.PortName = value; }
@@ -229,12 +226,12 @@ namespace Devinno.Communications.Modbus.RTU
             }
         }
         public override bool IsOpen => ser.IsOpen;
+        public bool AutoStart { get; set; }
         #endregion
 
-        #region Constructor
-        public ModbusRTUMaster()
-        {
-        }
+        #region Member Variable
+        private SerialPort ser = new SerialPort() { PortName = "COM1", BaudRate = 115200 };
+        private Thread thAutoStart;
         #endregion
 
         #region Event
@@ -252,9 +249,49 @@ namespace Devinno.Communications.Modbus.RTU
         public event EventHandler DeviceClosed;
         #endregion
 
+        #region Constructor
+        public ModbusRTUMaster()
+        {
+            thAutoStart = new Thread(new ThreadStart(() =>
+            {
+                while (true)
+                {
+                    if (!IsStart)
+                    {
+                        _Start();
+                    }
+                    Thread.Sleep(1000);
+                }
+            }))
+            { IsBackground = true };
+            thAutoStart.Start();
+        }
+        #endregion
+
         #region Method
-        #region Start
+        #region Start / Stop
+        public bool Start(SerialPortSetting data)
+        {
+            ser.PortName = data.Port;
+            ser.BaudRate = data.Baudrate;
+            ser.Parity = data.Parity;
+            ser.DataBits = data.DataBit;
+            ser.StopBits = data.StopBit;
+            return Start();
+        }
+
         public override bool Start()
+        {
+            if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
+            return _Start();
+        }
+        public override void Stop()
+        {
+            if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
+            _Stop();
+        }
+
+        bool _Start()
         {
             bool ret = false;
             if (!IsOpen && !IsStart)
@@ -271,21 +308,8 @@ namespace Devinno.Communications.Modbus.RTU
             }
             return ret;
         }
-        public bool Start(SerialPortSetting data)
-        {
-            ser.PortName = data.Port;
-            ser.BaudRate = data.Baudrate;
-            ser.Parity = data.Parity;
-            ser.DataBits = data.DataBit;
-            ser.StopBits = data.StopBit;
-            return Start();
-        }
-        #endregion
-        #region Stop
-        public override void Stop()
-        {
-            StopThread();
-        }
+
+        private void _Stop() => StopThread();
         #endregion
 
         #region AutoBitRead
