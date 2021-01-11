@@ -27,7 +27,6 @@ namespace Devinno.Communications.Modbus.TCP
             }
         }
         #endregion
-
         #region class : EventArgs
         #region BitReadEventArgs
         public class BitReadEventArgs : EventArgs

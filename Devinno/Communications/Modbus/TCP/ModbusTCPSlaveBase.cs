@@ -13,7 +13,7 @@ namespace Devinno.Communications.Modbus.TCP
 {
     public class ModbusTCPSlaveBase
     {
-        #region [class] EventArgs
+        #region class : EventArgs
         #region BitReadRequestArgs
         public class BitReadRequestArgs : EventArgs
         {

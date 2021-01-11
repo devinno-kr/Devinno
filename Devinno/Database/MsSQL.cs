@@ -1,26 +1,32 @@
-﻿using Devinno.Data;
-using Microsoft.Data.Sqlite;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Devinno.Database
 {
-    #region class : SQLite
-    public class SQLite
+    #region class : MySQL
+    public class MsSQL
     {
         #region Properties
-        public string FileName { get; set; }
-        public bool Lock { get; private set; }
-        public string ConnectString { get { return string.Format(@"Data Source={0};Version=3;Pooling=false;Compress=false", FileName); } }
-        #endregion
+        public string Host { get; set; } = "localhost";
+        public int Port { get; set; } = 3306;
+        public string ID { get; set; } = "root";
+        public string Password { get; set; } = "1234";
+        public string DatabaseName { get; set; }
+        public bool IntegratedSecurity { get; set; }
 
+        private string ConnectString => (IntegratedSecurity
+            ? $"server={Host};Port={Port};database={DatabaseName};Integrated Security=True;CHARSET=utf8"
+            : $"Server={Host};Port={Port};Database={DatabaseName};Uid={ID};pwd={Password};CHARSET=utf8");
+        #endregion
         #region Constructor
-        public SQLite()
+        public MsSQL()
         {
 
         }
@@ -28,166 +34,73 @@ namespace Devinno.Database
 
         #region Method
         #region Table
-        public void CreateTable<T>(string TableName) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.CreateTable<T>(cmd, TableName); }); }
-        public void DropTable(string TableName) { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.DropTable(cmd, TableName); }); }
-        public bool ExistTable(string TableName) { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.ExistTable(cmd, TableName); }); return ret; }
+        public void CreateTable<T>(string TableName) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.CreateTable<T>(cmd, TableName); }); }
+        public void DropTable(string TableName) { Execute((conn, cmd, trans) => { MsSqlCommandTool.DropTable(cmd, TableName); }); }
+        public bool ExistTable(string TableName) { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.ExistTable(cmd, TableName); }); return ret; }
         #endregion
         #region Command
-        public bool Exist(string TableName, int Id) { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Exist(cmd, TableName, Id); }); return ret; }
-        public bool Exist<T>(string TableName, T Data) where T : SQLiteData { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Exist<T>(cmd, TableName, Data); }); return ret; }
-        public bool Check(string TableName, string Where) { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Check(cmd, TableName, Where); }); return ret; }
-        public List<T> Select<T>(string TableName) where T : SQLiteData { return Select<T>(TableName, null); }
-        public List<T> Select<T>(string TableName, string Where) where T : SQLiteData { List<T> ret = null; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Select<T>(cmd, TableName, Where); }); return ret; }
-        public void Update<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Update<T>(cmd, TableName, Datas); }); }
-        public void Insert<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Insert<T>(cmd, TableName, Datas); }); }
-        public void Delete<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Delete<T>(cmd, TableName, Datas); }); }
-        public void Delete(string TableName, List<int> Ids) { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, Ids); }); }
-        public void Delete(string TableName, string Where) { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, Where); }); }
+        public bool Exist(string TableName, int Id) { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Exist(cmd, TableName, Id); }); return ret; }
+        public bool Exist<T>(string TableName, T Data) where T : MsData { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Exist<T>(cmd, TableName, Data); }); return ret; }
+        public bool Check(string TableName, string Where) { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Check(cmd, TableName, Where); }); return ret; }
+        public List<T> Select<T>(string TableName) where T : MsData { return Select<T>(TableName, null); }
+        public List<T> Select<T>(string TableName, string Where) where T : MsData { List<T> ret = null; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Select<T>(cmd, TableName, Where); }); return ret; }
+        public void Update<T>(string TableName, params T[] Datas) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.Update<T>(cmd, TableName, Datas); }); }
+        public void Insert<T>(string TableName, params T[] Datas) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.Insert<T>(cmd, TableName, Datas); }); }
+        public void Delete<T>(string TableName, params T[] Datas) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.Delete<T>(cmd, TableName, Datas); }); }
+        public void Delete(string TableName, List<int> Ids) { Execute((conn, cmd, trans) => { MsSqlCommandTool.Delete(cmd, TableName, Ids); }); }
+        public void Delete(string TableName, string Where) { Execute((conn, cmd, trans) => { MsSqlCommandTool.Delete(cmd, TableName, Where); }); }
         #endregion
         #region Execute
-        public void ExecuteWaiting(Action<SqliteConnection, SqliteCommand, SqliteTransaction> ExcuteQuery)
+        public void Execute(Action<SqlConnection, SqlCommand, SqlTransaction> ExcuteQuery)
         {
-            while (Lock) System.Threading.Thread.Sleep(10);
-            Execute(ExcuteQuery);
-        }
-        public void Execute(Action<SqliteConnection, SqliteCommand, SqliteTransaction> ExcuteQuery)
-        {
-            Lock = true;
-            using (var conn = new SqliteConnection() { ConnectionString = this.ConnectString })
+            try
             {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (var conn = new SqlConnection(ConnectString))
                 {
-                    using (var trans = conn.BeginTransaction())
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
                     {
-                        try
+                        using (var trans = conn.BeginTransaction())
                         {
-                            ExcuteQuery(conn, cmd, trans);
-                            trans.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
+                            try
+                            {
+                                ExcuteQuery(conn, cmd, trans);
+                                trans.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                try { trans.Rollback(); }
+                                catch (SqlException ex2) { }
+                            }
                         }
                     }
                 }
-                conn.Close();
             }
-            Lock = false;
+            catch (Exception ex) { }
         }
         #endregion
         #endregion
     }
     #endregion
-    #region class : SQLiteMemDB
-    public class SQLiteMemDB
-    {
-        #region Properties
-        public bool Lock { get; private set; }
-        public string ConnectString { get { return string.Format(@"Data Source=:memory:;Version=3;"); } }
-        public SqliteConnection Connection { get; private set; }
-        #endregion
-
-        #region Constructor
-        public SQLiteMemDB()
-        {
-
-        }
-        #endregion
-
-        #region Method
-        #region Connection
-        #region Open
-        public void Open()
-        {
-            Connection = new SqliteConnection() { ConnectionString = this.ConnectString };
-            Connection.Open();
-        }
-        #endregion
-        #region Close
-        public void Close()
-        {
-            if (Connection != null && Connection.State == System.Data.ConnectionState.Open)
-            {
-                Connection.Close();
-                Connection.Dispose();
-                Connection = null;
-            }
-        }
-        #endregion
-        #endregion
-
-        #region Table
-        public void CreateTable<T>(string TableName) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.CreateTable<T>(cmd, TableName); }); }
-        public void DropTable(string TableName) { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.DropTable(cmd, TableName); }); }
-        public bool ExistTable(string TableName) { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.ExistTable(cmd, TableName); }); return ret; }
-        #endregion
-        #region Command
-        public bool Exist(string TableName, int Id) { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Exist(cmd, TableName, Id); }); return ret; }
-        public bool Exist<T>(string TableName, T Data) where T : SQLiteData { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Exist<T>(cmd, TableName, Data); }); return ret; }
-        public bool Check(string TableName, string Where) { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Check(cmd, TableName, Where); }); return ret; }
-        public List<T> Select<T>(string TableName) where T : SQLiteData { return Select<T>(TableName, null); }
-        public List<T> Select<T>(string TableName, string Where) where T : SQLiteData { List<T> ret = null; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Select<T>(cmd, TableName, Where); }); return ret; }
-        public void Update<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Update<T>(cmd, TableName, Datas); }); }
-        public void Insert<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Insert<T>(cmd, TableName, Datas); }); }
-        public void Delete<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Delete<T>(cmd, TableName, Datas); }); }
-        public void Delete(string TableName, List<int> Ids) { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, Ids); }); }
-        public void Delete(string TableName, string Where) { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, Where); }); }
-        #endregion
-        #region Execute
-        public void ExecuteWaiting(Action<SqliteCommand, SqliteTransaction> ExcuteQuery)
-        {
-            while (Lock) System.Threading.Thread.Sleep(10);
-            Execute(ExcuteQuery);
-        }
-        public void Execute(Action<SqliteCommand, SqliteTransaction> ExcuteQuery)
-        {
-            Lock = true;
-            var conn = Connection;
-            using (var cmd = conn.CreateCommand())
-            {
-                using (var trans = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        ExcuteQuery(cmd, trans);
-                        trans.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        trans.Rollback();
-                    }
-                }
-            }
-            Lock = false;
-        }
-        #endregion
-        #endregion
-    }
-    #endregion
-    #region class : SQLiteCommandTool
-    public class SQLiteCommandTool
+    #region class : MsSqlCommandTool
+    public class MsSqlCommandTool
     {
         #region Command
         #region CreateTable
-        public static void CreateTable<T>(SqliteCommand cmd, string TableName) where T : SQLiteData
+        public static void CreateTable<T>(SqlCommand cmd, string TableName) where T : MsData
         {
             var props = typeof(T).GetProperties().Where(x => x.Name != "Id" && x.CanRead && x.CanWrite && !Attribute.IsDefined(x, typeof(SqlIgnoreAttribute))).ToList();
 
             if (props.Count > 0)
             {
                 var sb = new StringBuilder();
-                var sb2 = new StringBuilder();
-                sb.AppendLine("CREATE TABLE IF NOT EXISTS `" + TableName + "`");
+
+                sb.AppendLine("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '" + TableName + "')");
+                sb.AppendLine("CREATE TABLE [" + TableName + "]");
                 sb.AppendLine("(");
-                sb.AppendLine("     `Id` INTEGER PRIMARY KEY AUTOINCREMENT,");
-                foreach (var p in props) sb2.AppendLine("     `" + p.Name + "` " + GetTypeText(p) + ",");
-
-                var vs = sb2.ToString();
-                vs = vs.Substring(0, vs.Length - 3);
-
-                sb.AppendLine(vs);
-                sb.AppendLine(");");
+                sb.AppendLine("     [ID] [uniqueidentifier] NOT NULL PRIMARY KEY,");
+                foreach (var p in props) sb.AppendLine("     [" + p.Name + "] " + GetTypeText(p) + ",");
+                sb.AppendLine(")");
 
                 cmd.CommandText = sb.ToString();
                 cmd.ExecuteNonQuery();
@@ -195,17 +108,17 @@ namespace Devinno.Database
         }
         #endregion
         #region DropTable
-        public static void DropTable(SqliteCommand cmd, string TableName)
+        public static void DropTable(SqlCommand cmd, string TableName)
         {
-            cmd.CommandText = "DROP TABLE IF EXISTS `" + TableName + "`";
+            cmd.CommandText = "DROP TABLE IF EXISTS [" + TableName + "]";
             cmd.ExecuteNonQuery();
         }
         #endregion
         #region ExistTable
-        public static bool ExistTable(SqliteCommand cmd, string TableName)
+        public static bool ExistTable(SqlCommand cmd, string TableName)
         {
             bool ret = false;
-            cmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + TableName + "'";
+            cmd.CommandText = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '" + TableName + "'";
             using (var reader = cmd.ExecuteReader())
             {
                 ret = reader.HasRows;
@@ -214,10 +127,10 @@ namespace Devinno.Database
         }
         #endregion
         #region Exists
-        public static bool Exist(SqliteCommand cmd, string TableName, int Id)
+        public static bool Exist(SqlCommand cmd, string TableName, int Id)
         {
             bool ret = false;
-            string sql = "SELECT * FROM `" + TableName + "` WHERE `Id`=" + Id;
+            string sql = "SELECT * FROM [" + TableName + "] WHERE [Id]=" + Id;
             cmd.CommandText = sql;
             using (var rd = cmd.ExecuteReader())
             {
@@ -226,10 +139,10 @@ namespace Devinno.Database
             return ret;
         }
 
-        public static bool Exist<T>(SqliteCommand cmd, string TableName, T Data) where T : SQLiteData
+        public static bool Exist<T>(SqlCommand cmd, string TableName, T Data) where T : MsData
         {
             bool ret = false;
-            string sql = "SELECT * FROM `" + TableName + "` WHERE `Id`=" + Data.Id;
+            string sql = "SELECT * FROM [" + TableName + "] WHERE [Id]=" + Data.Id;
             cmd.CommandText = sql;
             using (var rd = cmd.ExecuteReader())
             {
@@ -239,11 +152,11 @@ namespace Devinno.Database
         }
         #endregion
         #region Check
-        public static bool Check(SqliteCommand cmd, string TableName, string Where)
+        public static bool Check(SqlCommand cmd, string TableName, string Where)
         {
             bool ret = false;
 
-            string sql = "SELECT * FROM `" + TableName + "` " + Where;
+            string sql = "SELECT * FROM [" + TableName + "] " + Where;
 
             cmd.CommandText = sql;
             using (var rd = cmd.ExecuteReader())
@@ -255,12 +168,11 @@ namespace Devinno.Database
         }
         #endregion
         #region Select
-        static byte[] ba = new byte[5 * 1024 * 1024];
-        public static List<T> Select<T>(SqliteCommand cmd, string TableName, string Where) where T : SQLiteData
+        public static List<T> Select<T>(SqlCommand cmd, string TableName, string Where) where T : MsData
         {
             List<T> ret = null;
 
-            string sql = "SELECT * FROM `" + TableName + "`";
+            string sql = "SELECT * FROM [" + TableName + "]";
             if (!string.IsNullOrEmpty(Where)) sql += " " + Where;
 
             cmd.CommandText = sql;
@@ -282,7 +194,7 @@ namespace Devinno.Database
 
                         try
                         {
-                            #region Bool
+                            #region bool
                             if (tp == typeof(bool))
                             {
                                 pi.SetValue(v, rd.GetBoolean(idx), null);
@@ -293,7 +205,6 @@ namespace Devinno.Database
                                 else pi.SetValue(v, rd.GetBoolean(idx), null);
                             }
                             #endregion
-                            #region Integer
                             #region byte
                             else if (tp == typeof(byte))
                             {
@@ -371,8 +282,6 @@ namespace Devinno.Database
                                 else pi.SetValue(v, Convert.ToUInt64(rd.GetInt64(idx)), null);
                             }
                             #endregion
-                            #endregion
-                            #region Real
                             #region float
                             else if (tp == typeof(float))
                             {
@@ -406,8 +315,7 @@ namespace Devinno.Database
                                 else pi.SetValue(v, rd.GetDecimal(idx), null);
                             }
                             #endregion
-                            #endregion
-                            #region Text
+                            #region string
                             else if (tp == typeof(string))
                             {
                                 if (rd.IsDBNull(idx)) pi.SetValue(v, null, null);
@@ -450,10 +358,10 @@ namespace Devinno.Database
                             {
                                 if (!rd.IsDBNull(idx))
                                 {
-                                    var len = rd.GetBytes(idx, 0, ba, 0, ba.Length);
+                                    var ba = Convert.FromBase64String(rd.GetString(idx));
 
                                     var ls = new List<int>();
-                                    for (int i = 0; i < len; i += 4) ls.Add(BitConverter.ToInt32(ba, i));
+                                    for (int i = 0; i < ba.Length; i += 4) ls.Add(BitConverter.ToInt32(ba, i));
 
                                     pi.SetValue(v, ls.ToArray(), null);
                                 }
@@ -464,10 +372,10 @@ namespace Devinno.Database
                             {
                                 if (!rd.IsDBNull(idx))
                                 {
-                                    var len = rd.GetBytes(idx, 0, ba, 0, ba.Length);
+                                    var ba = Convert.FromBase64String(rd.GetString(idx));
 
                                     var ls = new List<uint>();
-                                    for (int i = 0; i < len; i += 4) ls.Add(BitConverter.ToUInt32(ba, i));
+                                    for (int i = 0; i < ba.Length; i += 4) ls.Add(BitConverter.ToUInt32(ba, i));
 
                                     pi.SetValue(v, ls.ToArray(), null);
                                 }
@@ -478,10 +386,32 @@ namespace Devinno.Database
                             {
                                 if (!rd.IsDBNull(idx))
                                 {
-                                    var len = rd.GetBytes(idx, 0, ba, 0, ba.Length);
-
-                                    var r = new byte[len]; Array.Copy(ba, 0, r, 0, Convert.ToInt32(len));
-                                    pi.SetValue(v, r, null);
+                                    var ba = Convert.FromBase64String(rd.GetString(idx));
+                                    pi.SetValue(v, ba, null);
+                                }
+                            }
+                            #endregion
+                            #region Bitmap
+                            else if (tp == typeof(System.Drawing.Bitmap))
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null);
+                                else
+                                {
+                                    using (var m = new MemoryStream(Convert.FromBase64String(rd.GetString(idx))))
+                                    {
+                                        pi.SetValue(v, (Bitmap)Bitmap.FromStream(m));
+                                    }
+                                }
+                            }
+                            else if (tp == typeof(System.Drawing.Image))
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null);
+                                else
+                                {
+                                    using (var m = new MemoryStream(Convert.FromBase64String(rd.GetString(idx))))
+                                    {
+                                        pi.SetValue(v, (Image)Image.FromStream(m));
+                                    }
                                 }
                             }
                             #endregion
@@ -497,17 +427,17 @@ namespace Devinno.Database
         }
         #endregion
         #region Update
-        public static void Update<T>(SqliteCommand cmd, string TableName, params T[] Datas) where T : SQLiteData
+        public static void Update<T>(SqlCommand cmd, string TableName, params T[] Datas) where T : MsData
         {
             foreach (var Data in Datas)
             {
                 if (Data != null)
                 {
-                    string sql = "UPDATE `" + TableName + "` SET ";
-                    string where = " WHERE `Id`=" + Data.Id;
+                    string sql = "UPDATE [" + TableName + "] SET ";
+                    string where = " WHERE [Id]=" + Data.Id;
 
                     var props = typeof(T).GetProperties().Where(x => x.Name != "Id" && x.CanRead && x.CanWrite && !Attribute.IsDefined(x, typeof(SqlIgnoreAttribute)));
-                    foreach (var pi in props) sql += " `" + pi.Name + "` = @" + pi.Name + ",";
+                    foreach (var pi in props) sql += " [" + pi.Name + "] = @" + pi.Name + ",";
 
                     cmd.CommandText = sql.Substring(0, sql.Length - 1) + where;
                     foreach (var pi in props) cmd.Parameters.AddWithValue("@" + pi.Name, GetValue(Data, pi));
@@ -517,19 +447,19 @@ namespace Devinno.Database
         }
         #endregion
         #region Insert
-        public static void Insert<T>(SqliteCommand cmd, string TableName, params T[] Datas) where T : SQLiteData
+        public static void Insert<T>(SqlCommand cmd, string TableName, params T[] Datas) where T : MsData
         {
             foreach (var Data in Datas)
             {
                 var props = typeof(T).GetProperties().Where(x => x.Name != "Id" && x.CanRead && x.CanWrite && !Attribute.IsDefined(x, typeof(SqlIgnoreAttribute)));
 
-                string s_insert_in = string.Concat(props.Select(x => " `" + x.Name + "`,").ToArray());
+                string s_insert_in = string.Concat(props.Select(x => " [" + x.Name + "],").ToArray());
                 string s_values_in = string.Concat(props.Select(x => " @" + x.Name + ",").ToArray());
 
                 s_values_in = s_values_in.Substring(0, s_values_in.Length - 1);
                 s_insert_in = s_insert_in.Substring(0, s_insert_in.Length - 1);
 
-                string s_insert = "INSERT INTO `" + TableName + "` (" + s_insert_in + " )";
+                string s_insert = "INSERT INTO [" + TableName + "] (" + s_insert_in + " )";
                 string s_values = "VALUES (" + s_values_in + " )";
                 string s_sql = s_insert + "\r\n" + s_values;
 
@@ -540,11 +470,11 @@ namespace Devinno.Database
         }
         #endregion
         #region Delete
-        public static void Delete<T>(SqliteCommand cmd, string TableName, params T[] Datas) where T : SQLiteData
+        public static void Delete<T>(SqlCommand cmd, string TableName, params T[] Datas) where T : MsData
         {
             if (Datas.Length > 0)
             {
-                string sql = "DELETE FROM `" + TableName + "`\r\nWHERE ";
+                string sql = "DELETE FROM [" + TableName + "]\r\nWHERE ";
                 for (int i = 0; i < Datas.Length; i++) sql += "ID = " + Datas[i].Id + (i < Datas.Length - 1 ? " OR " : "");
 
                 cmd.CommandText = sql;
@@ -552,11 +482,11 @@ namespace Devinno.Database
             }
         }
 
-        public static void Delete(SqliteCommand cmd, string TableName, List<int> Ids)
+        public static void Delete(SqlCommand cmd, string TableName, List<int> Ids)
         {
             if (Ids.Count > 0)
             {
-                string sql = "DELETE FROM `" + TableName + "`\r\nWHERE ";
+                string sql = "DELETE FROM [" + TableName + "]\r\nWHERE ";
                 for (int i = 0; i < Ids.Count; i++) sql += "ID = " + Ids[i] + (i < Ids.Count - 1 ? " OR " : "");
 
                 cmd.CommandText = sql;
@@ -564,9 +494,9 @@ namespace Devinno.Database
             }
         }
 
-        public static void Delete(SqliteCommand cmd, string TableName, string Where)
+        public static void Delete(SqlCommand cmd, string TableName, string Where)
         {
-            string sql = "DELETE FROM `" + TableName + "`\r\n" + Where;
+            string sql = "DELETE FROM [" + TableName + "]\r\n" + Where;
 
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
@@ -578,38 +508,37 @@ namespace Devinno.Database
         {
             string ret = null;
             var tp = pi.PropertyType;
-            if (tp == typeof(bool)) ret = "INTEGER NOT NULL DEFAULT 0";
-            else if (tp == typeof(bool?)) ret = "INTEGER DEFAULT NULL";
-            else if (tp == typeof(byte)) ret = "INTEGER NOT NULL DEFAULT 0";
-            else if (tp == typeof(short)) ret = "INTEGER NOT NULL DEFAULT 0";
-            else if (tp == typeof(ushort)) ret = "INTEGER NOT NULL DEFAULT 0";
-            else if (tp == typeof(int)) ret = "INTEGER NOT NULL DEFAULT 0";
-            else if (tp == typeof(uint)) ret = "INTEGER NOT NULL DEFAULT 0";
-            else if (tp == typeof(long)) ret = "INTEGER NOT NULL DEFAULT 0";
-            else if (tp == typeof(ulong)) ret = "INTEGER NOT NULL DEFAULT 0";
-            else if (tp == typeof(sbyte?)) ret = "INTEGER DEFAULT NULL";
-            else if (tp == typeof(byte?)) ret = "INTEGER DEFAULT NULL";
-            else if (tp == typeof(short?)) ret = "INTEGER DEFAULT NULL";
-            else if (tp == typeof(ushort?)) ret = "INTEGER DEFAULT NULL";
-            else if (tp == typeof(int?)) ret = "INTEGER DEFAULT NULL";
-            else if (tp == typeof(uint?)) ret = "INTEGER DEFAULT NULL";
-            else if (tp == typeof(long?)) ret = "INTEGER DEFAULT NULL";
-            else if (tp == typeof(ulong?)) ret = "INTEGER DEFAULT NULL";
-            else if (tp == typeof(float)) ret = "REAL NOT NULL DEFAULT 0";
-            else if (tp == typeof(double)) ret = "REAL NOT NULL DEFAULT 0";
-            else if (tp == typeof(decimal)) ret = "REAL NOT NULL DEFAULT 0";
-            else if (tp == typeof(float?)) ret = "REAL DEFAULT NULL";
-            else if (tp == typeof(double?)) ret = "REAL DEFAULT NULL";
-            else if (tp == typeof(decimal?)) ret = "REAL DEFAULT NULL";
-            else if (tp == typeof(string)) ret = "TEXT DEFAULT NULL";
-            else if (tp == typeof(DateTime)) ret = "TEXT NOT NULL DEFAULT '2000-01-01 00:00:00'";
-            else if (tp == typeof(DateTime?)) ret = "TEXT DEFAULT NULL";
-            else if (tp == typeof(TimeSpan)) ret = "TEXT NOT NULL DEFAULT '00:00:00'";
-            else if (tp == typeof(TimeSpan?)) ret = "TEXT DEFAULT NULL";
-            else if (tp.IsEnum) ret = "INTEGER NOT NULL DEFAULT 0";
-            else if (tp == typeof(int[])) ret = "BLOB DEFAULT NUL";
-            else if (tp == typeof(uint[])) ret = "BLOB DEFAULT NUL";
-            else if (tp == typeof(byte[])) ret = "BLOB DEFAULT NUL";
+            if (tp == typeof(bool)) ret = "bit(1) NOT NULL DEFAULT 0";
+            else if (tp == typeof(bool?)) ret = "bit(1) DEFAULT NULL";
+            else if (tp == typeof(byte)) ret = "tinyint(3) unsigned NOT NULL DEFAULT '0'";
+            else if (tp == typeof(short)) ret = "smallint(6) NOT NULL DEFAULT '0'";
+            else if (tp == typeof(ushort)) ret = "smallint(6) unsigned NOT NULL DEFAULT '0'";
+            else if (tp == typeof(int)) ret = "int(11) NOT NULL DEFAULT '0'";
+            else if (tp == typeof(uint)) ret = "int(11) unsigned NOT NULL DEFAULT '0'";
+            else if (tp == typeof(long)) ret = "bigint(20) NOT NULL DEFAULT '0'";
+            else if (tp == typeof(ulong)) ret = "bigint(20) unsigned NOT NULL DEFAULT '0'";
+            else if (tp == typeof(byte?)) ret = "tinyint(3) unsigned DEFAULT NULL";
+            else if (tp == typeof(short?)) ret = "smallint(6) DEFAULT NULL";
+            else if (tp == typeof(ushort?)) ret = "smallint(6) unsigned DEFAULT NULL";
+            else if (tp == typeof(int?)) ret = "int(11) DEFAULT NULL";
+            else if (tp == typeof(uint?)) ret = "int(11) unsigned DEFAULT NULL";
+            else if (tp == typeof(long?)) ret = "bigint(20) DEFAULT NULL";
+            else if (tp == typeof(ulong?)) ret = "bigint(20) unsigned DEFAULT NULL";
+            else if (tp == typeof(float)) ret = "float NOT NULL DEFAULT '0'";
+            else if (tp == typeof(double)) ret = "double NOT NULL DEFAULT '0'";
+            else if (tp == typeof(decimal)) ret = "decimal NOT NULL DEFAULT '0'";
+            else if (tp == typeof(float?)) ret = "float DEFAULT NULL";
+            else if (tp == typeof(double?)) ret = "double DEFAULT NULL";
+            else if (tp == typeof(decimal?)) ret = "decimal DEFAULT NULL";
+            else if (tp == typeof(string)) ret = "text DEFAULT NULL";
+            else if (tp == typeof(DateTime)) ret = "datetime NOT NULL DEFAULT '1970-01-01 00:00:00'";
+            else if (tp == typeof(DateTime?)) ret = "datetime DEFAULT NULL";
+            else if (tp == typeof(TimeSpan)) ret = "text NOT NULL DEFAULT '00:00:00'";
+            else if (tp == typeof(TimeSpan?)) ret = "text DEFAULT NULL";
+            else if (tp.IsEnum) ret = "int(11) NOT NULL DEFAULT '0'";
+            else if (tp == typeof(int[])) ret = "longtext DEFAULT NULL";
+            else if (tp == typeof(uint[])) ret = "longtext DEFAULT NULL";
+            else if (tp == typeof(byte[])) ret = "longtext DEFAULT NULL";
             else throw new Exception("Unknown Type");
             return ret;
         }
@@ -646,12 +575,12 @@ namespace Devinno.Database
             else if (tp == typeof(DateTime))
             {
                 var v = (DateTime)pi.GetValue(Data, null);
-                ret = v.ToString("yyyy-MM-dd HH:mm:ss");
+                ret = v;
             }
             else if (tp == typeof(DateTime?))
             {
                 var v = (DateTime?)pi.GetValue(Data, null);
-                ret = v.HasValue ? v.Value.ToString("yyyy-MM-dd HH:mm:ss") : null;
+                ret = v.HasValue ? v.Value : null;
             }
             else if (tp == typeof(TimeSpan))
             {
@@ -677,7 +606,7 @@ namespace Devinno.Database
                 {
                     var ls = new List<byte>();
                     foreach (var vv in v.Select(x => BitConverter.GetBytes(x))) ls.AddRange(vv);
-                    ret = ls.ToArray();
+                    ret = Convert.ToBase64String(ls.ToArray());
                 }
             }
             else if (tp == typeof(uint[]))
@@ -689,17 +618,51 @@ namespace Devinno.Database
                 {
                     var ls = new List<byte>();
                     foreach (var vv in v.Select(x => BitConverter.GetBytes(x))) ls.AddRange(vv);
+                    ret = Convert.ToBase64String(ls.ToArray());
                 }
             }
-            else if (tp == typeof(byte[])) ret = pi.GetValue(Data, null);
-            
+            else if (tp == typeof(byte[]))
+            {
+                var v = (byte[])pi.GetValue(Data, null);
+                if (v == null) ret = null;
+                else
+                {
+                    ret = Convert.ToBase64String(v);
+                }
+            }
+            else if (tp == typeof(System.Drawing.Bitmap))
+            {
+                var v = (Bitmap)pi.GetValue(Data);
+                if (v != null)
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        v.Save(m, System.Drawing.Imaging.ImageFormat.Png);
+                        ret = Convert.ToBase64String(m.ToArray());
+                    }
+                }
+            }
+            else if (tp == typeof(System.Drawing.Image))
+            {
+                var v = (Image)pi.GetValue(Data);
+                if (v != null)
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        v.Save(m, System.Drawing.Imaging.ImageFormat.Png);
+                        ret = Convert.ToBase64String(m.ToArray());
+                    }
+                }
+            }
             return ret;
         }
         #endregion
     }
     #endregion
-    #region class : SQLiteData
-    public class SQLiteData { public int Id { get; set; } }
+    #region class : MsData
+    public class MsData
+    {
+        public int Id { get; set; }
+    }
     #endregion
-
 }

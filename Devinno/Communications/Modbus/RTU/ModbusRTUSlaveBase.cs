@@ -13,7 +13,7 @@ namespace Devinno.Communications.Modbus.RTU
 {
     public class ModbusRTUSlaveBase : SlaveScheduler
     {
-        #region [class] EventArgs
+        #region class : EventArgs
         #region BitReadRequestArgs
         public class BitReadRequestArgs : EventArgs
         {

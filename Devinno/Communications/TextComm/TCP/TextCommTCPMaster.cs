@@ -32,7 +32,6 @@ namespace Devinno.Communications.TextComm.TCP
             }
         }
         #endregion
-
         #region class : EventArgs
         #region ReceivedEventArgs
         public class ReceivedEventArgs : EventArgs
