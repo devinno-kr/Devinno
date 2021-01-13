@@ -14,6 +14,9 @@ namespace Devinno.Tools
     public class LauncherTool
     {
         #region IsAdministrator
+        /// <summary>
+        /// 관리자 권한 여부
+        /// </summary>
         [SupportedOSPlatform("windows")]
         public static bool IsAdministrator
         {

@@ -13,6 +13,11 @@ namespace Devinno.Tools
     public class NetworkTool
     {
         #region ValidIPv4
+        /// <summary>
+        /// 유효한 IPv4 주소인가?
+        /// </summary>
+        /// <param name="address">IP 주소</param>
+        /// <returns>유효 여부</returns>
         public static bool ValidIPv4(string address)
         {
             byte n;
@@ -20,6 +25,11 @@ namespace Devinno.Tools
         }
         #endregion
         #region ValidDomain
+        /// <summary>
+        /// 유효한 도메인인가?
+        /// </summary>
+        /// <param name="address">도메인 or IP 주소</param>
+        /// <returns>유효 여부</returns>
         public static bool ValidDomain(string address)
         {
             bool ret = false;
@@ -40,6 +50,10 @@ namespace Devinno.Tools
         }
         #endregion
         #region GetLocalIP
+        /// <summary>
+        /// 현재 IP 주소 획득
+        /// </summary>
+        /// <returns>IP주소</returns>
         public static string GetLocalIP()
         {
             string localIP = "UNKNOWN";
@@ -56,6 +70,14 @@ namespace Devinno.Tools
         }
         #endregion
         #region SetLocalIP
+        /// <summary>
+        /// 지정한 NIC의 IP, SubnetMask, Gateway 설정
+        /// </summary>
+        /// <param name="description">NIC Description</param>
+        /// <param name="ip">설정할 IP</param>
+        /// <param name="subnet">설정할 SubnetMask</param>
+        /// <param name="gateway">설정할 Gateway</param>
+        /// <returns>설정 결과</returns>
         [SupportedOSPlatform("windows")]
         public static bool SetLocalIP(string description, string ip, string subnet, string gateway)
         {
@@ -93,10 +115,19 @@ namespace Devinno.Tools
         }
         #endregion
         #region SetDHCP
+        /// <summary>
+        /// 지정한 NIC의 DHCP 설정
+        /// </summary>
+        /// <param name="description">NIC Description</param>
+        /// <returns>설정 결과</returns>
         [SupportedOSPlatform("windows")]
         public static bool SetDHCP(string description) => SetLocalIP(description, null, null, null);
         #endregion
         #region GetNicDescriptions
+        /// <summary>
+        /// NIC Description 배열 획득
+        /// </summary>
+        /// <returns>NIC Description 배열</returns>
         [SupportedOSPlatform("windows")]
         public string[] GetNicDescriptions()
         {
@@ -113,6 +144,11 @@ namespace Devinno.Tools
         }
         #endregion
         #region IsSocketConnected
+        /// <summary>
+        /// 해당 소켓이 접속중인지 확인
+        /// </summary>
+        /// <param name="s">소켓</param>
+        /// <returns>접속 여부</returns>
         public static bool IsSocketConnected(Socket s) => s == null ? false : !((s.Poll(1000, SelectMode.SelectRead) && (s.Available == 0)) || !s.Connected);
         #endregion
     }

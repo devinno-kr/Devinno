@@ -66,23 +66,25 @@ namespace Devinno.Communications.Mqtt
     public class MQClient
     {
         #region Properties
-        #region BrokerHostName
-        private string strBrokerHostName = "127.0.0.1";
-        public string BrokerHostName
-        {
-            get { return strBrokerHostName; }
-            set { strBrokerHostName = value; }
-        }
-        #endregion
-        #region IsConnected
-        public bool IsConnected { get { return client != null ? client.IsConnected : false; } }
-        #endregion
-        #region SubscribeArray
-        public MQSubscribe[] SubscribeArray { get { return Subscribes.Values.ToArray(); } }
-        #endregion
-        #region IsStart
-        public bool IsStart { get; set; }
-        #endregion
+        /// <summary>
+        /// 브로커 주소
+        /// </summary>
+        public string BrokerHostName { get; set; } = "127.0.0.1";
+        
+        /// <summary>
+        /// 통신 시작 여부
+        /// </summary>
+        public bool IsStart { get; private set; }
+        
+        /// <summary>
+        /// 브로커 접속 여부
+        /// </summary>
+        public bool IsConnected => client != null ? client.IsConnected : false;
+        
+        /// <summary>
+        /// 구독중인 토픽
+        /// </summary>
+        public MQSubscribe[] SubscribeArray => Subscribes.Values.ToArray();
         #endregion
 
         #region Member Variable
@@ -95,6 +97,7 @@ namespace Devinno.Communications.Mqtt
         #endregion
 
         #region Event
+        public event EventHandler Connected;
         public event EventHandler Disconnected;
         public event EventHandler<MQReceiveArgs> Received;
         #endregion
@@ -130,8 +133,11 @@ namespace Devinno.Communications.Mqtt
         #endregion
 
         #region Method
-        #region Start
-        #region Start()
+        #region Start(ClientID)
+        /// <summary>
+        /// 통신 시작
+        /// </summary>
+        /// <param name="ClientID">클라이언트 ID</param>
         public void Start(string ClientID)
         {
             try
@@ -150,7 +156,13 @@ namespace Devinno.Communications.Mqtt
             catch (Exception) { }
         }
         #endregion
-        #region Start(UserName, Password)
+        #region Start(ClientID, UserName, Password)
+        /// <summary>
+        /// 통신 시작
+        /// </summary>
+        /// <param name="ClientID">클라이언트 ID</param>
+        /// <param name="UserName">사용자 이름</param>
+        /// <param name="Password">암호</param>
         public void Start(string ClientID, string UserName, string Password)
         {
             try
@@ -169,38 +181,57 @@ namespace Devinno.Communications.Mqtt
             catch (Exception ex) { }
         }
         #endregion
-        #endregion
+
         #region Stop
+        /// <summary>
+        /// 통신 정지
+        /// </summary>
         public void Stop()
         {
             IsStart = false;
         }
         #endregion
-        #region Publish
-        #region Publish
+
+        #region Publish(Topic, byte[])
+        /// <summary>
+        /// 메시지 발행
+        /// </summary>
+        /// <param name="Topic">토픽</param>
+        /// <param name="Data">byte[] 데이터</param>
         public void Publish(string Topic, byte[] Data)
         {
             if (client != null && client.IsConnected)
-            {
                 client.Publish(Topic, Data);
-            }
         }
         #endregion
-        #region Publish(Topic, Text)
-        public void Publish(string Topic, string Text)
+        #region Publish(Topic, String)
+        /// <summary>
+        /// 메시지 발행
+        /// </summary>
+        /// <param name="Topic">토픽</param>
+        /// <param name="Data">string 데이터</param>
+        public void Publish(string Topic, string Data)
         {
-            Publish(Topic, Encoding.UTF8.GetBytes(Text));
+            Publish(Topic, Encoding.UTF8.GetBytes(Data));
         }
         #endregion
-        #region Publish(Topic, Data)
+        #region Publish(Topic, Object)
+        /// <summary>
+        /// 메시지 발행
+        /// </summary>
+        /// <param name="Topic">토픽</param>
+        /// <param name="Data">Object 데이터</param>
         public void Publish(string Topic, object Data)
         {
             Publish(Topic, Serialize.JsonSerialize(Data));
         }
         #endregion
-        #endregion
+
         #region Subscribe
-        #region Subscribe
+        /// <summary>
+        /// 메시지 구독
+        /// </summary>
+        /// <param name="Sub">구독 정보</param>
         public void Subscribe(MQSubscribe Sub)
         {
             Subscribes.Add(Sub.Topic, Sub);
@@ -210,44 +241,79 @@ namespace Devinno.Communications.Mqtt
             }
         }
         #endregion
-        #region Subscribe   (Topic)
+        #region Subscribe(Topic)
+        /// <summary>
+        /// 메시지 구독
+        /// </summary>
+        /// <param name="Topic">토픽</param>
         public void Subscribe(string Topic)
         {
             Subscribe(new MQSubscribe(Topic));
         }
         #endregion
-        #region Subscribe   (Topic, Qos)
+        #region Subscribe(Topic, Qos)
+        /// <summary>
+        /// 메시지 구독
+        /// </summary>
+        /// <param name="Topic">토픽</param>
+        /// <param name="Qos">Qos</param>
         public void Subscribe(string Topic, MQQos Qos)
         {
             Subscribe(new MQSubscribe(Topic, Qos));
         }
         #endregion
-        #region Subscribe   (Topic, ParseType)
+        #region Subscribe(Topic, ParseType)
+        /// <summary>
+        /// 메시지 구독
+        /// </summary>
+        /// <param name="Topic"></param>
+        /// <param name="ParseType"></param>
         public void Subscribe(string Topic, Type ParseType)
         {
             Subscribe(new MQSubscribe(Topic, ParseType));
         }
         #endregion
-        #region Subscribe   (Topic, Qos, ParseType)
+        #region Subscribe(Topic, Qos, ParseType)
+        /// <summary>
+        /// 메시지 구독
+        /// </summary>
+        /// <param name="Topic">토픽</param>
+        /// <param name="Qos">Qos</param>
+        /// <param name="ParseType">변환 타입</param>
         public void Subscribe(string Topic, MQQos Qos, Type ParseType)
         {
             Subscribe(new MQSubscribe(Topic, Qos, ParseType));
         }
         #endregion
         #region Subscribe<T>(Topic)
+        /// <summary>
+        /// 메시지 구독
+        /// </summary>
+        /// <typeparam name="T">변환 타입</typeparam>
+        /// <param name="Topic">토픽</param>
         public void Subscribe<T>(string Topic)
         {
             Subscribe(Topic, typeof(T));
         }
         #endregion
         #region Subscribe<T>(Topic, Qos)
+        /// <summary>
+        /// 메시지 구독
+        /// </summary>
+        /// <typeparam name="T">변환 타입</typeparam>
+        /// <param name="Topic">토픽</param>
+        /// <param name="Qos">Qos</param>
         public void Subscribe<T>(string Topic, MQQos Qos)
         {
             Subscribe(Topic, Qos, typeof(T));
         }
         #endregion
-        #endregion
-        #region Unsubscribe
+
+        #region Unsubscribe(Topic)
+        /// <summary>
+        /// 구독 해지
+        /// </summary>
+        /// <param name="Topic">토픽</param>
         public void Unsubscribe(string Topic)
         {
             if (Subscribes.ContainsKey(Topic))
@@ -260,6 +326,11 @@ namespace Devinno.Communications.Mqtt
                 }
             }
         }
+        #endregion
+        #region UnsubscribeClear
+        /// <summary>
+        /// 구독 전체 해지
+        /// </summary>
         public void UnsubscribeClear()
         {
             if (Subscribes.Count > 0)
@@ -276,6 +347,12 @@ namespace Devinno.Communications.Mqtt
         #endregion
 
         #region Test
+        /// <summary>
+        /// 브로커 접속 테스트
+        /// </summary>
+        /// <param name="BrokerIP">브로커 주소</param>
+        /// <param name="ClientID">클라이언트 ID</param>
+        /// <returns>테스트 결과</returns>
         public static bool Test(string BrokerIP, string ClientID)
         {
             bool ret = false;
@@ -310,6 +387,8 @@ namespace Devinno.Communications.Mqtt
                         {
                             if (client.Connect(strClientID, strUserName, strPassword) == 0)
                             {
+                                Connected?.Invoke(this, null);
+
                                 #region Subscribe
                                 if (Subscribes.Count > 0)
                                 {
@@ -326,6 +405,8 @@ namespace Devinno.Communications.Mqtt
                         {
                             if (client.Connect(strClientID) == 0)
                             {
+                                Connected?.Invoke(this, null);
+
                                 #region Subscribe
                                 if (Subscribes.Count > 0)
                                 {

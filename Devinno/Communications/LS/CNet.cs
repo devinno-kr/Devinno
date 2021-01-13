@@ -11,8 +11,18 @@ using System.Threading.Tasks;
 
 namespace Devinno.Communications.LS
 {
-    #region enum : MASTERK Function
-    public enum MasterKFunc { NONE, READ_SINGLE, READ_BLOCK, WRITE_SINGLE, WRITE_BLOCK, }
+    #region enum : CNet Function
+    public enum CNetFunc
+    {
+        NONE, READ_SINGLE, READ_BLOCK, WRITE_SINGLE, WRITE_BLOCK,
+    }
+    #endregion
+    #region class : CNetValue
+    public class CNetValue
+    {
+        public string Device { get; set; }
+        public int Value { get; set; }
+    }
     #endregion
 
     public class CNet : MasterScheduler
@@ -30,7 +40,7 @@ namespace Devinno.Communications.LS
         private class WorkCN : MasterScheduler.Work
         {
             public int Slave { get { int n; return int.TryParse(Encoding.ASCII.GetString(Data, 1, 2), out n) ? n : -1; } }
-            public MasterKFunc Function { get { return StringToFunc(Encoding.ASCII.GetString(Data, 3, 3)); } }
+            public CNetFunc Function { get { return CNet.StringToFunc(Encoding.ASCII.GetString(Data, 3, 3)); } }
             public string[] Devices { get; set; }
 
             public WorkCN(int id, byte[] data)
@@ -46,11 +56,11 @@ namespace Devinno.Communications.LS
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public MasterKFunc Function { get; private set; }
+            public CNetFunc Function { get; private set; }
             public int[] Data { get; private set; }
             public string[] ReadAddress { get; private set; }
 
-            public DataReadEventArgs(int ID, int Slave, MasterKFunc Func, int[] Data, string[] ReadAddress)
+            public DataReadEventArgs(int ID, int Slave, CNetFunc Func, int[] Data, string[] ReadAddress)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -65,9 +75,9 @@ namespace Devinno.Communications.LS
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public MasterKFunc Function { get; private set; }
+            public CNetFunc Function { get; private set; }
 
-            public WriteEventArgs(int ID, int Slave, MasterKFunc Func)
+            public WriteEventArgs(int ID, int Slave, CNetFunc Func)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -80,11 +90,11 @@ namespace Devinno.Communications.LS
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public MasterKFunc Function { get; private set; }
+            public CNetFunc Function { get; private set; }
 
             public string[] Device { get; set; }
 
-            public TimeoutEventArgs(int ID, int Slave, MasterKFunc Func)
+            public TimeoutEventArgs(int ID, int Slave, CNetFunc Func)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -97,9 +107,9 @@ namespace Devinno.Communications.LS
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public MasterKFunc Function { get; private set; }
+            public CNetFunc Function { get; private set; }
 
-            public BCCErrorEventArgs(int ID, int Slave, MasterKFunc Func)
+            public BCCErrorEventArgs(int ID, int Slave, CNetFunc Func)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -112,10 +122,10 @@ namespace Devinno.Communications.LS
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public MasterKFunc Function { get; private set; }
+            public CNetFunc Function { get; private set; }
             public int ErrorCode { get; private set; }
 
-            public NAKEventArgs(int ID, int Slave, MasterKFunc Func, int ErrCode)
+            public NAKEventArgs(int ID, int Slave, CNetFunc Func, int ErrCode)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -132,8 +142,26 @@ namespace Devinno.Communications.LS
         #endregion
 
         #region Properties
+        /// <summary>
+        /// 통신 속도
+        /// </summary>
         public int Baudrate { get => ser.BaudRate; set => ser.BaudRate = value; }
+        
+        /// <summary>
+        /// 통신 포트
+        /// </summary>
         public string Port { get => ser.PortName; set => ser.PortName = value; }
+        
+        /// <summary>
+        /// 포트 상태
+        /// </summary>
+        public override bool IsOpen => ser.IsOpen;
+
+        /// <summary>
+        /// 자동 시작
+        /// </summary>
+        public bool AutoStart { get; set; }
+
         protected override int Available
         {
             get
@@ -147,8 +175,6 @@ namespace Devinno.Communications.LS
                 catch (InvalidOperationException) { throw new SchedulerStopException(); }
             }
         }
-        public override bool IsOpen => ser.IsOpen;
-        public bool AutoStart { get; set; }
         #endregion
 
         #region Construct
@@ -183,6 +209,11 @@ namespace Devinno.Communications.LS
 
         #region Method
         #region Start / Stop
+        /// <summary>
+        /// 지정한 포트 정보로 통신 시작
+        /// </summary>
+        /// <param name="data">포트 정보</param>
+        /// <returns>시작 여부</returns>
         public bool Start(SerialPortSetting data)
         {
             ser.PortName = data.Port;
@@ -193,18 +224,26 @@ namespace Devinno.Communications.LS
             return Start();
         }
 
+        /// <summary>
+        /// 통신 시작
+        /// </summary>
+        /// <returns>시작 여부</returns>
         public override bool Start()
         {
             if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
             return _Start();
         }
+
+        /// <summary>
+        /// 통신 정지
+        /// </summary>
         public override void Stop()
         {
             if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
             _Stop();
         }
 
-        bool _Start()
+        private bool _Start()
         {
             bool ret = false;
             if (!IsOpen && !IsStart)
@@ -226,6 +265,12 @@ namespace Devinno.Communications.LS
         #endregion
 
         #region AutoRSS(id, slave, device)
+        /// <summary>
+        /// 지정한 국번의 주소에 값을 자동으로 읽어오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
         public void AutoRSS(int id, int slave, string device)
         {
             StringBuilder strbul = new StringBuilder();
@@ -256,11 +301,17 @@ namespace Devinno.Communications.LS
         }
         #endregion
         #region AutoRSS(id, slave, devices)
-        public void AutoRSS(int id, int Slave, string[] devices)
+        /// <summary>
+        /// 지정한 국번의 복수개 주소에 값을 자동으로 읽어오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="devices">복수개 주소</param>
+        public void AutoRSS(int id, int slave, string[] devices)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("rSS");
             strbul.Append(devices.Length.ToString("X2"));
             for (int i = 0; i < devices.Length; i++)
@@ -288,16 +339,23 @@ namespace Devinno.Communications.LS
             data = null;
         }
         #endregion
-        #region AutoRSB
-        public void AutoRSB(int id, int Slave, string device, int Length)
+        #region AutoRSB(id, slave, device, Length)
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 값을 자동으로 읽어오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="length">개수</param>
+        public void AutoRSB(int id, int slave, string device, int length)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("rSB");
             strbul.Append(device.Length.ToString("X2"));
             strbul.Append(device);
-            strbul.Append(Length.ToString("X2"));
+            strbul.Append(length.ToString("X2"));
             strbul.Append((char)EOT);
             strbul.Append("00");
 
@@ -316,7 +374,7 @@ namespace Devinno.Communications.LS
 
             List<string> d = new List<string>();
             int n = Convert.ToInt32(device.Substring(3));
-            for (int i = 0; i < Length; i++) d.Add(device.Substring(0, 3) + (n + i));
+            for (int i = 0; i < length; i++) d.Add(device.Substring(0, 3) + (n + i));
 
             AddAuto(new WorkCN(id, data) { Devices = d.ToArray() });
             data = null;
@@ -324,6 +382,12 @@ namespace Devinno.Communications.LS
         #endregion
 
         #region ManualRSS(id, slave, device)
+        /// <summary>
+        /// 지정한 국번의 주소에 값을 읽어오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
         public void ManualRSS(int id, int slave, string device)
         {
             StringBuilder strbul = new StringBuilder();
@@ -354,6 +418,12 @@ namespace Devinno.Communications.LS
         }
         #endregion
         #region ManualRSS(id, slave, devices)
+        /// <summary>
+        /// 지정한 국번의 복수개 주소에 값을 읽어오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="devices">복수개 주소</param>
         public void ManualRSS(int id, int slave, string[] devices)
         {
             StringBuilder strbul = new StringBuilder();
@@ -386,16 +456,23 @@ namespace Devinno.Communications.LS
             data = null;
         }
         #endregion
-        #region ManualRSB 
-        public void ManualRSB(int id, int Slave, string device, int Length)
+        #region ManualRSB(id, slave, device, length)
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 값을 읽어오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="length">개수</param>
+        public void ManualRSB(int id, int slave, string device, int length)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("rSB");
             strbul.Append(device.Length.ToString("X2"));
             strbul.Append(device);
-            strbul.Append(Length.ToString("X2"));
+            strbul.Append(length.ToString("X2"));
             strbul.Append((char)EOT);
             strbul.Append("00");
 
@@ -414,19 +491,26 @@ namespace Devinno.Communications.LS
 
             List<string> d = new List<string>();
             int n = Convert.ToInt32(device.Substring(3));
-            for (int i = 0; i < Length; i++)
+            for (int i = 0; i < length; i++)
                 d.Add(device.Substring(0, 3) + (n + i));
 
             AddManual(new WorkCN(id, data) { Devices = d.ToArray() });
             data = null;
         }
         #endregion
-        #region ManualWSS
-        public void ManualWSS(int id, int Slave, string device, int value)
+        #region ManualWSS(id, slave, device, value)
+        /// <summary>
+        /// 지정한 국번의 주소에 값을 쓰는 기능 등록
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="value">값</param>
+        public void ManualWSS(int id, int slave, string device, int value)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("wSS");
             strbul.Append("01");
             strbul.Append(device.Length.ToString("X2"));
@@ -459,22 +543,26 @@ namespace Devinno.Communications.LS
             data = null;
         }
         #endregion
-        #region ManualWSS
-        public void ManualWSS(int id, int Slave, string[] devices, int[] value)
+        #region ManualWSS(id, slave, values)
+        /// <summary>
+        /// 지정한 국번의 복수개 주소에 값을 쓰는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="values">복수개 주소와 값</param>
+        public void ManualWSS(int id, int slave, CNetValue[] values)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("wSS");
-            strbul.Append(devices.Length.ToString("X2"));
-            for (int i = 0; i < devices.Length; i++)
+            strbul.Append(values.Length.ToString("X2"));
+            foreach (var v in values)
             {
-                strbul.Append(devices[i].Length.ToString("X2"));
-                strbul.Append(devices[i]);
-                if (devices[i][2] == 'W')
-                    strbul.Append(value[i].ToString("X4"));
-                if (devices[i][2] == 'X')
-                    strbul.Append(value[i].ToString("X2"));
+                strbul.Append(v.Device.Length.ToString("X2"));
+                strbul.Append(v.Device);
+                if (v.Device[2] == 'W') strbul.Append(v.Value.ToString("X4"));
+                if (v.Device[2] == 'X') strbul.Append(v.Value.ToString("X2"));
             }
             strbul.Append((char)EOT);
             strbul.Append("00");
@@ -496,12 +584,19 @@ namespace Devinno.Communications.LS
             data = null;
         }
         #endregion
-        #region ManualWSB
-        public void ManualWSB(int id, int Slave, string device, int[] values)
+        #region ManualWSB(id, slave, device, values)
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 값을 쓰는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="values">복수개 값</param>
+        public void ManualWSB(int id, int slave, string device, int[] values)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("wSB");
             strbul.Append(device.Length.ToString("X2"));
             strbul.Append(values.Length);
@@ -531,21 +626,21 @@ namespace Devinno.Communications.LS
 
         #region Static Method
         #region FuncToString
-        public static string FuncToString(MasterKFunc func)
+        internal static string FuncToString(CNetFunc func)
         {
             string ret = "";
             switch (func)
             {
-                case MasterKFunc.READ_SINGLE:
+                case CNetFunc.READ_SINGLE:
                     ret = "rSS";
                     break;
-                case MasterKFunc.READ_BLOCK:
+                case CNetFunc.READ_BLOCK:
                     ret = "rSB";
                     break;
-                case MasterKFunc.WRITE_SINGLE:
+                case CNetFunc.WRITE_SINGLE:
                     ret = "wSS";
                     break;
-                case MasterKFunc.WRITE_BLOCK:
+                case CNetFunc.WRITE_BLOCK:
                     ret = "wSB";
                     break;
             }
@@ -553,22 +648,22 @@ namespace Devinno.Communications.LS
         }
         #endregion
         #region StringToFunc
-        public static MasterKFunc StringToFunc(string func)
+        internal static CNetFunc StringToFunc(string func)
         {
-            MasterKFunc ret = MasterKFunc.NONE;
+            CNetFunc ret = CNetFunc.NONE;
             switch (func)
             {
                 case "rSS":
-                    ret = MasterKFunc.READ_SINGLE;
+                    ret = CNetFunc.READ_SINGLE;
                     break;
                 case "rSB":
-                    ret = MasterKFunc.READ_BLOCK;
+                    ret = CNetFunc.READ_BLOCK;
                     break;
                 case "wSS":
-                    ret = MasterKFunc.WRITE_SINGLE;
+                    ret = CNetFunc.WRITE_SINGLE;
                     break;
                 case "wSB":
-                    ret = MasterKFunc.WRITE_BLOCK;
+                    ret = CNetFunc.WRITE_BLOCK;
                     break;
             }
             return ret;
@@ -660,7 +755,7 @@ namespace Devinno.Communications.LS
                     string strBCC = new string(new char[] { (char)baResponse[nRecv - 2], (char)baResponse[nRecv - 1] });
 
                     int slave = Convert.ToInt32(strSlave, 16);
-                    MasterKFunc func = StringToFunc(strFunc);
+                    CNetFunc func = StringToFunc(strFunc);
                     int nBCC = Convert.ToInt32(strBCC, 16);
                     #endregion
                     #region Calc BCC
@@ -680,7 +775,7 @@ namespace Devinno.Communications.LS
                             switch (func)
                             {
                                 #region READ_BLACK
-                                case MasterKFunc.READ_BLOCK:
+                                case CNetFunc.READ_BLOCK:
                                     {
                                         int BlockCount = int.Parse(new string(new char[] { (char)baResponse[6], (char)baResponse[7] }));
                                         List<int> Data = new List<int>();
@@ -710,7 +805,7 @@ namespace Devinno.Communications.LS
                                     break;
                                 #endregion
                                 #region READ_SINGLE
-                                case MasterKFunc.READ_SINGLE:
+                                case CNetFunc.READ_SINGLE:
                                     {
                                         int BlockCount = int.Parse(new string(new char[] { (char)baResponse[6], (char)baResponse[7] }));
                                         List<int> Data = new List<int>();
@@ -742,14 +837,14 @@ namespace Devinno.Communications.LS
                                     break;
                                 #endregion
                                 #region WRITE_BLOCK
-                                case MasterKFunc.WRITE_BLOCK:
+                                case CNetFunc.WRITE_BLOCK:
                                     {
                                         WriteResponseReceived?.Invoke(this, new WriteEventArgs(w.MessageID, slave, func));
                                     }
                                     break;
                                 #endregion
                                 #region WRITE_SINGLE
-                                case MasterKFunc.WRITE_SINGLE:
+                                case CNetFunc.WRITE_SINGLE:
                                     {
                                         WriteResponseReceived?.Invoke(this, new WriteEventArgs(w.MessageID, slave, func));
                                     }
@@ -783,4 +878,5 @@ namespace Devinno.Communications.LS
         #endregion
         #endregion
     }
+
 }

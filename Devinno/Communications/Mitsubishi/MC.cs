@@ -9,10 +9,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Devinno.Communications.Mitubishi
+namespace Devinno.Communications.Mitsubishi
 {
     #region enum : MITSUBISHI FX Function
-    public enum FXFunc
+    public enum MCFunc
     {
         None,
         BitRead,
@@ -22,7 +22,7 @@ namespace Devinno.Communications.Mitubishi
     }
     #endregion
 
-    public class FX : MasterScheduler
+    public class MC : MasterScheduler
     {
         #region const : Special Code
         private const byte ENQ = 0x05;
@@ -42,10 +42,10 @@ namespace Devinno.Communications.Mitubishi
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public FXFunc Function { get; private set; }
+            public MCFunc Function { get; private set; }
             public int[] Data { get; private set; }
 
-            public WordDataReadEventArgs(int ID, int Slave, FXFunc Func, int[] Data)
+            public WordDataReadEventArgs(int ID, int Slave, MCFunc Func, int[] Data)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -59,10 +59,10 @@ namespace Devinno.Communications.Mitubishi
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public FXFunc Function { get; private set; }
+            public MCFunc Function { get; private set; }
             public bool[] Data { get; private set; }
 
-            public BitDataReadEventArgs(int ID, int Slave, FXFunc Func, bool[] Data)
+            public BitDataReadEventArgs(int ID, int Slave, MCFunc Func, bool[] Data)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -76,9 +76,9 @@ namespace Devinno.Communications.Mitubishi
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public FXFunc Function { get; private set; }
+            public MCFunc Function { get; private set; }
 
-            public WriteEventArgs(int ID, int Slave, FXFunc Func)
+            public WriteEventArgs(int ID, int Slave, MCFunc Func)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -91,9 +91,9 @@ namespace Devinno.Communications.Mitubishi
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public FXFunc Function { get; private set; }
+            public MCFunc Function { get; private set; }
 
-            public TimeoutEventArgs(int ID, int Slave, FXFunc Func)
+            public TimeoutEventArgs(int ID, int Slave, MCFunc Func)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -106,9 +106,9 @@ namespace Devinno.Communications.Mitubishi
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public FXFunc Function { get; private set; }
+            public MCFunc Function { get; private set; }
 
-            public CheckSumErrorEventArgs(int ID, int Slave, FXFunc Func)
+            public CheckSumErrorEventArgs(int ID, int Slave, MCFunc Func)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -121,9 +121,9 @@ namespace Devinno.Communications.Mitubishi
         {
             public int MessageID { get; private set; }
             public int Slave { get; private set; }
-            public FXFunc Function { get; private set; }
+            public MCFunc Function { get; private set; }
 
-            public NakErrorEventArgs(int ID, int Slave, FXFunc Func)
+            public NakErrorEventArgs(int ID, int Slave, MCFunc Func)
             {
                 this.MessageID = ID;
                 this.Slave = Slave;
@@ -139,11 +139,36 @@ namespace Devinno.Communications.Mitubishi
         #endregion
 
         #region Properties
+        /// <summary>
+        /// 흐름제어 사용여부
+        /// </summary>
         public bool UseControlSequence { get; set; } = false;
+        
+        /// <summary>
+        /// 체크섬 사용여부
+        /// </summary>
         public bool UseCheckSum { get; set; } = false;
 
+        /// <summary>
+        /// 통신 속도
+        /// </summary>
         public int Baudrate { get => ser.BaudRate; set => ser.BaudRate = value; }
+        
+        /// <summary>
+        /// 통신 포트
+        /// </summary>
         public string Port { get => ser.PortName; set => ser.PortName = value; }
+        
+        /// <summary>
+        /// 포트 상태
+        /// </summary>
+        public override bool IsOpen => ser.IsOpen;
+        
+        /// <summary>
+        /// 자동 시작
+        /// </summary>
+        public bool AutoStart { get; set; }
+
         protected override int Available
         {
             get
@@ -157,12 +182,10 @@ namespace Devinno.Communications.Mitubishi
                 catch (InvalidOperationException) { throw new SchedulerStopException(); }
             }
         }
-        public override bool IsOpen => ser.IsOpen;
-        public bool AutoStart { get; set; }
         #endregion
 
         #region Construct
-        public FX()
+        public MC()
         {
             thAutoStart = new Thread(new ThreadStart(() =>
             {
@@ -194,6 +217,11 @@ namespace Devinno.Communications.Mitubishi
 
         #region Method
         #region Start / Stop
+        /// <summary>
+        /// 지정한 포트 정보로 통신 시작
+        /// </summary>
+        /// <param name="data">포트 정보</param>
+        /// <returns>시작 여부</returns>
         public bool Start(SerialPortSetting data)
         {
             ser.PortName = data.Port;
@@ -204,18 +232,26 @@ namespace Devinno.Communications.Mitubishi
             return Start();
         }
 
+        /// <summary>
+        /// 통신 시작
+        /// </summary>
+        /// <returns>시작 여부</returns>
         public override bool Start()
         {
             if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
             return _Start();
         }
+
+        /// <summary>
+        /// 통신 정지
+        /// </summary>
         public override void Stop()
         {
             if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
             _Stop();
         }
 
-        bool _Start()
+        private bool _Start()
         {
             bool ret = false;
             if (!IsOpen && !IsStart)
@@ -237,23 +273,30 @@ namespace Devinno.Communications.Mitubishi
         #endregion
 
         #region AutoBitRead
-        public void AutoBitRead(int id, int PLCNum, int Slave, int WaitTime, string device, int Length)
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어 오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="length">개수</param>
+        /// <param name="waitTime">응답 대기 시간</param>
+        public void AutoBitRead(int id, int slave, string device, int length, int waitTime = 0)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
 
-            if (WaitTime > 15) WaitTime = 15;
-            if (Length > 255) Length = 255;
-            if (Slave > 255) Slave = 255;
-            if (PLCNum > 255) PLCNum = 255;
+            if (waitTime > 15) waitTime = 15;
+            if (length > 255) length = 255;
+            if (slave > 255) slave = 255;
 
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("FF");
             strbul.Append("BR");
-            strbul.Append(WaitTime.ToString("X"));
+            strbul.Append(waitTime.ToString("X"));
             strbul.Append(device);
-            strbul.Append(Length.ToString("X2"));
+            strbul.Append(length.ToString("X2"));
             if (UseCheckSum) strbul.Append("00");
             if (UseControlSequence) strbul.Append("\r\n");
 
@@ -285,23 +328,30 @@ namespace Devinno.Communications.Mitubishi
         }
         #endregion
         #region AutoWordRead
-        public void AutoWordRead(int id, int PLCNum, int Slave, int WaitTime, string device, int Length)
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="length">개수</param>
+        /// <param name="waitTime">응답 대기 시간</param>
+        public void AutoWordRead(int id, int slave, string device, int length, int waitTime = 0)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
 
-            if (WaitTime > 15) WaitTime = 15;
-            if (Length > 255) Length = 255;
-            if (Slave > 255) Slave = 255;
-            if (PLCNum > 255) PLCNum = 255;
+            if (waitTime > 15) waitTime = 15;
+            if (length > 255) length = 255;
+            if (slave > 255) slave = 255;
 
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("FF");
             strbul.Append("WR");
-            strbul.Append(WaitTime.ToString("X"));
+            strbul.Append(waitTime.ToString("X"));
             strbul.Append(device);
-            strbul.Append(Length.ToString("X2"));
+            strbul.Append(length.ToString("X2"));
             if (UseCheckSum) strbul.Append("00");
             if (UseControlSequence) strbul.Append("\r\n");
 
@@ -335,22 +385,30 @@ namespace Devinno.Communications.Mitubishi
         #endregion
 
         #region ManualBitRead
-        public void ManualBitRead(int id, int Slave, int WaitTime, string device, int Length)
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="length">개수</param>
+        /// <param name="waitTime">응답 대기 시간</param>
+        public void ManualBitRead(int id, int slave, string device, int length, int waitTime = 0)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
 
-            if (WaitTime > 15) WaitTime = 15;
-            if (Length > 255) Length = 255;
-            if (Slave > 255) Slave = 255;
+            if (waitTime > 15) waitTime = 15;
+            if (length > 255) length = 255;
+            if (slave > 255) slave = 255;
 
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("FF");
             strbul.Append("BR");
-            strbul.Append(WaitTime.ToString("X"));
+            strbul.Append(waitTime.ToString("X"));
             strbul.Append(device);
-            strbul.Append(Length.ToString("X2"));
+            strbul.Append(length.ToString("X2"));
             if (UseCheckSum) strbul.Append("00");
             if (UseControlSequence) strbul.Append("\r\n");
 
@@ -384,24 +442,41 @@ namespace Devinno.Communications.Mitubishi
         }
         #endregion
         #region ManualBitWrite
-        public void ManualBitWrite(int id, int Slave, int WaitTime, string device, bool value) { ManualBitWrite(id, Slave, WaitTime, device, new bool[] { value }); }
-        public void ManualBitWrite(int id, int Slave, int WaitTime, string device, bool[] value)
+        /// <summary>
+        /// 지정한 국번의 주소에 비트값을 쓰는 기능 
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="value">값</param>
+        /// <param name="waitTime">응답 대기 시간</param>
+        public void ManualBitWrite(int id, int slave, string device, bool value, int waitTime = 0) => ManualBitWrite(id, slave, device, new bool[] { value }, waitTime);
+
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 비트값을 쓰는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="value">값</param>
+        /// <param name="waitTime">응답 대기 시간</param>
+        public void ManualBitWrite(int id, int slave, string device, bool[] value, int waitTime = 0)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
             int Length = value.Length;
             string strValue = "";
             for (int i = 0; i < value.Length; i++) strValue += value[i] ? "1" : "0";
 
-            if (WaitTime > 15) WaitTime = 15;
+            if (waitTime > 15) waitTime = 15;
             if (Length > 255) Length = 255;
-            if (Slave > 255) Slave = 255;
+            if (slave > 255) slave = 255;
 
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("FF");
             strbul.Append("BW");
-            strbul.Append(WaitTime.ToString("X"));
+            strbul.Append(waitTime.ToString("X"));
             strbul.Append(device);
             strbul.Append(Length.ToString("X2"));
             strbul.Append(strValue);
@@ -438,22 +513,30 @@ namespace Devinno.Communications.Mitubishi
         }
         #endregion
         #region ManualWordRead
-        public void ManualWordRead(int id, int Slave, int WaitTime, string device, int Length)
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="length">개수</param>
+        /// <param name="waitTime">응답 대기 시간</param>
+        public void ManualWordRead(int id, int slave, string device, int length, int waitTime = 0)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
 
-            if (WaitTime > 15) WaitTime = 15;
-            if (Length > 255) Length = 255;
-            if (Slave > 255) Slave = 255;
+            if (waitTime > 15) waitTime = 15;
+            if (length > 255) length = 255;
+            if (slave > 255) slave = 255;
 
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("FF");
             strbul.Append("WR");
-            strbul.Append(WaitTime.ToString("X"));
+            strbul.Append(waitTime.ToString("X"));
             strbul.Append(device);
-            strbul.Append(Length.ToString("X2"));
+            strbul.Append(length.ToString("X2"));
 
             if (UseCheckSum) strbul.Append("00");
             if (UseControlSequence) strbul.Append("\r\n");
@@ -487,24 +570,41 @@ namespace Devinno.Communications.Mitubishi
         }
         #endregion
         #region ManualWordWrite
-        public void ManualWordWrite(int id, int Slave, int WaitTime, string device, int value) { ManualWordWrite(id, Slave, WaitTime, device, new int[] { value }); }
-        public void ManualWordWrite(int id, int Slave, int WaitTime, string device, int[] value)
+        /// <summary>
+        /// 지정한 국번의 주소에 워드값을 쓰는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="value">값</param>
+        /// <param name="waitTime">응답 대기 시간</param>
+        public void ManualWordWrite(int id, int slave, string device, int value, int waitTime = 0) { ManualWordWrite(id, slave, device, new int[] { value }, waitTime); }
+
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 워드값을 쓰는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="slave">국번</param>
+        /// <param name="device">주소</param>
+        /// <param name="value">값</param>
+        /// <param name="waitTime">응답 대기 시간</param>
+        public void ManualWordWrite(int id, int slave, string device, int[] value, int waitTime = 0)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
             int Length = value.Length;
             string strValue = "";
             for (int i = 0; i < value.Length; i++) strValue += value[i].ToString("X4");
 
-            if (WaitTime > 15) WaitTime = 15;
+            if (waitTime > 15) waitTime = 15;
             if (Length > 255) Length = 255;
-            if (Slave > 255) Slave = 255;
+            if (slave > 255) slave = 255;
 
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
-            strbul.Append(Slave.ToString("X2"));
+            strbul.Append(slave.ToString("X2"));
             strbul.Append("FF");
             strbul.Append("WW");
-            strbul.Append(WaitTime.ToString("X"));
+            strbul.Append(waitTime.ToString("X"));
             strbul.Append(device);
             strbul.Append(Length.ToString("X2"));
             strbul.Append(strValue);
@@ -546,27 +646,27 @@ namespace Devinno.Communications.Mitubishi
         #endregion
 
         #region Static Method
-        public static string FuncToString(FXFunc func)
+        internal static string FuncToString(MCFunc func)
         {
             string ret = "";
             switch (func)
             {
-                case FXFunc.BitRead: ret = "BR"; break;
-                case FXFunc.BitWrite: ret = "BW"; break;
-                case FXFunc.WordRead: ret = "WR"; break;
-                case FXFunc.WordWrite: ret = "WW"; break;
+                case MCFunc.BitRead: ret = "BR"; break;
+                case MCFunc.BitWrite: ret = "BW"; break;
+                case MCFunc.WordRead: ret = "WR"; break;
+                case MCFunc.WordWrite: ret = "WW"; break;
             }
             return ret;
         }
-        public static FXFunc StringToFunc(string func)
+        internal static MCFunc StringToFunc(string func)
         {
-            FXFunc ret = FXFunc.None;
+            MCFunc ret = MCFunc.None;
             switch (func)
             {
-                case "BR": ret = FXFunc.BitRead; break;
-                case "BW": ret = FXFunc.BitWrite; break;
-                case "WR": ret = FXFunc.WordRead; break;
-                case "WW": ret = FXFunc.WordWrite; break;
+                case "BR": ret = MCFunc.BitRead; break;
+                case "BW": ret = MCFunc.BitWrite; break;
+                case "WR": ret = MCFunc.WordRead; break;
+                case "WW": ret = MCFunc.WordWrite; break;
             }
             return ret;
         }
@@ -630,7 +730,7 @@ namespace Devinno.Communications.Mitubishi
                 string strSlave = new string(new char[] { (char)w.Data[1], (char)w.Data[2] });
                 string strFunc = new string(new char[] { (char)w.Data[5], (char)w.Data[6] });
                 int slave = int.Parse(strSlave, System.Globalization.NumberStyles.AllowHexSpecifier);
-                FXFunc func = StringToFunc(strFunc);
+                MCFunc func = StringToFunc(strFunc);
 
                 TimeoutReceived?.Invoke(this, new TimeoutEventArgs(w.MessageID, slave, func));
             }
@@ -698,7 +798,7 @@ namespace Devinno.Communications.Mitubishi
                                         string strSlave = new string(new char[] { (char)w.Data[1], (char)w.Data[2] });
                                         string strFunc = new string(new char[] { (char)w.Data[5], (char)w.Data[6] });
                                         int slave = int.Parse(strSlave, System.Globalization.NumberStyles.AllowHexSpecifier);
-                                        FXFunc func = StringToFunc(strFunc);
+                                        MCFunc func = StringToFunc(strFunc);
 
                                         bool[] realData = new bool[Data.Length];
                                         for (int i = 0; i < realData.Length; i++) realData[i] = (Data[i] == '1');
@@ -716,7 +816,7 @@ namespace Devinno.Communications.Mitubishi
                                         string strSlave = new string(new char[] { (char)w.Data[1], (char)w.Data[2] });
                                         string strFunc = new string(new char[] { (char)w.Data[5], (char)w.Data[6] });
                                         int slave = Convert.ToInt32(strSlave, 16);
-                                        FXFunc func = StringToFunc(strFunc);
+                                        MCFunc func = StringToFunc(strFunc);
                                         if (CheckSumErrorReceived != null)
                                             CheckSumErrorReceived.Invoke(this, new CheckSumErrorEventArgs(w.MessageID, slave, func));
                                     }
@@ -732,7 +832,7 @@ namespace Devinno.Communications.Mitubishi
                                     string strSlave = new string(new char[] { (char)w.Data[1], (char)w.Data[2] });
                                     string strFunc = new string(new char[] { (char)w.Data[5], (char)w.Data[6] });
                                     int slave = int.Parse(strSlave, System.Globalization.NumberStyles.AllowHexSpecifier);
-                                    FXFunc func = StringToFunc(strFunc);
+                                    MCFunc func = StringToFunc(strFunc);
 
                                     bool[] realData = new bool[Data.Length];
                                     for (int i = 0; i < realData.Length; i++)
@@ -771,7 +871,7 @@ namespace Devinno.Communications.Mitubishi
                                         string strSlave = new string(new char[] { (char)w.Data[1], (char)w.Data[2] });
                                         string strFunc = new string(new char[] { (char)w.Data[5], (char)w.Data[6] });
                                         int slave = int.Parse(strSlave, System.Globalization.NumberStyles.AllowHexSpecifier);
-                                        FXFunc func = StringToFunc(strFunc);
+                                        MCFunc func = StringToFunc(strFunc);
 
                                         int[] realData = new int[Data.Length / 4];
                                         for (int i = 0; i < Data.Length; i += 4) realData[i / 4] = Convert.ToInt32(Data.Substring(i, 4), 16);
@@ -789,7 +889,7 @@ namespace Devinno.Communications.Mitubishi
                                         string strSlave = new string(new char[] { (char)w.Data[1], (char)w.Data[2] });
                                         string strFunc = new string(new char[] { (char)w.Data[5], (char)w.Data[6] });
                                         int slave = int.Parse(strSlave, System.Globalization.NumberStyles.AllowHexSpecifier);
-                                        FXFunc func = StringToFunc(strFunc);
+                                        MCFunc func = StringToFunc(strFunc);
                                         if (CheckSumErrorReceived != null)
                                             CheckSumErrorReceived.Invoke(this, new CheckSumErrorEventArgs(w.MessageID, slave, func));
                                     }
@@ -805,7 +905,7 @@ namespace Devinno.Communications.Mitubishi
                                     string strSlave = new string(new char[] { (char)w.Data[1], (char)w.Data[2] });
                                     string strFunc = new string(new char[] { (char)w.Data[5], (char)w.Data[6] });
                                     int slave = int.Parse(strSlave, System.Globalization.NumberStyles.AllowHexSpecifier);
-                                    FXFunc func = StringToFunc(strFunc);
+                                    MCFunc func = StringToFunc(strFunc);
 
                                     int[] realData = new int[Data.Length / 4];
                                     for (int i = 0; i < Data.Length; i += 4)
@@ -829,7 +929,7 @@ namespace Devinno.Communications.Mitubishi
                                     string strSlave = new string(new char[] { (char)w.Data[1], (char)w.Data[2] });
                                     string strFunc = new string(new char[] { (char)w.Data[5], (char)w.Data[6] });
                                     int slave = int.Parse(strSlave, System.Globalization.NumberStyles.AllowHexSpecifier);
-                                    FXFunc func = StringToFunc(strFunc);
+                                    MCFunc func = StringToFunc(strFunc);
                                     if (WriteResponseReceived != null)
                                         WriteResponseReceived.Invoke(this, new WriteEventArgs(w.MessageID, slave, func));
                                 }
@@ -843,7 +943,7 @@ namespace Devinno.Communications.Mitubishi
                                     string strSlave = new string(new char[] { (char)w.Data[1], (char)w.Data[2] });
                                     string strFunc = new string(new char[] { (char)w.Data[5], (char)w.Data[6] });
                                     int slave = int.Parse(strSlave, System.Globalization.NumberStyles.AllowHexSpecifier);
-                                    FXFunc func = StringToFunc(strFunc);
+                                    MCFunc func = StringToFunc(strFunc);
                                     if (NakErrorReceived != null)
                                         NakErrorReceived.Invoke(this, new NakErrorEventArgs(w.MessageID, slave, func));
                                 }

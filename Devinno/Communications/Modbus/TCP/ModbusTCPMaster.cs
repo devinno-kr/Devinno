@@ -193,11 +193,27 @@ namespace Devinno.Communications.Modbus.TCP
         #endregion
 
         #region Properties
+        /// <summary>
+        /// 원격지 주소
+        /// </summary>
         public string RemoteIP { get; set; } = "127.0.0.1";
+        
+        /// <summary>
+        /// 원격지 포트
+        /// </summary>
         public int RemotePort { get; set; } = 502;
-        protected override int Available { get => client != null ? client.Available : 0; }
+
+        /// <summary>
+        /// 소켓 상태
+        /// </summary>        
         public override bool IsOpen => NetworkTool.IsSocketConnected(client);
+        
+        /// <summary>
+        /// 자동 시작
+        /// </summary>
         public bool AutoStart { get; set; }
+
+        protected override int Available { get => client != null ? client.Available : 0; }
         #endregion
 
         #region Member Variable
@@ -240,11 +256,19 @@ namespace Devinno.Communications.Modbus.TCP
 
         #region Method
         #region Start / Stop
+        /// <summary>
+        /// 통신 시작
+        /// </summary>
+        /// <returns>시작 여부</returns>
         public override bool Start()
         {
             if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
             return _Start();
         }
+
+        /// <summary>
+        /// 통신 정지
+        /// </summary>
         public override void Stop()
         {
             if (AutoStart) throw new Exception("AutoStart가 true일 땐 Start/Stop 을 할 수 없습니다.");
@@ -277,8 +301,24 @@ namespace Devinno.Communications.Modbus.TCP
         #endregion
 
         #region AutoBitRead
-        public void AutoBitRead_F1(int id, int Slave, int StartAddr, int Length) => AutoBitRead(id, Slave, 1, StartAddr, Length);
-        public void AutoBitRead_F2(int id, int Slave, int StartAddr, int Length) => AutoBitRead(id, Slave, 2, StartAddr, Length);
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어오는 기능 ( Read Coil Status )
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Length">개수</param>
+        public void AutoBitRead_FC1(int id, int Slave, int StartAddr, int Length) => AutoBitRead(id, Slave, 1, StartAddr, Length);
+
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어오는 기능 ( Read Input Status )
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Length">개수</param>
+        public void AutoBitRead_FC2(int id, int Slave, int StartAddr, int Length) => AutoBitRead(id, Slave, 2, StartAddr, Length);
+        
         private void AutoBitRead(int id, int Slave, byte fn, int StartAddr, int Length)
         {
             byte[] data = new byte[12];
@@ -302,8 +342,24 @@ namespace Devinno.Communications.Modbus.TCP
         }
         #endregion
         #region AutoWordRead
-        public void AutoWordRead_F3(int id, int Slave, int StartAddr, int Length) => AutoWordRead(id, Slave, 3, StartAddr, Length);
-        public void AutoWordRead_F4(int id, int Slave, int StartAddr, int Length) => AutoWordRead(id, Slave, 4, StartAddr, Length);
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능 ( Read Holding Registers )  
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Length">개수</param>
+        public void AutoWordRead_FC3(int id, int Slave, int StartAddr, int Length) => AutoWordRead(id, Slave, 3, StartAddr, Length);
+
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능 ( Read Input Registers )
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Length">개수</param>
+        public void AutoWordRead_FC4(int id, int Slave, int StartAddr, int Length) => AutoWordRead(id, Slave, 4, StartAddr, Length);
+        
         private void AutoWordRead(int id, int Slave, byte fn, int StartAddr, int Length)
         {
             byte[] data = new byte[12];
@@ -326,8 +382,24 @@ namespace Devinno.Communications.Modbus.TCP
         #endregion
 
         #region ManualBitRead
-        public void ManualBitRead_F1(int id, int Slave, int StartAddr, int Length) => ManualBitRead(id, Slave, 1, StartAddr, Length);
-        public void ManualBitRead_F2(int id, int Slave, int StartAddr, int Length) => ManualBitRead(id, Slave, 2, StartAddr, Length);
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능 ( Read Coil Status )
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Length">개수</param>
+        public void ManualBitRead_FC1(int id, int Slave, int StartAddr, int Length) => ManualBitRead(id, Slave, 1, StartAddr, Length);
+
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능 ( Read Input Status )
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Length">개수</param>
+        public void ManualBitRead_FC2(int id, int Slave, int StartAddr, int Length) => ManualBitRead(id, Slave, 2, StartAddr, Length);
+        
         private void ManualBitRead(int id, int Slave, byte fn, int StartAddr, int Length)
         {
             byte[] data = new byte[12];
@@ -351,8 +423,24 @@ namespace Devinno.Communications.Modbus.TCP
         }
         #endregion
         #region ManualWordRead
-        public void ManualWordRead_F3(int id, int Slave, int StartAddr, int Length) => ManualWordRead(id, Slave, 3, StartAddr, Length);
-        public void ManualWordRead_F4(int id, int Slave, int StartAddr, int Length) => ManualWordRead(id, Slave, 4, StartAddr, Length);
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능 ( Read Holding Registers ) 
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Length">개수</param>
+        public void ManualWordRead_FC3(int id, int Slave, int StartAddr, int Length) => ManualWordRead(id, Slave, 3, StartAddr, Length);
+
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능 ( Read Input Registers ) 
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Length">개수</param>
+        public void ManualWordRead_FC4(int id, int Slave, int StartAddr, int Length) => ManualWordRead(id, Slave, 4, StartAddr, Length);
+        
         private void ManualWordRead(int id, int Slave, byte fn, int StartAddr, int Length)
         {
             byte[] data = new byte[12];
@@ -374,7 +462,14 @@ namespace Devinno.Communications.Modbus.TCP
         }
         #endregion
         #region ManualBitWrite
-        public void ManualBitWrite(int id, int Slave, int StartAddr, bool val)
+        /// <summary>
+        /// 지정한 국번의 주소에 비트값을 쓰는 기능 ( Force Single Coil )
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="val">값</param>
+        public void ManualBitWrite_FC5(int id, int Slave, int StartAddr, bool val)
         {
             byte[] data = new byte[12];
             int Value = val ? 0xFF00 : 0x0000;
@@ -396,7 +491,14 @@ namespace Devinno.Communications.Modbus.TCP
         }
         #endregion
         #region ManualWordWrite
-        public void ManualWordWrite(int id, int Slave, int StartAddr, int Value)
+        /// <summary>
+        /// 지정한 국번의 주소에 워드값을 쓰는 기능 ( Preset Single Register )
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Value">값</param>
+        public void ManualWordWrite_FC6(int id, int Slave, int StartAddr, int Value)
         {
             byte[] data = new byte[12];
 
@@ -418,7 +520,14 @@ namespace Devinno.Communications.Modbus.TCP
         }
         #endregion
         #region ManualMultiBitWrite
-        public void ManualMultiBitWrite(int id, int Slave, int StartAddr, bool[] Value)
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Force Multiple Coils )
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Value">값</param>
+        public void ManualMultiBitWrite_FC15(int id, int Slave, int StartAddr, bool[] Value)
         {
             int Length = Value.Length / 8;
             Length += (Value.Length % 8 == 0) ? 0 : 1;
@@ -458,7 +567,14 @@ namespace Devinno.Communications.Modbus.TCP
         }
         #endregion
         #region ManualMultiWordWrite
-        public void ManualMultiWordWrite(int id, int Slave, int StartAddr, int[] Value)
+        /// <summary>
+        /// 지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Preset Multiple Registers )
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="Value">값</param>
+        public void ManualMultiWordWrite_FC16(int id, int Slave, int StartAddr, int[] Value)
         {
             byte[] data = new byte[13 + (Value.Length * 2)];
 
@@ -488,7 +604,15 @@ namespace Devinno.Communications.Modbus.TCP
         }
         #endregion
         #region ManualWordBitSet
-        public void ManualWordBitSet(int id, int Slave, int StartAddr, byte BitIndex, bool val)
+        /// <summary>
+        /// 지정한 국번의 주소에 워드의 특정 비트를 쓰는 기능
+        /// </summary>
+        /// <param name="id">메시지 ID</param>
+        /// <param name="Slave">국번</param>
+        /// <param name="StartAddr">국번</param>
+        /// <param name="BitIndex">비트 인덱스</param>
+        /// <param name="val">값</param>
+        public void ManualWordBitSet_FC26(int id, int Slave, int StartAddr, byte BitIndex, bool val)
         {
             byte[] data = new byte[9];
 

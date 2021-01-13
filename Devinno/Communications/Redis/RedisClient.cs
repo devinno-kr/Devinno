@@ -11,8 +11,19 @@ namespace Devinno.Communications.Redis
     public class RedisClient
     {
         #region Properties
+        /// <summary>
+        /// 호스트 주소
+        /// </summary>
         public string Host { get; set; } = "127.0.0.1";
+
+        /// <summary>
+        /// 타임아웃 시간
+        /// </summary>
         public int Timeout { get; set; } = 1000;
+
+        /// <summary>
+        /// 접속 여부
+        /// </summary>
         public bool IsConnected => conn != null && conn.IsConnected;
         #endregion
 

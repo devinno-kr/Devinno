@@ -12,13 +12,39 @@ namespace Devinno.Communications.Modbus.RTU
     public class ModbusRTUSlave
     {
         #region Properties
+        /// <summary>
+        /// 국번
+        /// </summary>
         public int Slave { get; set; } = 1;
+        
+        /// <summary>
+        /// 통신 속도
+        /// </summary>
         public int Baudrate { get => modbus.Baudrate; set => modbus.Baudrate = value; }
+        
+        /// <summary>
+        /// 통신 포트
+        /// </summary>
         public string Port { get => modbus.Port; set => modbus.Port = value; }
+        
+        /// <summary>
+        /// 통신 시작 여부
+        /// </summary>
         public bool IsStart => modbus.IsStart;
+        
+        /// <summary>
+        /// 포트 상태
+        /// </summary>
         public bool IsOpen => modbus.IsOpen;
 
+        /// <summary>
+        /// 비트 영역
+        /// </summary>
         public Dictionary<int, BitMemories> BitAreas { get; } = new Dictionary<int, BitMemories>();
+        
+        /// <summary>
+        /// 워드 영역
+        /// </summary>
         public Dictionary<int, WordMemories> WordAreas { get; } = new Dictionary<int, WordMemories>();
         #endregion
 
@@ -167,8 +193,20 @@ namespace Devinno.Communications.Modbus.RTU
         #endregion
 
         #region Method
+        /// <summary>
+        /// 통신 시작
+        /// </summary>
         public void Start() => modbus.Start();
+
+        /// <summary>
+        /// 지정한 포트 정보로 통신 시작
+        /// </summary>
+        /// <param name="setting"></param>
         public void Start(SerialPortSetting setting) => modbus.Start(setting);
+        
+        /// <summary>
+        /// 통신 정지
+        /// </summary>
         public void Stop() => modbus.Stop();
         #endregion
     }

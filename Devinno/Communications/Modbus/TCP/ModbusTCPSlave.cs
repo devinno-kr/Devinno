@@ -11,11 +11,29 @@ namespace Devinno.Communications.Modbus.TCP
     public class ModbusTCPSlave
     {
         #region Properties
+        /// <summary>
+        /// 국번
+        /// </summary>
         public int Slave { get; set; } = 1;
+        
+        /// <summary>
+        /// TCP 포트
+        /// </summary>
         public int LocalPort { get => modbus.LocalPort; set => modbus.LocalPort = value; }
+        
+        /// <summary>
+        /// 통신 시작 여부
+        /// </summary>
         public bool IsStart => modbus.IsStart;
 
+        /// <summary>
+        /// 비트 영역
+        /// </summary>
         public Dictionary<int, BitMemories> BitAreas { get; } = new Dictionary<int, BitMemories>();
+        
+        /// <summary>
+        /// 워드 영역
+        /// </summary>
         public Dictionary<int, WordMemories> WordAreas { get; } = new Dictionary<int, WordMemories>();
         #endregion
 
@@ -164,7 +182,14 @@ namespace Devinno.Communications.Modbus.TCP
         #endregion
 
         #region Method
+        /// <summary>
+        /// 통신 시작
+        /// </summary>
         public void Start() => modbus.Start();
+        
+        /// <summary>
+        /// 통신 정지
+        /// </summary>
         public void Stop() => modbus.Stop();
         #endregion
     }

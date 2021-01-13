@@ -10,28 +10,47 @@ namespace Devinno.Tools
     public class MathTool
     {
         #region Map
+        /// <summary>
+        /// 비례값 구하기
+        /// </summary>
+        /// <param name="val">현재값</param>
+        /// <param name="min">현재 최소값</param>
+        /// <param name="max">현재 최대값</param>
+        /// <param name="convert_min">비례 최소값</param>
+        /// <param name="convert_max">비례 최대값</param>
+        /// <returns>비례값</returns>
+        public static long Map(long val, long min, long max, long convert_min, long convert_max)
+        {
+            long ret = 0;
+            if ((max - min) != 0) ret = (val - min) * (convert_max - convert_min) / (max - min) + convert_min;
+            return ret;
+        }
+
+        /// <summary>
+        /// 비례값 구하기
+        /// </summary>
+        /// <param name="val">현재값</param>
+        /// <param name="min">현재 최소값</param>
+        /// <param name="max">현재 최대값</param>
+        /// <param name="convert_min">비례 최소값</param>
+        /// <param name="convert_max">비례 최대값</param>
+        /// <returns>비례값</returns>
         public static double Map(double val, double min, double max, double convert_min, double convert_max)
         {
             double ret = 0;
             if ((max - min) != 0) ret = (val - min) * (convert_max - convert_min) / (max - min) + convert_min;
             return ret;
         }
-        public static decimal Map(decimal val, decimal min, decimal max, decimal convert_min, decimal convert_max)
-        {
-            decimal ret = 0;
-            if ((max - min) != 0) ret = (val - min) * (convert_max - convert_min) / (max - min) + convert_min;
-            return ret;
-        }
         #endregion
+
         #region Constrain
-        public static double Constrain(double val, double min, double max)
-        {
-            double ret = val;
-            if (ret < min) ret = min;
-            if (ret > max) ret = max;
-            if (min > max) ret = min;
-            return ret;
-        }
+        /// <summary>
+        /// 제한값 구하기
+        /// </summary>
+        /// <param name="val">현재값</param>
+        /// <param name="min">최소값</param>
+        /// <param name="max">최대값</param>
+        /// <returns>제한값</returns>
         public static long Constrain(long val, long min, long max)
         {
             long ret = val;
@@ -40,35 +59,78 @@ namespace Devinno.Tools
             if (min > max) ret = min;
             return ret;
         }
-        public static decimal Constrain(decimal val, decimal min, decimal max)
+
+        /// <summary>
+        /// 제한값 구하기
+        /// </summary>
+        /// <param name="val">현재값</param>
+        /// <param name="min">최소값</param>
+        /// <param name="max">최대값</param>
+        /// <returns>제한값</returns>
+        public static double Constrain(double val, double min, double max)
         {
-            decimal ret = val;
+            double ret = val;
             if (ret < min) ret = min;
             if (ret > max) ret = max;
             if (min > max) ret = min;
             return ret;
         }
         #endregion
+
         #region GetAngle
+        /// <summary>
+        /// 시작점에서 끝점의 각도
+        /// </summary>
+        /// <param name="from">시작점</param>
+        /// <param name="to">끝점</param>
+        /// <returns>각독</returns>
         public static double GetAngle(Point from, Point to)
         {
             return Math.Atan2(to.Y - from.Y, to.X - from.X) * 180.0 / Math.PI;
         }
+
+        /// <summary>
+        /// 시작점에서 끝점의 각도
+        /// </summary>
+        /// <param name="from">시작점</param>
+        /// <param name="to">끝점</param>
+        /// <returns>각독</returns>
         public static double GetAngle(PointF from, PointF to)
         {
             return Math.Atan2(to.Y - from.Y, to.X - from.X) * 180.0 / Math.PI;
         }
         #endregion
+
         #region GetDistance
+        /// <summary>
+        /// 두 점 사이 거리
+        /// </summary>
+        /// <param name="a">점 1</param>
+        /// <param name="b">점 2</param>
+        /// <returns>거리</returns>
         public static double GetDistance(Point a, Point b)
         {
             return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
         }
+
+        /// <summary>
+        /// 두 점 사이 거리
+        /// </summary>
+        /// <param name="a">점 1</param>
+        /// <param name="b">점 2</param>
+        /// <returns>거리</returns>
         public static double GetDistance(PointF a, PointF b)
         {
             return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
         }
 
+        /// <summary>
+        /// 선분과 한 점 사이 거리
+        /// </summary>
+        /// <param name="LN1">선분 시작점</param>
+        /// <param name="LN2">선분 끝점</param>
+        /// <param name="pt">점</param>
+        /// <returns>거리</returns>
         public static double GetDistance(PointF LN1, PointF LN2, PointF pt)
         {
             double a, b, c, d;
@@ -99,7 +161,16 @@ namespace Devinno.Tools
             d = Math.Abs((double)(rM * (double)pt.X - (double)pt.Y + C)) / Math.Sqrt(Math.Pow(rM, 2) + 1);
             return d;
         }
-
+        /// <summary>
+        /// 3차원 상 두점의 거리 구하기
+        /// </summary>
+        /// <param name="x1">점1 X</param>
+        /// <param name="y1">점1 Y</param>
+        /// <param name="z1">점1 Z</param>
+        /// <param name="x2">점2 X</param>
+        /// <param name="y2">점2 Y</param>
+        /// <param name="z2">점2 Z</param>
+        /// <returns></returns>
         public static double GetDistance(double x1, double y1, double z1, double x2, double y2, double z2)
         {
             double dx = x2 - x1;
@@ -109,26 +180,21 @@ namespace Devinno.Tools
             return Math.Sqrt(dx * dx + dy * dy * dz * dz);
         }
 
-        public static double GetDistanceN(double[] first, double[] second)
+        public static double GetDistance(double[] first, double[] second)
         {
             var sum = first.Select((x, i) => (x - second[i]) * (x - second[i])).Sum();
             return Math.Sqrt(sum);
         }
         #endregion
 
-        #region AbsRectangle
-        public static RectangleF AbsRectangle(RectangleF rt) { return AbsRectangle(rt.Left, rt.Right, rt.Top, rt.Bottom); }
-        public static RectangleF AbsRectangle(float Left, float Right, float Top, float Bottom)
-        {
-            var Width = Math.Abs(Right - Left);
-            var Height = Math.Abs(Bottom - Top);
-            var X = Math.Max(Left, Right) - Width;
-            var Y = Math.Max(Top, Bottom) - Height;
-            return new RectangleF(X, Y, Width, Height);
-        }
-        #endregion
-
         #region RotatePoint
+        /// <summary>
+        /// 한 점을 중점을 기준으로 회전 시켰을때 좌표 
+        /// </summary>
+        /// <param name="Center">중점</param>
+        /// <param name="Target">점</param>
+        /// <param name="angle">회전각</param>
+        /// <returns>회전 좌표</returns>
         public static PointF RotatePoint(PointF Center, PointF Target, float angle)
         {
             double angleInRadians = angle * (Math.PI / 180);
@@ -141,40 +207,52 @@ namespace Devinno.Tools
             };
         }
         #endregion
+
         #region CenterPoint
         #region CenterPoint ( Rectangle )
+        /// <summary>
+        /// 사각형의 중점 구하기
+        /// </summary>
+        /// <param name="rt">사각형</param>
+        /// <returns>중심 좌표</returns>
         public static Point CenterPoint(Rectangle rt)
         {
             return new Point(rt.X + rt.Width / 2, rt.Y + rt.Height / 2);
         }
 
+        /// <summary>
+        /// 사각형의 중점 구하기
+        /// </summary>
+        /// <param name="rt">사각형</param>
+        /// <returns>중심 좌표</returns>
         public static PointF CenterPoint(RectangleF rt)
         {
             return new PointF(rt.X + rt.Width / 2F, rt.Y + rt.Height / 2F);
         }
         #endregion
         #region CenterPoint ( p1, p2 )
-        public static Point CenterPoint(Point p1, Point p2)
-        {
-            return new Point((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
-        }
+        /// <summary>
+        /// 두 점 사이 중점 구하기
+        /// </summary>
+        /// <param name="p1">점 1</param>
+        /// <param name="p2">점 2</param>
+        /// <returns>중심 좌표</returns>
+        public static Point CenterPoint(Point p1, Point p2) => new Point((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
 
-        public static PointF CenterPoint(PointF p1, PointF p2)
-        {
-            return new PointF((p1.X + p2.X) / 2F, (p1.Y + p2.Y) / 2F);
-        }
+        /// <summary>
+        /// 두 점 사이 중점 구하기
+        /// </summary>
+        /// <param name="p1">점 1</param>
+        /// <param name="p2">점 2</param>
+        /// <returns>중심 좌표</returns>
+        public static PointF CenterPoint(PointF p1, PointF p2) => new PointF((p1.X + p2.X) / 2F, (p1.Y + p2.Y) / 2F);
         #endregion
         #region CenterPoint ( List<Point> )
-        /*
-        public static PointF CenterPoint(IEnumerable<PointF> pts)
-        {
-            var x1 = pts.Min(x => x.X);
-            var y1 = pts.Min(x => x.Y);
-            var x2 = pts.Max(x => x.X);
-            var y2 = pts.Max(x => x.Y);
-            return new PointF(x1 + ((x2 - x1) / 2F), y1 + ((y2 / y1) / 2F));
-        }
-        */
+        /// <summary>
+        /// 지정한 좌표들의 중심 좌표 구하기
+        /// </summary>
+        /// <param name="sourceList">좌표 리스트</param>
+        /// <returns>중심 좌표</returns>
         public PointF CenterPoint(List<PointF> sourceList)
         {
             float centerX = 0F;
@@ -213,22 +291,29 @@ namespace Devinno.Tools
             centerY *= factor;
 
             return new PointF(centerX, centerY);
-
         }
         #endregion
         #endregion
+
         #region MakeRectangle
         #region MakeRectangle ( Rectangle Center )
         /// <summary>
-        /// rect 중심 기준 sz 크기의 사각형 생성
+        /// 지정한 사각형 중심 기준으로 지정한 크기의 사각형 생성
         /// </summary>
-        /// <param name="rect"></param>
-        /// <param name="size"></param>
-        /// <returns></returns>
+        /// <param name="rect">사각형</param>
+        /// <param name="size">생성할 사각형 크기</param>
+        /// <returns>생성한 사각형</returns>
         public static Rectangle MakeRectangle(Rectangle rect, Size size)
         {
             return new Rectangle(rect.X + (rect.Width / 2) - (size.Width / 2), rect.Y + (rect.Height / 2) - (size.Height / 2), size.Width, size.Height);
         }
+
+        /// <summary>
+        /// 지정한 사각형 중심 기준으로 지정한 크기의 사각형 생성
+        /// </summary>
+        /// <param name="rect">사각형</param>
+        /// <param name="size">생성할 사각형 크기</param>
+        /// <returns>생성한 사각형</returns>
         public static RectangleF MakeRectangle(RectangleF rect, SizeF size)
         {
             return new RectangleF(rect.X + (rect.Width / 2F) - (size.Width / 2F), rect.Y + (rect.Height / 2F) - (size.Height / 2F), size.Width, size.Height);
@@ -236,11 +321,11 @@ namespace Devinno.Tools
         #endregion
         #region MakeRectangle ( Two Point )
         /// <summary>
-        /// 두점을 기준으로 사각형 생성
+        /// 두 점을 기준으로 사각형 생성
         /// </summary>
-        /// <param name="pt1"></param>
-        /// <param name="pt2"></param>
-        /// <returns></returns>
+        /// <param name="pt1">점 1</param>
+        /// <param name="pt2">점 2</param>
+        /// <returns>생성한 사각형</returns>
         public static Rectangle MakeRectangle(Point pt1, Point pt2)
         {
             int minx = Math.Min(pt1.X, pt2.X);
@@ -253,6 +338,12 @@ namespace Devinno.Tools
 
             return new Rectangle(minx, miny, rx, ry);
         }
+        /// <summary>
+        /// 두 점을 기준으로 사각형 생성
+        /// </summary>
+        /// <param name="pt1">점 1</param>
+        /// <param name="pt2">점 2</param>
+        /// <returns>생성한 사각형</returns>
         public static RectangleF MakeRectangle(PointF pt1, PointF pt2)
         {
             var minx = Math.Min(pt1.X, pt2.X);
@@ -267,6 +358,11 @@ namespace Devinno.Tools
         }
         #endregion
         #region MakeRectangle ( Points ) 
+        /// <summary>
+        /// 지정한 좌표들을 포함하는 사각형 생성
+        /// </summary>
+        /// <param name="pts">좌표 리스트</param>
+        /// <return>생성한 사각형</return>
         public static RectangleF MakeRectangle(IEnumerable<Point> pts)
         {
             if (pts.Count() >= 2)
@@ -281,48 +377,150 @@ namespace Devinno.Tools
 
                 return new RectangleF(minx, miny, rx, ry);
             }
-            else throw new Exception("POINTS LENGTH < 2");
+            else throw new Exception("POINTS 개수가 2개 미만입니다.");
         }
         #endregion
         #region MakeRectangle ( Center Point )
+        /// <summary>
+        /// 지정한 점을 기준으로 지정한 크기의 정사각형 생성
+        /// </summary>
+        /// <param name="pt">점</param>
+        /// <param name="Size">크기</param>
+        /// <returns>생성한 사각형</returns>
         public static Rectangle MakeRectangle(Point pt, int Size) { return new Rectangle(pt.X - (Size / 2), pt.Y - (Size / 2), Size, Size); }
+        
+        /// <summary>
+        /// 지정한 점을 기준으로 지정한 크기의 정사각형 생성
+        /// </summary>
+        /// <param name="pt">점</param>
+        /// <param name="Size">크기</param>
+        /// <returns>생성한 사각형</returns>
         public static RectangleF MakeRectangle(PointF pt, float Size) { return new RectangleF(pt.X - (Size / 2F), pt.Y - (Size / 2F), Size, Size); }
 
+        /// <summary>
+        /// 지정한 점을 기준으로 지정한 넓이와 높이의 사각형 생성
+        /// </summary>
+        /// <param name="pt">점</param>
+        /// <param name="rWIdth">넓이</param>
+        /// <param name="rHeight">높이</param>
+        /// <returns>생성한 사각형</returns>
         public static Rectangle MakeRectangle(Point pt, int rWIdth, int rHeight) { return new Rectangle(pt.X - rWIdth, pt.Y - rHeight, rWIdth * 2, rHeight * 2); }
+
+        /// <summary>
+        /// 지정한 점을 기준으로 지정한 넓이와 높이의 사각형 생성
+        /// </summary>
+        /// <param name="pt">점</param>
+        /// <param name="rWIdth">넓이</param>
+        /// <param name="rHeight">높이</param>
+        /// <returns>생성한 사각형</returns>
         public static RectangleF MakeRectangle(PointF pt, float rWIdth, float rHeight) { return new RectangleF(pt.X - rWIdth, pt.Y - rHeight, rWIdth * 2F, rHeight * 2F); }
 
+        /// <summary>
+        /// 지정한 점을 기준으로 지정한 크기의 정사각형 생성
+        /// </summary>
+        /// <param name="X">점 X좌표</param>
+        /// <param name="Y">점 Y좌표</param>
+        /// <param name="Size">크기</param>
+        /// <returns>생성한 사각형</returns>
         public static Rectangle MakeRectangle(int X, int Y, int Size) { return new Rectangle(X - (Size / 2), Y - (Size / 2), Size, Size); }
+
+        /// <summary>
+        /// 지정한 점을 기준으로 지정한 크기의 정사각형 생성
+        /// </summary>
+        /// <param name="X">점 X좌표</param>
+        /// <param name="Y">점 Y좌표</param>
+        /// <param name="Size">크기</param>
+        /// <returns>생성한 사각형</returns>
         public static RectangleF MakeRectangle(float X, float Y, float Size) { return new RectangleF(X - (Size / 2F), Y - (Size / 2F), Size, Size); }
         #endregion
         #endregion
 
         #region GetPoints
+        /// <summary>
+        /// 사각형의 네 점 반환
+        /// </summary>
+        /// <param name="rt">사각형</param>
+        /// <returns>네 점</returns>
         public static PointF[] GetPoints(RectangleF rt)
         {
             return new PointF[] { new PointF(rt.Left, rt.Top), new PointF(rt.Right, rt.Top), new PointF(rt.Right, rt.Bottom), new PointF(rt.Left, rt.Bottom) };
         }
         #endregion
+
         #region GetPoint
+        /// <summary>
+        /// 지정한 점의 지정한 각도로 지정한 거리의 좌표   
+        /// </summary>
+        /// <param name="p">점</param>
+        /// <param name="angle">각도</param>
+        /// <param name="dist">거리</param>
+        /// <returns>좌표</returns>
         public static PointF GetPointWithAngle(PointF p, float angle, float dist)
         {
             float x = GetX_WithAngle(p, angle, dist);
             float y = GetY_WithAngle(p, angle, dist);
             return new PointF(x, y);
         }
-        public static float GetX_WithAngle(PointF p, float angle, float dist) { return p.X + dist * Convert.ToSingle(Math.Cos(angle * Math.PI / 180.0)); }
-        public static float GetY_WithAngle(PointF p, float angle, float dist) { return p.Y + dist * Convert.ToSingle(Math.Sin(angle * Math.PI / 180.0)); }
 
+        /// <summary>
+        /// 지정한 점의 지정한 각도로 지정한 거리의 좌표   
+        /// </summary>
+        /// <param name="p">점</param>
+        /// <param name="angle">각도</param>
+        /// <param name="dist">거리</param>
+        /// <returns>좌표</returns>
         public static PointF GetPointWithAngle(Point p, float angle, float dist)
         {
             float x = GetX_WithAngle(p, angle, dist);
             float y = GetY_WithAngle(p, angle, dist);
             return new PointF(x, y);
         }
+
+        /// <summary>
+        /// 지정한 점의 지정한 각도로 지정한 거리의 X좌표 
+        /// </summary>
+        /// <param name="p">점</param>
+        /// <param name="angle">각도</param>
+        /// <param name="dist">거리</param>
+        /// <returns>x 좌표</returns>
+        public static float GetX_WithAngle(PointF p, float angle, float dist) { return p.X + dist * Convert.ToSingle(Math.Cos(angle * Math.PI / 180.0)); }
+
+        /// <summary>
+        /// 지정한 점의 지정한 각도로 지정한 거리의 Y좌표 
+        /// </summary>
+        /// <param name="p">점</param>
+        /// <param name="angle">각도</param>
+        /// <param name="dist">거리</param>
+        /// <returns>Y 좌표</returns>
+        public static float GetY_WithAngle(PointF p, float angle, float dist) { return p.Y + dist * Convert.ToSingle(Math.Sin(angle * Math.PI / 180.0)); }
+
+        /// <summary>
+        /// 지정한 점의 지정한 각도로 지정한 거리의 X좌표 
+        /// </summary>
+        /// <param name="p">점</param>
+        /// <param name="angle">각도</param>
+        /// <param name="dist">거리</param>
+        /// <returns>X 좌표</returns>
         public static float GetX_WithAngle(Point p, float angle, float dist) { return p.X + dist * Convert.ToSingle(Math.Cos(angle * Math.PI / 180.0)); }
+
+        /// <summary>
+        /// 지정한 점의 지정한 각도로 지정한 거리의 Y좌표 
+        /// </summary>
+        /// <param name="p">점</param>
+        /// <param name="angle">각도</param>
+        /// <param name="dist">거리</param>
+        /// <returns>Y 좌표</returns>
         public static float GetY_WithAngle(Point p, float angle, float dist) { return p.Y + dist * Convert.ToSingle(Math.Sin(angle * Math.PI / 180.0)); }
         #endregion
 
         #region LinearEquation
+        /// <summary>
+        /// 두 점을 지나는 직선의 X좌표가 주어졌을시 Y좌표의 값
+        /// </summary>
+        /// <param name="p1">점 1</param>
+        /// <param name="p2">점 2</param>
+        /// <param name="x">X 좌표</param>
+        /// <returns>Y좌표</returns>
         public static float LinearEquationY(PointF p1, PointF p2, float x)
         {
             float x1 = p1.X, x2 = p2.X, y1 = p1.Y, y2 = p2.Y;
@@ -333,6 +531,13 @@ namespace Devinno.Tools
             return y;
         }
 
+        /// <summary>
+        /// 두 점을 지나는 직선의 Y좌표가 주어졌을시 X좌표의 값
+        /// </summary>
+        /// <param name="p1">점 1</param>
+        /// <param name="p2">점 2</param>
+        /// <param name="x">Y 좌표</param>
+        /// <returns>X좌표</returns>
         public static float LinearEquationX(PointF p1, PointF p2, float y)
         {
             float x1 = p1.X, x2 = p2.X, y1 = p1.Y, y2 = p2.Y;
