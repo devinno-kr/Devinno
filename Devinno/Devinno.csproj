@@ -3,10 +3,14 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/devinno-kr/devinno</PackageProjectUrl>
-    <PackageTags>Modbus, CNet</PackageTags>
+    <PackageProjectUrl>https://github.com/devinno-kr/Devinno</PackageProjectUrl>
+    <PackageTags></PackageTags>
     <RepositoryUrl></RepositoryUrl>
     <Version>1.0.0</Version>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Authors>hy75212</Authors>
+    <Product>Devinno</Product>
+    <Company>Devinno</Company>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +24,13 @@
     <PackageReference Include="System.IO.Ports" Version="5.0.0" />
     <PackageReference Include="System.Management" Version="5.0.0" />
     <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
