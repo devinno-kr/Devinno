@@ -1,0 +1,1495 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Devinno</name>
+    </assembly>
+    <members>
+        <member name="E:Devinno.Collections.EventList`1.Changed">
+            <summary>
+            리스트 내용 변경 시 발생하는 이벤트
+            </summary>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.Add(`0)">
+            <summary>
+            아이템 추가
+            </summary>
+            <param name="item">아이템</param>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.AddRange(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            아이템 컬렉션 추가
+            </summary>
+            <param name="collection">아이템 컬렉션</param>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.Clear">
+            <summary>
+            리스트 비우기
+            </summary>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.Insert(System.Int32,`0)">
+            <summary>
+            지정한 인덱스에 아이템 삽입
+            </summary>
+            <param name="index">인덱스</param>
+            <param name="item">아이템</param>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.InsertRange(System.Int32,System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            지정한 인덱스에 아이템 컬렉션 삽입
+            </summary>
+            <param name="index">인덱스</param>
+            <param name="collection">아이템 컬렉션</param>        
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.Remove(`0)">
+            <summary>
+            아이템 삭제
+            </summary>
+            <param name="item">아이템</param>
+            <returns>삭제 여부</returns>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.RemoveAll(System.Predicate{`0})">
+            <summary>
+            조건의 일치하는 아이템 삭제
+            </summary>
+            <param name="match">조건</param>
+            <returns>제거된 아이템 수</returns>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.RemoveAt(System.Int32)">
+            <summary>
+            지정한 인덱스의 아이템 삭제
+            </summary>
+            <param name="index">인덱스</param>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.RemoveRange(System.Int32,System.Int32)">
+            <summary>
+            지정한 범위의 아이템 삭제
+            </summary>
+            <param name="index">인덱스</param>
+            <param name="count">개수</param>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.Reverse(System.Int32,System.Int32)">
+            <summary>
+            지정한 범위의 아이템 순서 반전
+            </summary>
+            <param name="index">인덱스</param>
+            <param name="count">개수</param>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.Reverse">
+            <summary>
+            리스트의 아이템 순서 반전
+            </summary>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.Sort(System.Int32,System.Int32,System.Collections.Generic.IComparer{`0})">
+            <summary>
+            지정한 범위의 비교자를 기준으로 아이템 정렬 
+            </summary>
+            <param name="index">인덱스</param>
+            <param name="count">범위</param>
+            <param name="comparer">비교자</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Devinno.Collections.EventList`1.Sort(System.Comparison{`0})" -->
+        <member name="M:Devinno.Collections.EventList`1.Sort">
+            <summary>
+            아이템 정렬
+            </summary>
+        </member>
+        <member name="M:Devinno.Collections.EventList`1.Sort(System.Collections.Generic.IComparer{`0})">
+            <summary>
+            비교자를 기준으로 아이템 정렬
+            </summary>
+            <param name="comparer">비교자</param>
+        </member>
+        <member name="P:Devinno.Communications.LS.CNet.Baudrate">
+            <summary>
+            통신 속도
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.LS.CNet.Port">
+            <summary>
+            통신 포트
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.LS.CNet.IsOpen">
+            <summary>
+            포트 상태
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.LS.CNet.AutoStart">
+            <summary>
+            자동 시작
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.Start(Devinno.Communications.Setting.SerialPortSetting)">
+            <summary>
+            지정한 포트 정보로 통신 시작
+            </summary>
+            <param name="data">포트 정보</param>
+            <returns>시작 여부</returns>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.Start">
+            <summary>
+            통신 시작
+            </summary>
+            <returns>시작 여부</returns>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.Stop">
+            <summary>
+            통신 정지
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.AutoRSS(System.Int32,System.Int32,System.String)">
+            <summary>
+            지정한 국번의 주소에 값을 자동으로 읽어오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.AutoRSS(System.Int32,System.Int32,System.String[])">
+            <summary>
+            지정한 국번의 복수개 주소에 값을 자동으로 읽어오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="devices">복수개 주소</param>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.AutoRSB(System.Int32,System.Int32,System.String,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 값을 자동으로 읽어오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.ManualRSS(System.Int32,System.Int32,System.String)">
+            <summary>
+            지정한 국번의 주소에 값을 읽어오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.ManualRSS(System.Int32,System.Int32,System.String[])">
+            <summary>
+            지정한 국번의 복수개 주소에 값을 읽어오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="devices">복수개 주소</param>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.ManualRSB(System.Int32,System.Int32,System.String,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 값을 읽어오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.ManualWSS(System.Int32,System.Int32,System.String,System.Int32)">
+            <summary>
+            지정한 국번의 주소에 값을 쓰는 기능 등록
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="value">값</param>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.ManualWSS(System.Int32,System.Int32,Devinno.Communications.LS.CNetValue[])">
+            <summary>
+            지정한 국번의 복수개 주소에 값을 쓰는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="values">복수개 주소와 값</param>
+        </member>
+        <member name="M:Devinno.Communications.LS.CNet.ManualWSB(System.Int32,System.Int32,System.String,System.Int32[])">
+            <summary>
+            지정한 국번의 연속되는 주소에 값을 쓰는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="values">복수개 값</param>
+        </member>
+        <member name="P:Devinno.Communications.Mitsubishi.MC.UseControlSequence">
+            <summary>
+            흐름제어 사용여부
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Mitsubishi.MC.UseCheckSum">
+            <summary>
+            체크섬 사용여부
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Mitsubishi.MC.Baudrate">
+            <summary>
+            통신 속도
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Mitsubishi.MC.Port">
+            <summary>
+            통신 포트
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Mitsubishi.MC.IsOpen">
+            <summary>
+            포트 상태
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Mitsubishi.MC.AutoStart">
+            <summary>
+            자동 시작
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.Start(Devinno.Communications.Setting.SerialPortSetting)">
+            <summary>
+            지정한 포트 정보로 통신 시작
+            </summary>
+            <param name="data">포트 정보</param>
+            <returns>시작 여부</returns>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.Start">
+            <summary>
+            통신 시작
+            </summary>
+            <returns>시작 여부</returns>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.Stop">
+            <summary>
+            통신 정지
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.AutoBitRead(System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어 오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="length">개수</param>
+            <param name="waitTime">응답 대기 시간</param>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.AutoWordRead(System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="length">개수</param>
+            <param name="waitTime">응답 대기 시간</param>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualBitRead(System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="length">개수</param>
+            <param name="waitTime">응답 대기 시간</param>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualBitWrite(System.Int32,System.Int32,System.String,System.Boolean,System.Int32)">
+            <summary>
+            지정한 국번의 주소에 비트값을 쓰는 기능 
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="value">값</param>
+            <param name="waitTime">응답 대기 시간</param>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualBitWrite(System.Int32,System.Int32,System.String,System.Boolean[],System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 쓰는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="value">값</param>
+            <param name="waitTime">응답 대기 시간</param>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualWordRead(System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="length">개수</param>
+            <param name="waitTime">응답 대기 시간</param>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualWordWrite(System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 주소에 워드값을 쓰는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="value">값</param>
+            <param name="waitTime">응답 대기 시간</param>
+        </member>
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualWordWrite(System.Int32,System.Int32,System.String,System.Int32[],System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 쓰는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="slave">국번</param>
+            <param name="device">주소</param>
+            <param name="value">값</param>
+            <param name="waitTime">응답 대기 시간</param>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.Baudrate">
+            <summary>
+            통신 속도
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.Port">
+            <summary>
+            통신 포트
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.IsOpen">
+            <summary>
+            포트 상태
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.AutoStart">
+            <summary>
+            자동 시작
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.Start(Devinno.Communications.Setting.SerialPortSetting)">
+            <summary>
+            지정한 포트 정보로 통신 시작
+            </summary>
+            <param name="data">포트 정보</param>
+            <returns>시작 여부</returns>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.Start">
+            <summary>
+            통신 시작
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.Stop">
+            <summary>
+            통신 정지
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.AutoBitRead_FC1(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어오는 기능 ( Read Coil Status )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.AutoBitRead_FC2(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어오는 기능 ( Read Input Status )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.AutoWordRead_FC3(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능 ( Read Holding Registers )  
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.AutoWordRead_FC4(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능 ( Read Input Registers )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualBitRead_FC1(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능 ( Read Coil Status )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualBitRead_FC2(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능 ( Read Input Status )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualWordRead_FC3(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능 ( Read Holding Registers ) 
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualWordRead_FC4(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능 ( Read Input Registers ) 
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualBitWrite_FC5(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            지정한 국번의 주소에 비트값을 쓰는 기능 ( Force Single Coil )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="val">값</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualWordWrite_FC6(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 주소에 워드값을 쓰는 기능 ( Preset Single Register )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Value">값</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualMultiBitWrite_FC15(System.Int32,System.Int32,System.Int32,System.Boolean[])">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Force Multiple Coils )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Value">값</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualMultiWordWrite_FC16(System.Int32,System.Int32,System.Int32,System.Int32[])">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Preset Multiple Registers )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Value">값</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualWordBitSet_FC26(System.Int32,System.Int32,System.Int32,System.Byte,System.Boolean)">
+            <summary>
+            지정한 국번의 주소에 워드의 특정 비트를 쓰는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="BitIndex">비트 인덱스</param>
+            <param name="val">값</param>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.Slave">
+            <summary>
+            국번
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.Baudrate">
+            <summary>
+            통신 속도
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.Port">
+            <summary>
+            통신 포트
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.IsStart">
+            <summary>
+            통신 시작 여부
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.IsOpen">
+            <summary>
+            포트 상태
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.BitAreas">
+            <summary>
+            비트 영역
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.WordAreas">
+            <summary>
+            워드 영역
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.Start">
+            <summary>
+            통신 시작
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.Start(Devinno.Communications.Setting.SerialPortSetting)">
+            <summary>
+            지정한 포트 정보로 통신 시작
+            </summary>
+            <param name="setting"></param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.Stop">
+            <summary>
+            통신 정지
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.RemoteIP">
+            <summary>
+            원격지 주소
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.RemotePort">
+            <summary>
+            원격지 포트
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.IsOpen">
+            <summary>
+            소켓 상태
+            </summary>        
+        </member>
+        <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.AutoStart">
+            <summary>
+            자동 시작
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.Start">
+            <summary>
+            통신 시작
+            </summary>
+            <returns>시작 여부</returns>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.Stop">
+            <summary>
+            통신 정지
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.AutoBitRead_FC1(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어오는 기능 ( Read Coil Status )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.AutoBitRead_FC2(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어오는 기능 ( Read Input Status )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.AutoWordRead_FC3(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능 ( Read Holding Registers )  
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.AutoWordRead_FC4(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능 ( Read Input Registers )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualBitRead_FC1(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능 ( Read Coil Status )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualBitRead_FC2(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능 ( Read Input Status )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualWordRead_FC3(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능 ( Read Holding Registers ) 
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualWordRead_FC4(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능 ( Read Input Registers ) 
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Length">개수</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualBitWrite_FC5(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            지정한 국번의 주소에 비트값을 쓰는 기능 ( Force Single Coil )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="val">값</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualWordWrite_FC6(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 국번의 주소에 워드값을 쓰는 기능 ( Preset Single Register )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Value">값</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualMultiBitWrite_FC15(System.Int32,System.Int32,System.Int32,System.Boolean[])">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Force Multiple Coils )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Value">값</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualMultiWordWrite_FC16(System.Int32,System.Int32,System.Int32,System.Int32[])">
+            <summary>
+            지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Preset Multiple Registers )
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="Value">값</param>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualWordBitSet_FC26(System.Int32,System.Int32,System.Int32,System.Byte,System.Boolean)">
+            <summary>
+            지정한 국번의 주소에 워드의 특정 비트를 쓰는 기능
+            </summary>
+            <param name="id">메시지 ID</param>
+            <param name="Slave">국번</param>
+            <param name="StartAddr">국번</param>
+            <param name="BitIndex">비트 인덱스</param>
+            <param name="val">값</param>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPSlave.Slave">
+            <summary>
+            국번
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPSlave.LocalPort">
+            <summary>
+            TCP 포트
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPSlave.IsStart">
+            <summary>
+            통신 시작 여부
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPSlave.BitAreas">
+            <summary>
+            비트 영역
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPSlave.WordAreas">
+            <summary>
+            워드 영역
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPSlave.Start">
+            <summary>
+            통신 시작
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPSlave.Stop">
+            <summary>
+            통신 정지
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Mqtt.MQClient.BrokerHostName">
+            <summary>
+            브로커 주소
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Mqtt.MQClient.IsStart">
+            <summary>
+            통신 시작 여부
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Mqtt.MQClient.IsConnected">
+            <summary>
+            브로커 접속 여부
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Mqtt.MQClient.SubscribeArray">
+            <summary>
+            구독중인 토픽
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Start(System.String)">
+            <summary>
+            통신 시작
+            </summary>
+            <param name="ClientID">클라이언트 ID</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Start(System.String,System.String,System.String)">
+            <summary>
+            통신 시작
+            </summary>
+            <param name="ClientID">클라이언트 ID</param>
+            <param name="UserName">사용자 이름</param>
+            <param name="Password">암호</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Stop">
+            <summary>
+            통신 정지
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Publish(System.String,System.Byte[])">
+            <summary>
+            메시지 발행
+            </summary>
+            <param name="Topic">토픽</param>
+            <param name="Data">byte[] 데이터</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Publish(System.String,System.String)">
+            <summary>
+            메시지 발행
+            </summary>
+            <param name="Topic">토픽</param>
+            <param name="Data">string 데이터</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Publish(System.String,System.Object)">
+            <summary>
+            메시지 발행
+            </summary>
+            <param name="Topic">토픽</param>
+            <param name="Data">Object 데이터</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Subscribe(Devinno.Communications.Mqtt.MQSubscribe)">
+            <summary>
+            메시지 구독
+            </summary>
+            <param name="Sub">구독 정보</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Subscribe(System.String)">
+            <summary>
+            메시지 구독
+            </summary>
+            <param name="Topic">토픽</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Subscribe(System.String,Devinno.Communications.Mqtt.MQQos)">
+            <summary>
+            메시지 구독
+            </summary>
+            <param name="Topic">토픽</param>
+            <param name="Qos">Qos</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Subscribe(System.String,System.Type)">
+            <summary>
+            메시지 구독
+            </summary>
+            <param name="Topic"></param>
+            <param name="ParseType"></param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Subscribe(System.String,Devinno.Communications.Mqtt.MQQos,System.Type)">
+            <summary>
+            메시지 구독
+            </summary>
+            <param name="Topic">토픽</param>
+            <param name="Qos">Qos</param>
+            <param name="ParseType">변환 타입</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Subscribe``1(System.String)">
+            <summary>
+            메시지 구독
+            </summary>
+            <typeparam name="T">변환 타입</typeparam>
+            <param name="Topic">토픽</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Subscribe``1(System.String,Devinno.Communications.Mqtt.MQQos)">
+            <summary>
+            메시지 구독
+            </summary>
+            <typeparam name="T">변환 타입</typeparam>
+            <param name="Topic">토픽</param>
+            <param name="Qos">Qos</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Unsubscribe(System.String)">
+            <summary>
+            구독 해지
+            </summary>
+            <param name="Topic">토픽</param>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.UnsubscribeClear">
+            <summary>
+            구독 전체 해지
+            </summary>
+        </member>
+        <member name="M:Devinno.Communications.Mqtt.MQClient.Test(System.String,System.String)">
+            <summary>
+            브로커 접속 테스트
+            </summary>
+            <param name="BrokerIP">브로커 주소</param>
+            <param name="ClientID">클라이언트 ID</param>
+            <returns>테스트 결과</returns>
+        </member>
+        <member name="P:Devinno.Communications.Redis.RedisClient.Host">
+            <summary>
+            호스트 주소
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Redis.RedisClient.Timeout">
+            <summary>
+            타임아웃 시간
+            </summary>
+        </member>
+        <member name="P:Devinno.Communications.Redis.RedisClient.IsConnected">
+            <summary>
+            접속 여부
+            </summary>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.Check(System.Drawing.Rectangle,System.Drawing.Point)">
+            <summary>
+            사각형과 한 점간 충돌체크
+            </summary>
+            <param name="rt">사각형</param>
+            <param name="pt">좌표</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.Check(System.Drawing.Rectangle,System.Drawing.PointF)">
+            <summary>
+            사각형과 한 점간 충돌체크
+            </summary>
+            <param name="rt">사각형</param>
+            <param name="pt">좌표</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.Check(System.Drawing.RectangleF,System.Drawing.Point)">
+            <summary>
+            사각형과 한 점간 충돌체크
+            </summary>
+            <param name="rt">사각형</param>
+            <param name="pt">좌표</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.Check(System.Drawing.RectangleF,System.Drawing.PointF)">
+            <summary>
+            사각형과 한 점간 충돌체크
+            </summary>
+            <param name="rt">사각형</param>
+            <param name="pt">좌표</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.Check(System.Drawing.RectangleF,System.Single,System.Single)">
+            <summary>
+            사각형과 한 점간 충돌체크
+            </summary>
+            <param name="rt">사각형</param>
+            <param name="x">좌표 X</param>
+            <param name="y">좌표 Y</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.Check(System.Drawing.RectangleF,System.Int32,System.Int32)">
+            <summary>
+            사각형과 한 점간 충돌체크
+            </summary>
+            <param name="rt">사각형</param>
+            <param name="x">좌표 X</param>
+            <param name="y">좌표 Y</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.Check(System.Drawing.Rectangle,System.Int32,System.Int32)">
+            <summary>
+            사각형과 한 점간 충돌체크
+            </summary>
+            <param name="rt">사각형</param>
+            <param name="x">좌표 X</param>
+            <param name="y">좌표 Y</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.Check(System.Drawing.Rectangle,System.Single,System.Single)">
+            <summary>
+            사각형과 한 점간 충돌체크
+            </summary>
+            <param name="rt">사각형</param>
+            <param name="x">좌표 X</param>
+            <param name="y">좌표 Y</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.Check(System.Drawing.Rectangle,System.Drawing.Rectangle)">
+            <summary>
+            서로 다른 두 사각형간 충돌 체크 
+            </summary>
+            <param name="rt1">사각형1</param>
+            <param name="rt2">사각형2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckEllipse(System.Drawing.Rectangle,System.Drawing.Point)">
+            <summary>
+            타원과 한 점간의 충돌 체크 
+            </summary>
+            <param name="ellipse">타원</param>
+            <param name="pt">좌표</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckEllipse(System.Drawing.RectangleF,System.Drawing.PointF)">
+            <summary>
+            타원과 한 점간의 충돌 체크 
+            </summary>
+            <param name="ellipse">타원</param>
+            <param name="pt">좌표</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckEllipse(System.Drawing.RectangleF,System.Drawing.Rectangle)">
+            <summary>
+            서로 다른 두 타원간의 충돌 체크 
+            </summary>
+            <param name="ellipse1">타원1</param>
+            <param name="ellipse2">타원2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckVertical(System.Drawing.Rectangle,System.Drawing.Rectangle)">
+            <summary>
+            두 사각형간 Y좌표만 기준으로 충돌 체크
+            </summary>
+            <param name="rt1">사각형1</param>
+            <param name="rt2">사각형2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckVertical(System.Drawing.RectangleF,System.Drawing.RectangleF)">
+            <summary>
+            두 사각형간 Y좌표만 기준으로 충돌 체크
+            </summary>
+            <param name="rt1">사각형1</param>
+            <param name="rt2">사각형2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckVertical(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            두 상/하단이 겹치는지 충돌 체크
+            </summary>
+            <param name="Top1">상단1</param>
+            <param name="Bottom1">하단1</param>
+            <param name="Top2">상단2</param>
+            <param name="Bottom2">하단2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckVertical(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            두 상/하단이 겹치는지 충돌 체크
+            </summary>
+            <param name="Top1">상단1</param>
+            <param name="Bottom1">하단1</param>
+            <param name="Top2">상단2</param>
+            <param name="Bottom2">하단2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckHorizon(System.Drawing.Rectangle,System.Drawing.Rectangle)">
+            <summary>
+            두 사각형간 X좌표만 기준으로 충돌 체크
+            </summary>
+            <param name="rt1">사각형1</param>
+            <param name="rt2">사각형2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckHorizon(System.Drawing.RectangleF,System.Drawing.RectangleF)">
+            <summary>
+            두 사각형간 X좌표만 기준으로 충돌 체크
+            </summary>
+            <param name="rt1">사각형1</param>
+            <param name="rt2">사각형2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckHorizon(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            두 좌/우측이 겹치는지 충돌 체크
+            </summary>
+            <param name="Top1">좌측1</param>
+            <param name="Bottom1">우측1</param>
+            <param name="Top2">좌측2</param>
+            <param name="Bottom2">우측2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckHorizon(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            두 좌/우측이 겹치는지 충돌 체크
+            </summary>
+            <param name="Top1">좌측1</param>
+            <param name="Bottom1">우측1</param>
+            <param name="Top2">좌측2</param>
+            <param name="Bottom2">우측2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckLine(System.Drawing.Point,System.Drawing.Point,System.Drawing.Point,System.Single)">
+            <summary>
+            선분이 지정한 중점을 기준으로한 반경안에 드는지 충돌 체크 
+            </summary>
+            <param name="p1">선분 좌표1</param>
+            <param name="p2">선분 좌표2</param>
+            <param name="Location">중점</param>
+            <param name="Dist">반경</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckLine(System.Drawing.PointF,System.Drawing.PointF,System.Drawing.PointF,System.Single)">
+            <summary>
+            선분이 지정한 중점을 기준으로한 반경안에 드는지 충돌 체크 
+            </summary>
+            <param name="p1">선분 좌표1</param>
+            <param name="p2">선분 좌표2</param>
+            <param name="Location">중점</param>
+            <param name="Dist">반경</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckLine(System.Drawing.PointF,System.Drawing.PointF,System.Drawing.RectangleF)">
+            <summary>
+            선분이 사각형을 지나는지 충돌 체크
+            </summary>
+            <param name="p1">선분 좌표1</param>
+            <param name="p2">선분 좌표2</param>
+            <param name="rt">사각형</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckLine(System.Drawing.PointF,System.Drawing.PointF,System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            서로 다른 두 선분이 서로 교차되는지 충돌 체크
+            </summary>
+            <param name="Line1Start">선분1 시작점</param>
+            <param name="Line1End">선분1 끝점</param>
+            <param name="Line2Start">선분2 시작점</param>
+            <param name="Line2End">선분2 끝점</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckPolygon(System.Drawing.PointF[],System.Drawing.PointF[])">
+            <summary>
+            서로 다른 두 다각형의 충돌 체크
+            </summary>
+            <param name="poly1">다각형 1</param>
+            <param name="poly2">다각형 2</param>
+            <returns>충돌 여부</returns>
+        </member>
+        <member name="P:Devinno.Tools.LauncherTool.IsAdministrator">
+            <summary>
+            관리자 권한 여부
+            </summary>
+        </member>
+        <member name="M:Devinno.Tools.LauncherTool.Start(System.String,System.Action,System.Action,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+            프로그램 실행 도움
+            * 디버그시엔 관리자 모드 사용불가
+            </summary>
+            <param name="ProgramName">프로그램 명</param>
+            <param name="run">정상 콜백</param>
+            <param name="faild">비정상 콜백</param>
+            <param name="UseDuplicate">중복실행 여부</param>
+            <param name="UseAdministrator">관리자실행 여부</param>
+            <param name="Delay">지연</param>
+        </member>
+        <member name="M:Devinno.Tools.LauncherTool.Start(System.String,System.Action,System.Action,System.Boolean,System.Int32)">
+            <summary>
+            프로그램 실행 도움
+            * 디버그시엔 관리자 모드 사용불가
+            </summary>
+            <param name="ProgramName">프로그램 명</param>
+            <param name="run">정상 콜백</param>
+            <param name="faild">비정상 콜백</param>
+            <param name="UseDuplicate">중복실행 여부</param>
+            <param name="Delay">지연</param>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.Map(System.Int64,System.Int64,System.Int64,System.Int64,System.Int64)">
+            <summary>
+            비례값 구하기
+            </summary>
+            <param name="val">현재값</param>
+            <param name="min">현재 최소값</param>
+            <param name="max">현재 최대값</param>
+            <param name="convert_min">비례 최소값</param>
+            <param name="convert_max">비례 최대값</param>
+            <returns>비례값</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.Map(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            비례값 구하기
+            </summary>
+            <param name="val">현재값</param>
+            <param name="min">현재 최소값</param>
+            <param name="max">현재 최대값</param>
+            <param name="convert_min">비례 최소값</param>
+            <param name="convert_max">비례 최대값</param>
+            <returns>비례값</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.Constrain(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            제한값 구하기
+            </summary>
+            <param name="val">현재값</param>
+            <param name="min">최소값</param>
+            <param name="max">최대값</param>
+            <returns>제한값</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.Constrain(System.Double,System.Double,System.Double)">
+            <summary>
+            제한값 구하기
+            </summary>
+            <param name="val">현재값</param>
+            <param name="min">최소값</param>
+            <param name="max">최대값</param>
+            <returns>제한값</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetAngle(System.Drawing.Point,System.Drawing.Point)">
+            <summary>
+            시작점에서 끝점의 각도
+            </summary>
+            <param name="from">시작점</param>
+            <param name="to">끝점</param>
+            <returns>각독</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetAngle(System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            시작점에서 끝점의 각도
+            </summary>
+            <param name="from">시작점</param>
+            <param name="to">끝점</param>
+            <returns>각독</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetDistance(System.Drawing.Point,System.Drawing.Point)">
+            <summary>
+            두 점 사이 거리
+            </summary>
+            <param name="a">점 1</param>
+            <param name="b">점 2</param>
+            <returns>거리</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetDistance(System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            두 점 사이 거리
+            </summary>
+            <param name="a">점 1</param>
+            <param name="b">점 2</param>
+            <returns>거리</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetDistance(System.Drawing.PointF,System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            선분과 한 점 사이 거리
+            </summary>
+            <param name="LN1">선분 시작점</param>
+            <param name="LN2">선분 끝점</param>
+            <param name="pt">점</param>
+            <returns>거리</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetDistance(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            3차원 상 두점의 거리 구하기
+            </summary>
+            <param name="x1">점1 X</param>
+            <param name="y1">점1 Y</param>
+            <param name="z1">점1 Z</param>
+            <param name="x2">점2 X</param>
+            <param name="y2">점2 Y</param>
+            <param name="z2">점2 Z</param>
+            <returns></returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.RotatePoint(System.Drawing.PointF,System.Drawing.PointF,System.Single)">
+            <summary>
+            한 점을 중점을 기준으로 회전 시켰을때 좌표 
+            </summary>
+            <param name="Center">중점</param>
+            <param name="Target">점</param>
+            <param name="angle">회전각</param>
+            <returns>회전 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.CenterPoint(System.Drawing.Rectangle)">
+            <summary>
+            사각형의 중점 구하기
+            </summary>
+            <param name="rt">사각형</param>
+            <returns>중심 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.CenterPoint(System.Drawing.RectangleF)">
+            <summary>
+            사각형의 중점 구하기
+            </summary>
+            <param name="rt">사각형</param>
+            <returns>중심 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.CenterPoint(System.Drawing.Point,System.Drawing.Point)">
+            <summary>
+            두 점 사이 중점 구하기
+            </summary>
+            <param name="p1">점 1</param>
+            <param name="p2">점 2</param>
+            <returns>중심 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.CenterPoint(System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            두 점 사이 중점 구하기
+            </summary>
+            <param name="p1">점 1</param>
+            <param name="p2">점 2</param>
+            <returns>중심 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.CenterPoint(System.Collections.Generic.List{System.Drawing.PointF})">
+            <summary>
+            지정한 좌표들의 중심 좌표 구하기
+            </summary>
+            <param name="sourceList">좌표 리스트</param>
+            <returns>중심 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.Rectangle,System.Drawing.Size)">
+            <summary>
+            지정한 사각형 중심 기준으로 지정한 크기의 사각형 생성
+            </summary>
+            <param name="rect">사각형</param>
+            <param name="size">생성할 사각형 크기</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.RectangleF,System.Drawing.SizeF)">
+            <summary>
+            지정한 사각형 중심 기준으로 지정한 크기의 사각형 생성
+            </summary>
+            <param name="rect">사각형</param>
+            <param name="size">생성할 사각형 크기</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.Point,System.Drawing.Point)">
+            <summary>
+            두 점을 기준으로 사각형 생성
+            </summary>
+            <param name="pt1">점 1</param>
+            <param name="pt2">점 2</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            두 점을 기준으로 사각형 생성
+            </summary>
+            <param name="pt1">점 1</param>
+            <param name="pt2">점 2</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Collections.Generic.IEnumerable{System.Drawing.Point})">
+            <summary>
+            지정한 좌표들을 포함하는 사각형 생성
+            </summary>
+            <param name="pts">좌표 리스트</param>
+            <return>생성한 사각형</return>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.Point,System.Int32)">
+            <summary>
+            지정한 점을 기준으로 지정한 크기의 정사각형 생성
+            </summary>
+            <param name="pt">점</param>
+            <param name="Size">크기</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.PointF,System.Single)">
+            <summary>
+            지정한 점을 기준으로 지정한 크기의 정사각형 생성
+            </summary>
+            <param name="pt">점</param>
+            <param name="Size">크기</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.Point,System.Int32,System.Int32)">
+            <summary>
+            지정한 점을 기준으로 지정한 넓이와 높이의 사각형 생성
+            </summary>
+            <param name="pt">점</param>
+            <param name="rWIdth">넓이</param>
+            <param name="rHeight">높이</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.PointF,System.Single,System.Single)">
+            <summary>
+            지정한 점을 기준으로 지정한 넓이와 높이의 사각형 생성
+            </summary>
+            <param name="pt">점</param>
+            <param name="rWIdth">넓이</param>
+            <param name="rHeight">높이</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            지정한 점을 기준으로 지정한 크기의 정사각형 생성
+            </summary>
+            <param name="X">점 X좌표</param>
+            <param name="Y">점 Y좌표</param>
+            <param name="Size">크기</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Single,System.Single,System.Single)">
+            <summary>
+            지정한 점을 기준으로 지정한 크기의 정사각형 생성
+            </summary>
+            <param name="X">점 X좌표</param>
+            <param name="Y">점 Y좌표</param>
+            <param name="Size">크기</param>
+            <returns>생성한 사각형</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetPoints(System.Drawing.RectangleF)">
+            <summary>
+            사각형의 네 점 반환
+            </summary>
+            <param name="rt">사각형</param>
+            <returns>네 점</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetPointWithAngle(System.Drawing.PointF,System.Single,System.Single)">
+            <summary>
+            지정한 점의 지정한 각도로 지정한 거리의 좌표   
+            </summary>
+            <param name="p">점</param>
+            <param name="angle">각도</param>
+            <param name="dist">거리</param>
+            <returns>좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetPointWithAngle(System.Drawing.Point,System.Single,System.Single)">
+            <summary>
+            지정한 점의 지정한 각도로 지정한 거리의 좌표   
+            </summary>
+            <param name="p">점</param>
+            <param name="angle">각도</param>
+            <param name="dist">거리</param>
+            <returns>좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetX_WithAngle(System.Drawing.PointF,System.Single,System.Single)">
+            <summary>
+            지정한 점의 지정한 각도로 지정한 거리의 X좌표 
+            </summary>
+            <param name="p">점</param>
+            <param name="angle">각도</param>
+            <param name="dist">거리</param>
+            <returns>x 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetY_WithAngle(System.Drawing.PointF,System.Single,System.Single)">
+            <summary>
+            지정한 점의 지정한 각도로 지정한 거리의 Y좌표 
+            </summary>
+            <param name="p">점</param>
+            <param name="angle">각도</param>
+            <param name="dist">거리</param>
+            <returns>Y 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetX_WithAngle(System.Drawing.Point,System.Single,System.Single)">
+            <summary>
+            지정한 점의 지정한 각도로 지정한 거리의 X좌표 
+            </summary>
+            <param name="p">점</param>
+            <param name="angle">각도</param>
+            <param name="dist">거리</param>
+            <returns>X 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.GetY_WithAngle(System.Drawing.Point,System.Single,System.Single)">
+            <summary>
+            지정한 점의 지정한 각도로 지정한 거리의 Y좌표 
+            </summary>
+            <param name="p">점</param>
+            <param name="angle">각도</param>
+            <param name="dist">거리</param>
+            <returns>Y 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.LinearEquationY(System.Drawing.PointF,System.Drawing.PointF,System.Single)">
+            <summary>
+            두 점을 지나는 직선의 X좌표가 주어졌을시 Y좌표의 값
+            </summary>
+            <param name="p1">점 1</param>
+            <param name="p2">점 2</param>
+            <param name="x">X 좌표</param>
+            <returns>Y좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.LinearEquationX(System.Drawing.PointF,System.Drawing.PointF,System.Single)">
+            <summary>
+            두 점을 지나는 직선의 Y좌표가 주어졌을시 X좌표의 값
+            </summary>
+            <param name="p1">점 1</param>
+            <param name="p2">점 2</param>
+            <param name="x">Y 좌표</param>
+            <returns>X좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.NetworkTool.ValidIPv4(System.String)">
+            <summary>
+            유효한 IPv4 주소인가?
+            </summary>
+            <param name="address">IP 주소</param>
+            <returns>유효 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.NetworkTool.ValidDomain(System.String)">
+            <summary>
+            유효한 도메인인가?
+            </summary>
+            <param name="address">도메인 or IP 주소</param>
+            <returns>유효 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.NetworkTool.GetLocalIP">
+            <summary>
+            현재 IP 주소 획득
+            </summary>
+            <returns>IP주소</returns>
+        </member>
+        <member name="M:Devinno.Tools.NetworkTool.SetLocalIP(System.String,System.String,System.String,System.String)">
+            <summary>
+            지정한 NIC의 IP, SubnetMask, Gateway 설정
+            </summary>
+            <param name="description">NIC Description</param>
+            <param name="ip">설정할 IP</param>
+            <param name="subnet">설정할 SubnetMask</param>
+            <param name="gateway">설정할 Gateway</param>
+            <returns>설정 결과</returns>
+        </member>
+        <member name="M:Devinno.Tools.NetworkTool.SetDHCP(System.String)">
+            <summary>
+            지정한 NIC의 DHCP 설정
+            </summary>
+            <param name="description">NIC Description</param>
+            <returns>설정 결과</returns>
+        </member>
+        <member name="M:Devinno.Tools.NetworkTool.GetNicDescriptions">
+            <summary>
+            NIC Description 배열 획득
+            </summary>
+            <returns>NIC Description 배열</returns>
+        </member>
+        <member name="M:Devinno.Tools.NetworkTool.IsSocketConnected(System.Net.Sockets.Socket)">
+            <summary>
+            해당 소켓이 접속중인지 확인
+            </summary>
+            <param name="s">소켓</param>
+            <returns>접속 여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.WindowsTool.PreventSleep">
+            <summary>
+            절점모드 중지
+            </summary>
+        </member>
+        <member name="M:Devinno.Tools.WindowsTool.AllowSleep">
+            <summary>
+            절전모드 재개
+            </summary>
+        </member>
+    </members>
+</doc>
