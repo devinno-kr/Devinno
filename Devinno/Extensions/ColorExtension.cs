@@ -9,7 +9,7 @@ namespace Devinno.Extensions
     public static class ColorExtension
     {
         #region ToHSV
-        public static Color ToHSV(this System.Drawing.Color color)
+        public static HsvColor ToHSV(this System.Drawing.Color color)
         {
             const double toDouble = 1.0 / 255;
             var r = toDouble * color.R;
@@ -38,7 +38,7 @@ namespace Devinno.Extensions
             }
 
             double saturation = chroma == 0 ? 0 : chroma / max;
-            Color ret;
+            HsvColor ret;
             ret.H = 60 * h1;
             ret.S = saturation;
             ret.V = max;
@@ -117,7 +117,7 @@ namespace Devinno.Extensions
     }
 
     #region struct : HsvColor
-    public struct Color
+    public struct HsvColor
     {
         public double H;
         public double S;
