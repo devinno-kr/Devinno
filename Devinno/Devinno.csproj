@@ -11,13 +11,14 @@
     <Authors>Devinno</Authors>
     <Product></Product>
     <Company>Devinno</Company>
-    <Description>통신 및 데이터베이스 등 개발에 필요한 기초 라이브러리</Description>
+    <Description>Basic library</Description>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
+    <PackageIcon>ico.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Project\Devinno\Git\devinno-kr\Devinno\Devinno\Devinno.xml</DocumentationFile>
+    <DocumentationFile>D:\Project\Devinno\Library\Git\devinno-kr\Devinno\Devinno\Devinno.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\..\ico.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\LICENSE.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
