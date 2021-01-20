@@ -951,6 +951,38 @@
             <param name="rt2">사각형2</param>
             <returns>충돌 여부</returns>
         </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckCircle(System.Drawing.Rectangle,System.Drawing.Point)">
+            <summary>
+            원과 한 점간 충돌 체크
+            </summary>
+            <param name="rt1">원</param>
+            <param name="pt">점</param>
+            <returns>충돌여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckCircle(System.Drawing.RectangleF,System.Drawing.PointF)">
+            <summary>
+            원과 한 점간 충돌 체크
+            </summary>
+            <param name="rt1">원</param>
+            <param name="pt">점</param>
+            <returns>충돌여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckCircle(System.Drawing.Rectangle,System.Drawing.PointF)">
+            <summary>
+            원과 한 점간 충돌 체크
+            </summary>
+            <param name="rt1">원</param>
+            <param name="pt">점</param>
+            <returns>충돌여부</returns>
+        </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckCircle(System.Drawing.RectangleF,System.Drawing.Point)">
+            <summary>
+            원과 한 점간 충돌 체크
+            </summary>
+            <param name="rt1">원</param>
+            <param name="pt">점</param>
+            <returns>충돌여부</returns>
+        </member>
         <member name="M:Devinno.Tools.CollisionTool.CheckEllipse(System.Drawing.Rectangle,System.Drawing.Point)">
             <summary>
             타원과 한 점간의 충돌 체크 
@@ -1217,12 +1249,44 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.RotatePoint(System.Drawing.PointF,System.Drawing.PointF,System.Single)">
             <summary>
-            한 점을 중점을 기준으로 회전 시켰을때 좌표 
+            중점을 기준으로 한점을 회전 시켰을때 좌표 
             </summary>
             <param name="Center">중점</param>
             <param name="Target">점</param>
             <param name="angle">회전각</param>
             <returns>회전 좌표</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.Center(System.Int32,System.Int32)">
+            <summary>
+            p1 과 p2 사이 중간값
+            </summary>
+            <param name="p1">값1</param>
+            <param name="p2">값2</param>
+            <returns>중간값</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.Center(System.Single,System.Single)">
+            <summary>
+            p1 과 p2 사이 중간값
+            </summary>
+            <param name="p1">값1</param>
+            <param name="p2">값2</param>
+            <returns>중간값</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.CenterDist(System.Int32,System.Int32)">
+            <summary>
+            x에서 dist 거리 사이이 중간값
+            </summary>
+            <param name="x">값</param>
+            <param name="dist">거리</param>
+            <returns>중간값</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.CenterDist(System.Single,System.Single)">
+            <summary>
+            x에서 dist 거리 사이이 중간값
+            </summary>
+            <param name="x">값</param>
+            <param name="dist">거리</param>
+            <returns>중간값</returns>
         </member>
         <member name="M:Devinno.Tools.MathTool.CenterPoint(System.Drawing.Rectangle)">
             <summary>
@@ -1263,7 +1327,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.Rectangle,System.Drawing.Size)">
             <summary>
-            지정한 사각형 중심 기준으로 지정한 크기의 사각형 생성
+            지정한 사각형의 중심을 기준으로 지정한 크기의 사각형 생성
             </summary>
             <param name="rect">사각형</param>
             <param name="size">생성할 사각형 크기</param>
@@ -1271,7 +1335,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.MakeRectangle(System.Drawing.RectangleF,System.Drawing.SizeF)">
             <summary>
-            지정한 사각형 중심 기준으로 지정한 크기의 사각형 생성
+            지정한 사각형의 중심을 기준으로 지정한 크기의 사각형 생성
             </summary>
             <param name="rect">사각형</param>
             <param name="size">생성할 사각형 크기</param>
@@ -1361,7 +1425,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetPointWithAngle(System.Drawing.PointF,System.Single,System.Single)">
             <summary>
-            지정한 점의 지정한 각도로 지정한 거리의 좌표   
+            한 점을 기준으로 각도와 거리를 알 때 점의 위치   
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
@@ -1370,7 +1434,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetPointWithAngle(System.Drawing.Point,System.Single,System.Single)">
             <summary>
-            지정한 점의 지정한 각도로 지정한 거리의 좌표   
+            한 점을 기준으로 각도롸 거리를 알 때 점의 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
@@ -1379,7 +1443,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetX_WithAngle(System.Drawing.PointF,System.Single,System.Single)">
             <summary>
-            지정한 점의 지정한 각도로 지정한 거리의 X좌표 
+            한 점을 기준으로 각도롸 거리를 알 때 점의 X좌료 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
@@ -1388,7 +1452,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetY_WithAngle(System.Drawing.PointF,System.Single,System.Single)">
             <summary>
-            지정한 점의 지정한 각도로 지정한 거리의 Y좌표 
+            한 점을 기준으로 각도롸 거리를 알 때 점의 Y좌표 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
@@ -1397,7 +1461,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetX_WithAngle(System.Drawing.Point,System.Single,System.Single)">
             <summary>
-            지정한 점의 지정한 각도로 지정한 거리의 X좌표 
+            한 점을 기준으로 각도롸 거리를 알 때 점의 X좌료 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
@@ -1406,7 +1470,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetY_WithAngle(System.Drawing.Point,System.Single,System.Single)">
             <summary>
-            지정한 점의 지정한 각도로 지정한 거리의 Y좌표 
+            한 점을 기준으로 각도롸 거리를 알 때 점의 Y좌표 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>

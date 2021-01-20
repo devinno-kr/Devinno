@@ -86,6 +86,56 @@ namespace Devinno.Tools
         public static bool Check(Rectangle rt1, RectangleF rt2) => (rt2.Right >= rt1.Left && rt1.Right >= rt2.Left && rt2.Bottom >= rt1.Top && rt1.Bottom >= rt2.Top);
         public static bool Check(RectangleF rt1, RectangleF rt2) => (rt2.Right >= rt1.Left && rt1.Right >= rt2.Left && rt2.Bottom >= rt1.Top && rt1.Bottom >= rt2.Top);
         #endregion
+        #region CheckCircle(Rectangle, Point)
+        /// <summary>
+        /// 원과 한 점간 충돌 체크
+        /// </summary>
+        /// <param name="rt1">원</param>
+        /// <param name="pt">점</param>
+        /// <returns>충돌여부</returns>
+        public static bool CheckCircle(Rectangle rt1, Point pt)
+        {
+            var gap = Math.Min(rt1.Width, rt1.Height) / 2;
+            var v = MathTool.GetDistance(MathTool.CenterPoint(rt1), pt);
+            return v < gap;
+        }
+        /// <summary>
+        /// 원과 한 점간 충돌 체크
+        /// </summary>
+        /// <param name="rt1">원</param>
+        /// <param name="pt">점</param>
+        /// <returns>충돌여부</returns>
+        public static bool CheckCircle(RectangleF rt1, PointF pt)
+        {
+            var gap = Math.Min(rt1.Width, rt1.Height) / 2;
+            var v = MathTool.GetDistance(MathTool.CenterPoint(rt1), pt);
+            return v < gap;
+        }
+        /// <summary>
+        /// 원과 한 점간 충돌 체크
+        /// </summary>
+        /// <param name="rt1">원</param>
+        /// <param name="pt">점</param>
+        /// <returns>충돌여부</returns>
+        public static bool CheckCircle(Rectangle rt1, PointF pt)
+        {
+            var gap = Math.Min(rt1.Width, rt1.Height) / 2;
+            var v = MathTool.GetDistance(MathTool.CenterPoint(rt1), pt);
+            return v < gap;
+        }
+        /// <summary>
+        /// 원과 한 점간 충돌 체크
+        /// </summary>
+        /// <param name="rt1">원</param>
+        /// <param name="pt">점</param>
+        /// <returns>충돌여부</returns>
+        public static bool CheckCircle(RectangleF rt1, Point pt)
+        {
+            var gap = Math.Min(rt1.Width, rt1.Height) / 2;
+            var v = MathTool.GetDistance(MathTool.CenterPoint(rt1), pt);
+            return v < gap;
+        }
+        #endregion
         #region CheckEllipse
         /// <summary>
         /// 타원과 한 점간의 충돌 체크 
@@ -345,6 +395,7 @@ namespace Devinno.Tools
         #endregion
         #endregion
         #endregion
+
     }
 
     #region EllipseCollision

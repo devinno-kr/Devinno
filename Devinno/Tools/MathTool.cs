@@ -189,7 +189,7 @@ namespace Devinno.Tools
 
         #region RotatePoint
         /// <summary>
-        /// 한 점을 중점을 기준으로 회전 시켰을때 좌표 
+        /// 중점을 기준으로 한점을 회전 시켰을때 좌표 
         /// </summary>
         /// <param name="Center">중점</param>
         /// <param name="Target">점</param>
@@ -208,14 +208,41 @@ namespace Devinno.Tools
         }
         #endregion
 
+        #region Center
+        /// <summary>
+        /// p1 과 p2 사이 중간값
+        /// </summary>
+        /// <param name="p1">값1</param>
+        /// <param name="p2">값2</param>
+        /// <returns>중간값</returns>
+        public static int Center(int p1, int p2) => p1 + ((p2 - p1) / 2);
+
+        /// <summary>
+        /// p1 과 p2 사이 중간값
+        /// </summary>
+        /// <param name="p1">값1</param>
+        /// <param name="p2">값2</param>
+        /// <returns>중간값</returns>
+        public static float Center(float p1, float p2) => p1 + ((p2 - p1) / 2F);
+
+        /// <summary>
+        /// x에서 dist 거리 사이이 중간값
+        /// </summary>
+        /// <param name="x">값</param>
+        /// <param name="dist">거리</param>
+        /// <returns>중간값</returns>
+        public static int CenterDist(int x, int dist) => x + (dist / 2);
+
+        /// <summary>
+        /// x에서 dist 거리 사이이 중간값
+        /// </summary>
+        /// <param name="x">값</param>
+        /// <param name="dist">거리</param>
+        /// <returns>중간값</returns>
+        public static float CenterDist(float x, float dist) => x + (dist / 2F);
+        #endregion
+
         #region CenterPoint
-
-        public int Center(int p1, int p2) => p1 + ((p2 - p1) / 2);
-        public float Center(float p1, float p2) => p1 + ((p2 - p1) / 2F);
-
-        public int CenterDist(int x, int dist) => x + (dist / 2);
-        public float CenterDist(float x, float dist) => x + (dist / 2F);
-
         #region CenterPoint ( Rectangle )
         /// <summary>
         /// 사각형의 중점 구하기
@@ -305,7 +332,7 @@ namespace Devinno.Tools
         #region MakeRectangle
         #region MakeRectangle ( Rectangle Center )
         /// <summary>
-        /// 지정한 사각형 중심 기준으로 지정한 크기의 사각형 생성
+        /// 지정한 사각형의 중심을 기준으로 지정한 크기의 사각형 생성
         /// </summary>
         /// <param name="rect">사각형</param>
         /// <param name="size">생성할 사각형 크기</param>
@@ -316,7 +343,7 @@ namespace Devinno.Tools
         }
 
         /// <summary>
-        /// 지정한 사각형 중심 기준으로 지정한 크기의 사각형 생성
+        /// 지정한 사각형의 중심을 기준으로 지정한 크기의 사각형 생성
         /// </summary>
         /// <param name="rect">사각형</param>
         /// <param name="size">생성할 사각형 크기</param>
@@ -456,7 +483,7 @@ namespace Devinno.Tools
 
         #region GetPoint
         /// <summary>
-        /// 지정한 점의 지정한 각도로 지정한 거리의 좌표   
+        /// 한 점을 기준으로 각도와 거리를 알 때 점의 위치   
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -470,7 +497,7 @@ namespace Devinno.Tools
         }
 
         /// <summary>
-        /// 지정한 점의 지정한 각도로 지정한 거리의 좌표   
+        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -484,7 +511,7 @@ namespace Devinno.Tools
         }
 
         /// <summary>
-        /// 지정한 점의 지정한 각도로 지정한 거리의 X좌표 
+        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 X좌료 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -493,7 +520,7 @@ namespace Devinno.Tools
         public static float GetX_WithAngle(PointF p, float angle, float dist) { return p.X + dist * Convert.ToSingle(Math.Cos(angle * Math.PI / 180.0)); }
 
         /// <summary>
-        /// 지정한 점의 지정한 각도로 지정한 거리의 Y좌표 
+        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 Y좌표 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -502,7 +529,7 @@ namespace Devinno.Tools
         public static float GetY_WithAngle(PointF p, float angle, float dist) { return p.Y + dist * Convert.ToSingle(Math.Sin(angle * Math.PI / 180.0)); }
 
         /// <summary>
-        /// 지정한 점의 지정한 각도로 지정한 거리의 X좌표 
+        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 X좌료 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -511,7 +538,7 @@ namespace Devinno.Tools
         public static float GetX_WithAngle(Point p, float angle, float dist) { return p.X + dist * Convert.ToSingle(Math.Cos(angle * Math.PI / 180.0)); }
 
         /// <summary>
-        /// 지정한 점의 지정한 각도로 지정한 거리의 Y좌표 
+        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 Y좌표 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
