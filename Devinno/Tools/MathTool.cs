@@ -209,6 +209,13 @@ namespace Devinno.Tools
         #endregion
 
         #region CenterPoint
+
+        public int Center(int p1, int p2) => p1 + ((p2 - p1) / 2);
+        public float Center(float p1, float p2) => p1 + ((p2 - p1) / 2F);
+
+        public int CenterDist(int x, int dist) => x + (dist / 2);
+        public float CenterDist(float x, float dist) => x + (dist / 2F);
+
         #region CenterPoint ( Rectangle )
         /// <summary>
         /// 사각형의 중점 구하기
