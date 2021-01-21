@@ -1495,6 +1495,36 @@
             <param name="x">Y 좌표</param>
             <returns>X좌표</returns>
         </member>
+        <member name="M:Devinno.Tools.MathTool.StandardAngle(System.Int32)">
+            <summary>
+            지정한 각도를 0~360 사이의 각으로 변환 
+            </summary>
+            <param name="angle">각도</param>
+            <returns>변환각</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.StandardAngle(System.Single)">
+            <summary>
+            지정한 각도를 0~360 사이의 각으로 변환 
+            </summary>
+            <param name="angle">각도</param>
+            <returns>변환각</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.StandardAngle(System.Double)">
+            <summary>
+            지정한 각도를 0~360 사이의 각으로 변환 
+            </summary>
+            <param name="angle">각도</param>
+            <returns>변환각</returns>
+        </member>
+        <member name="M:Devinno.Tools.MathTool.CompareAngle(System.Double,System.Double,System.Double)">
+            <summary>
+            지정한 각도가 시작각과 끝각 사이에 있는지 확인
+            </summary>
+            <param name="Angle">각도</param>
+            <param name="StartAngle">시작각</param>
+            <param name="EndAngle">끝각</param>
+            <returns>비교 결과</returns>
+        </member>
         <member name="M:Devinno.Tools.NetworkTool.ValidIPv4(System.String)">
             <summary>
             유효한 IPv4 주소인가?

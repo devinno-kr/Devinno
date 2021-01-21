@@ -582,5 +582,76 @@ namespace Devinno.Tools
             return x;
         }
         #endregion
+
+        #region StandardAngle
+        /// <summary>
+        /// 지정한 각도를 0~360 사이의 각으로 변환 
+        /// </summary>
+        /// <param name="angle">각도</param>
+        /// <returns>변환각</returns>
+        public static int StandardAngle(int angle)
+        {
+            int ret = angle;
+            if (ret > 360) ret -= 360;
+            if (ret < 0) ret += 360;
+            return ret;
+        }
+
+        /// <summary>
+        /// 지정한 각도를 0~360 사이의 각으로 변환 
+        /// </summary>
+        /// <param name="angle">각도</param>
+        /// <returns>변환각</returns>
+        public static float StandardAngle(float angle)
+        {
+            float ret = angle;
+            if (ret > 360) ret -= 360;
+            if (ret < 0) ret += 360;
+            return ret;
+        }
+
+        /// <summary>
+        /// 지정한 각도를 0~360 사이의 각으로 변환 
+        /// </summary>
+        /// <param name="angle">각도</param>
+        /// <returns>변환각</returns>
+        public static double StandardAngle(double angle)
+        {
+            double ret = angle;
+            if (ret > 360) ret -= 360;
+            if (ret < 0) ret += 360;
+            return ret;
+        }
+        #endregion
+
+        #region CompareAngle
+        /// <summary>
+        /// 지정한 각도가 시작각과 끝각 사이에 있는지 확인
+        /// </summary>
+        /// <param name="Angle">각도</param>
+        /// <param name="StartAngle">시작각</param>
+        /// <param name="EndAngle">끝각</param>
+        /// <returns>비교 결과</returns>
+        public static bool CompareAngle(double Angle, double StartAngle, double EndAngle)
+        {
+            bool ret = false;
+
+            var ang = MathTool.StandardAngle(Angle);
+            var stang = MathTool.StandardAngle(StartAngle);
+            var edang = MathTool.StandardAngle(EndAngle);
+            if (stang > edang)
+            {
+                double s1 = stang - 360, e1 = edang;
+                double s2 = stang, e2 = edang + 360;
+
+                ret = (s1 <= ang && ang <= e1) || (s2 <= ang && ang <= e2);
+            }
+            else
+            {
+                ret = stang <= ang && ang <= edang;
+            }
+            return ret;
+        }
+        #endregion
     }
 }
