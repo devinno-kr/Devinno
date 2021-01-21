@@ -1126,6 +1126,15 @@
             <param name="poly2">다각형 2</param>
             <returns>충돌 여부</returns>
         </member>
+        <member name="M:Devinno.Tools.ColorTool.MixColorAlpha(System.Drawing.Color,System.Drawing.Color,System.Int32)">
+            <summary>
+            원본 색상에 투명도가 적용된 색상을 덧씌웠을 때 색상
+            </summary>
+            <param name="dest">원본 색</param>
+            <param name="src">덧씌울 색</param>
+            <param name="srcAlpha">덧씌울 색 투명도</param>
+            <returns>최종색</returns>
+        </member>
         <member name="P:Devinno.Tools.LauncherTool.IsAdministrator">
             <summary>
             관리자 권한 여부
