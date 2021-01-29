@@ -451,7 +451,7 @@
             <param name="StartAddr">국번</param>
             <param name="Length">개수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualBitWrite_FC5(System.Int32,System.Int32,System.Int32,System.Boolean)">
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualBitWrite_FC5(System.Int32,System.Int32,System.Int32,System.Boolean,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 주소에 비트값을 쓰는 기능 ( Force Single Coil )
             </summary>
@@ -459,8 +459,9 @@
             <param name="Slave">국번</param>
             <param name="StartAddr">국번</param>
             <param name="val">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualWordWrite_FC6(System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualWordWrite_FC6(System.Int32,System.Int32,System.Int32,System.Int32,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 주소에 워드값을 쓰는 기능 ( Preset Single Register )
             </summary>
@@ -468,8 +469,9 @@
             <param name="Slave">국번</param>
             <param name="StartAddr">국번</param>
             <param name="Value">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualMultiBitWrite_FC15(System.Int32,System.Int32,System.Int32,System.Boolean[])">
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualMultiBitWrite_FC15(System.Int32,System.Int32,System.Int32,System.Boolean[],System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Force Multiple Coils )
             </summary>
@@ -477,8 +479,9 @@
             <param name="Slave">국번</param>
             <param name="StartAddr">국번</param>
             <param name="Value">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualMultiWordWrite_FC16(System.Int32,System.Int32,System.Int32,System.Int32[])">
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualMultiWordWrite_FC16(System.Int32,System.Int32,System.Int32,System.Int32[],System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Preset Multiple Registers )
             </summary>
@@ -486,8 +489,9 @@
             <param name="Slave">국번</param>
             <param name="StartAddr">국번</param>
             <param name="Value">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualWordBitSet_FC26(System.Int32,System.Int32,System.Int32,System.Byte,System.Boolean)">
+        <member name="M:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.ManualWordBitSet_FC26(System.Int32,System.Int32,System.Int32,System.Byte,System.Boolean,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 주소에 워드의 특정 비트를 쓰는 기능
             </summary>
@@ -496,6 +500,7 @@
             <param name="StartAddr">국번</param>
             <param name="BitIndex">비트 인덱스</param>
             <param name="val">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
         <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUSlave.Slave">
             <summary>
@@ -651,7 +656,7 @@
             <param name="StartAddr">국번</param>
             <param name="Length">개수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualBitWrite_FC5(System.Int32,System.Int32,System.Int32,System.Boolean)">
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualBitWrite_FC5(System.Int32,System.Int32,System.Int32,System.Boolean,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 주소에 비트값을 쓰는 기능 ( Force Single Coil )
             </summary>
@@ -659,8 +664,9 @@
             <param name="Slave">국번</param>
             <param name="StartAddr">국번</param>
             <param name="val">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualWordWrite_FC6(System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualWordWrite_FC6(System.Int32,System.Int32,System.Int32,System.Int32,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 주소에 워드값을 쓰는 기능 ( Preset Single Register )
             </summary>
@@ -668,8 +674,9 @@
             <param name="Slave">국번</param>
             <param name="StartAddr">국번</param>
             <param name="Value">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualMultiBitWrite_FC15(System.Int32,System.Int32,System.Int32,System.Boolean[])">
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualMultiBitWrite_FC15(System.Int32,System.Int32,System.Int32,System.Boolean[],System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Force Multiple Coils )
             </summary>
@@ -677,8 +684,9 @@
             <param name="Slave">국번</param>
             <param name="StartAddr">국번</param>
             <param name="Value">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualMultiWordWrite_FC16(System.Int32,System.Int32,System.Int32,System.Int32[])">
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualMultiWordWrite_FC16(System.Int32,System.Int32,System.Int32,System.Int32[],System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Preset Multiple Registers )
             </summary>
@@ -686,8 +694,9 @@
             <param name="Slave">국번</param>
             <param name="StartAddr">국번</param>
             <param name="Value">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualWordBitSet_FC26(System.Int32,System.Int32,System.Int32,System.Byte,System.Boolean)">
+        <member name="M:Devinno.Communications.Modbus.TCP.ModbusTCPMaster.ManualWordBitSet_FC26(System.Int32,System.Int32,System.Int32,System.Byte,System.Boolean,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 주소에 워드의 특정 비트를 쓰는 기능
             </summary>
@@ -696,6 +705,7 @@
             <param name="StartAddr">국번</param>
             <param name="BitIndex">비트 인덱스</param>
             <param name="val">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
         <member name="P:Devinno.Communications.Modbus.TCP.ModbusTCPSlave.Slave">
             <summary>

@@ -505,7 +505,8 @@ namespace Devinno.Communications.Modbus.RTU
         /// <param name="Slave">국번</param>
         /// <param name="StartAddr">국번</param>
         /// <param name="val">값</param>
-        public void ManualBitWrite_FC5(int id, int Slave, int StartAddr, bool val)
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        public void ManualBitWrite_FC5(int id, int Slave, int StartAddr, bool val, int? repeatCount = null)
         {
             byte[] data = new byte[8];
             byte crcHi = 0xff, crcLo = 0xff;
@@ -521,7 +522,7 @@ namespace Devinno.Communications.Modbus.RTU
             ModbusCRC.GetCRC(data, data.Length - 2, ref crcHi, ref crcLo);
             data[6] = crcHi;
             data[7] = crcLo;
-            AddManual(new WorkMD(id, data, 8));
+            AddManual(new WorkMD(id, data, 8) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
         }
         #endregion
         #region ManualWordWrite
@@ -532,7 +533,8 @@ namespace Devinno.Communications.Modbus.RTU
         /// <param name="Slave">국번</param>
         /// <param name="StartAddr">국번</param>
         /// <param name="Value">값</param>
-        public void ManualWordWrite_FC6(int id, int Slave, int StartAddr, int Value)
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        public void ManualWordWrite_FC6(int id, int Slave, int StartAddr, int Value, int? repeatCount = null)
         {
             byte[] data = new byte[8];
             byte crcHi = 0xff, crcLo = 0xff;
@@ -547,7 +549,7 @@ namespace Devinno.Communications.Modbus.RTU
             ModbusCRC.GetCRC(data, data.Length - 2, ref crcHi, ref crcLo);
             data[6] = crcHi;
             data[7] = crcLo;
-            AddManual(new WorkMD(id, data, 8));
+            AddManual(new WorkMD(id, data, 8) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
             data = null;
         }
         #endregion
@@ -559,7 +561,8 @@ namespace Devinno.Communications.Modbus.RTU
         /// <param name="Slave">국번</param>
         /// <param name="StartAddr">국번</param>
         /// <param name="Value">값</param>
-        public void ManualMultiBitWrite_FC15(int id, int Slave, int StartAddr, bool[] Value)
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        public void ManualMultiBitWrite_FC15(int id, int Slave, int StartAddr, bool[] Value, int? repeatCount = null)
         {
             int Length = Value.Length / 8;
             Length += (Value.Length % 8 == 0) ? 0 : 1;
@@ -592,7 +595,7 @@ namespace Devinno.Communications.Modbus.RTU
             ModbusCRC.GetCRC(data, data.Length - 2, ref crcHi, ref crcLo);
             data[data.Length - 2] = crcHi;
             data[data.Length - 1] = crcLo;
-            AddManual(new WorkMD(id, data, 8));
+            AddManual(new WorkMD(id, data, 8) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
         }
         #endregion
         #region ManualMultiWordWrite
@@ -603,7 +606,8 @@ namespace Devinno.Communications.Modbus.RTU
         /// <param name="Slave">국번</param>
         /// <param name="StartAddr">국번</param>
         /// <param name="Value">값</param>
-        public void ManualMultiWordWrite_FC16(int id, int Slave, int StartAddr, int[] Value)
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        public void ManualMultiWordWrite_FC16(int id, int Slave, int StartAddr, int[] Value, int? repeatCount = null)
         {
             byte[] data = new byte[9 + (Value.Length * 2)];
             byte crcHi = 0xff, crcLo = 0xff;
@@ -625,7 +629,7 @@ namespace Devinno.Communications.Modbus.RTU
             ModbusCRC.GetCRC(data, data.Length - 2, ref crcHi, ref crcLo);
             data[data.Length - 2] = crcHi;
             data[data.Length - 1] = crcLo;
-            AddManual(new WorkMD(id, data, 8));
+            AddManual(new WorkMD(id, data, 8) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
         }
         #endregion
         #region ManualWordBitSet
@@ -637,7 +641,8 @@ namespace Devinno.Communications.Modbus.RTU
         /// <param name="StartAddr">국번</param>
         /// <param name="BitIndex">비트 인덱스</param>
         /// <param name="val">값</param>
-        public void ManualWordBitSet_FC26(int id, int Slave, int StartAddr, byte BitIndex, bool val)
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        public void ManualWordBitSet_FC26(int id, int Slave, int StartAddr, byte BitIndex, bool val, int? repeatCount = null)
         {
             byte[] data = new byte[9];
             byte crcHi = 0xff, crcLo = 0xff;
@@ -655,7 +660,7 @@ namespace Devinno.Communications.Modbus.RTU
             data[7] = crcHi;
             data[8] = crcLo;
 
-            AddManual(new WorkMD(id, data, 8));
+            AddManual(new WorkMD(id, data, 8) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
         }
         #endregion
         #endregion
