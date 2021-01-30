@@ -580,7 +580,7 @@ namespace Devinno.Database
             else if (tp == typeof(DateTime?))
             {
                 var v = (DateTime?)pi.GetValue(Data, null);
-                ret = v.HasValue ? v.Value : null;
+                ret = v.HasValue ? v.Value : (DateTime?)null;
             }
             else if (tp == typeof(TimeSpan))
             {

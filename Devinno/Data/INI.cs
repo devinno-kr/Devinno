@@ -10,7 +10,10 @@ using System.Threading.Tasks;
 
 namespace Devinno.Data
 {
+
+#if NET5_0
     [SupportedOSPlatform("windows")]
+#endif
     public class INI
     {
         #region Properties

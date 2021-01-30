@@ -1,5 +1,4 @@
 ﻿using Devinno.Data;
-using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,16 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+
+#if NET5_0
+using Microsoft.Data.Sqlite;
+#else
+using System.Data.SQLite;
+
+using SqliteCommand = System.Data.SQLite.SQLiteCommand;
+using SqliteConnection = System.Data.SQLite.SQLiteConnection;
+using SqliteTransaction = System.Data.SQLite.SQLiteTransaction;
+#endif
 
 namespace Devinno.Database
 {
@@ -692,7 +701,7 @@ namespace Devinno.Database
                 }
             }
             else if (tp == typeof(byte[])) ret = pi.GetValue(Data, null);
-            
+
             return ret;
         }
         #endregion

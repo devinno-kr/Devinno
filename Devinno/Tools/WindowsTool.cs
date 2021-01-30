@@ -8,7 +8,10 @@ using System.Threading.Tasks;
 
 namespace Devinno.Tools
 {
+    #region class : WindowsTool
+#if NET5_0
     [SupportedOSPlatform("windows")]
+#endif
     public class WindowsTool
     {
         #region SetLocalTime
@@ -68,8 +71,12 @@ namespace Devinno.Tools
         }
         #endregion
     }
+    #endregion
 
+    #region class : Win32Tool
+#if NET5_0
     [SupportedOSPlatform("windows")]
+#endif
     public class Win32Tool
     {
         #region Const
@@ -114,9 +121,12 @@ namespace Devinno.Tools
         }
         #endregion
     }
+    #endregion
 
     #region enum : ExecutionStateKinds 
+#if NET5_0
     [SupportedOSPlatform("windows")]
+#endif
     [FlagsAttribute]
     public enum ExecutionStateKinds : uint
     {
@@ -128,7 +138,9 @@ namespace Devinno.Tools
     #endregion
 
     #region struct : SYSTEMTIME
+#if NET5_0
     [SupportedOSPlatform("windows")]
+#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct SYSTEMTIME
     {

@@ -17,7 +17,9 @@ namespace Devinno.Tools
         /// <summary>
         /// 관리자 권한 여부
         /// </summary>
+#if NET5_0
         [SupportedOSPlatform("windows")]
+#endif
         public static bool IsAdministrator
         {
             get
@@ -44,7 +46,9 @@ namespace Devinno.Tools
         /// <param name="UseDuplicate">중복실행 여부</param>
         /// <param name="UseAdministrator">관리자실행 여부</param>
         /// <param name="Delay">지연</param>
+#if NET5_0
         [SupportedOSPlatform("windows")]
+#endif
         public static void Start(string ProgramName, Action run, Action faild, bool UseDuplicate, bool UseAdministrator, int Delay = 0)
         {
             if (UseAdministrator)

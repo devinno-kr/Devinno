@@ -540,7 +540,7 @@ namespace Devinno.Data
                 var bits = ss.Length > 1 ? ss.LastOrDefault() : null;
 
                 this.Code = char.ToUpper(body[0]);
-                this.Bit = (bits != null && int.TryParse(bits, out n) ? n : null);
+                this.Bit = (bits != null && int.TryParse(bits, out n) ? n : (int?)null);
 
                 if (char.IsDigit(body[1]))
                 {

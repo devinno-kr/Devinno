@@ -78,7 +78,9 @@ namespace Devinno.Tools
         /// <param name="subnet">설정할 SubnetMask</param>
         /// <param name="gateway">설정할 Gateway</param>
         /// <returns>설정 결과</returns>
+#if NET5_0
         [SupportedOSPlatform("windows")]
+#endif
         public static bool SetLocalIP(string description, string ip, string subnet, string gateway)
         {
             ManagementClass managementClass = new ManagementClass("Win32_NetworkAdapterConfiguration");
@@ -120,7 +122,9 @@ namespace Devinno.Tools
         /// </summary>
         /// <param name="description">NIC Description</param>
         /// <returns>설정 결과</returns>
+#if NET5_0
         [SupportedOSPlatform("windows")]
+#endif
         public static bool SetDHCP(string description) => SetLocalIP(description, null, null, null);
         #endregion
         #region GetNicDescriptions
@@ -128,7 +132,9 @@ namespace Devinno.Tools
         /// NIC Description 배열 획득
         /// </summary>
         /// <returns>NIC Description 배열</returns>
+#if NET5_0
         [SupportedOSPlatform("windows")]
+#endif
         public string[] GetNicDescriptions()
         {
             ManagementClass managementClass = new ManagementClass("Win32_NetworkAdapterConfiguration");
