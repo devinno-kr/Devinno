@@ -271,7 +271,7 @@ namespace Devinno.Communications.Modbus.RTU
             {
                 while (true)
                 {
-                    if (!IsStart)
+                    if (!IsStart && AutoStart)
                     {
                         _Start();
                     }

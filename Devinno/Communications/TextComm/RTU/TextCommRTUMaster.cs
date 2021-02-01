@@ -106,7 +106,7 @@ namespace Devinno.Communications.TextComm.RTU
             {
                 while (true)
                 {
-                    if (!IsStart)
+                    if (!IsStart && AutoStart)
                     {
                         _Start();
                     }
@@ -170,10 +170,10 @@ namespace Devinno.Communications.TextComm.RTU
         }
         #endregion
         #region Manual
-        public void ManualSend(int MessageID, byte Slave, byte Command, string Message)
+        public void ManualSend(int MessageID, byte Slave, byte Command, string Message, int? repeatCount = null)
         {
             var ba = TextComm.MakePacket(MessageEncoding, Slave, Command, Message);
-            AddManual(new WorkTC(MessageID, ba, Slave, Command, Message));
+            AddManual(new WorkTC(MessageID, ba, Slave, Command, Message) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
         }
         #endregion
         #endregion

@@ -187,7 +187,7 @@
             <param name="device">주소</param>
             <param name="length">개수</param>
         </member>
-        <member name="M:Devinno.Communications.LS.CNet.ManualWSS(System.Int32,System.Int32,System.String,System.Int32)">
+        <member name="M:Devinno.Communications.LS.CNet.ManualWSS(System.Int32,System.Int32,System.String,System.Int32,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 주소에 값을 쓰는 기능 등록
             </summary>
@@ -195,16 +195,18 @@
             <param name="slave">국번</param>
             <param name="device">주소</param>
             <param name="value">값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.LS.CNet.ManualWSS(System.Int32,System.Int32,Devinno.Communications.LS.CNetValue[])">
+        <member name="M:Devinno.Communications.LS.CNet.ManualWSS(System.Int32,System.Int32,Devinno.Communications.LS.CNetValue[],System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 복수개 주소에 값을 쓰는 기능
             </summary>
             <param name="id">메시지 ID</param>
             <param name="slave">국번</param>
             <param name="values">복수개 주소와 값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.LS.CNet.ManualWSB(System.Int32,System.Int32,System.String,System.Int32[])">
+        <member name="M:Devinno.Communications.LS.CNet.ManualWSB(System.Int32,System.Int32,System.String,System.Int32[],System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 연속되는 주소에 값을 쓰는 기능
             </summary>
@@ -212,6 +214,7 @@
             <param name="slave">국번</param>
             <param name="device">주소</param>
             <param name="values">복수개 값</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
         <member name="P:Devinno.Communications.Mitsubishi.MC.UseControlSequence">
             <summary>
@@ -291,7 +294,7 @@
             <param name="length">개수</param>
             <param name="waitTime">응답 대기 시간</param>
         </member>
-        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualBitWrite(System.Int32,System.Int32,System.String,System.Boolean,System.Int32)">
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualBitWrite(System.Int32,System.Int32,System.String,System.Boolean,System.Int32,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 주소에 비트값을 쓰는 기능 
             </summary>
@@ -300,8 +303,9 @@
             <param name="device">주소</param>
             <param name="value">값</param>
             <param name="waitTime">응답 대기 시간</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualBitWrite(System.Int32,System.Int32,System.String,System.Boolean[],System.Int32)">
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualBitWrite(System.Int32,System.Int32,System.String,System.Boolean[],System.Int32,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 연속되는 주소에 비트값을 쓰는 기능
             </summary>
@@ -310,6 +314,7 @@
             <param name="device">주소</param>
             <param name="value">값</param>
             <param name="waitTime">응답 대기 시간</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
         <member name="M:Devinno.Communications.Mitsubishi.MC.ManualWordRead(System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
             <summary>
@@ -321,7 +326,7 @@
             <param name="length">개수</param>
             <param name="waitTime">응답 대기 시간</param>
         </member>
-        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualWordWrite(System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualWordWrite(System.Int32,System.Int32,System.String,System.Int32,System.Int32,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 주소에 워드값을 쓰는 기능
             </summary>
@@ -330,8 +335,9 @@
             <param name="device">주소</param>
             <param name="value">값</param>
             <param name="waitTime">응답 대기 시간</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
-        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualWordWrite(System.Int32,System.Int32,System.String,System.Int32[],System.Int32)">
+        <member name="M:Devinno.Communications.Mitsubishi.MC.ManualWordWrite(System.Int32,System.Int32,System.String,System.Int32[],System.Int32,System.Nullable{System.Int32})">
             <summary>
             지정한 국번의 연속되는 주소에 워드값을 쓰는 기능
             </summary>
@@ -340,6 +346,7 @@
             <param name="device">주소</param>
             <param name="value">값</param>
             <param name="waitTime">응답 대기 시간</param>
+            <param name="repeatCount">실패 시 반복횟수</param>
         </member>
         <member name="P:Devinno.Communications.Modbus.RTU.ModbusRTUMaster.Baudrate">
             <summary>
