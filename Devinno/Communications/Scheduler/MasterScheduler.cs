@@ -36,6 +36,7 @@ namespace Devinno.Communications.Scheduler
         #region Properties
         public int Timeout { get; set; } = 100;
         public int Interval { get; set; } = 10;
+        public int BufferSize { get; set; } = 1024;
         protected bool IsStartThread { get; private set; } = false;
         public bool IsStart => IsStartThread;
         #endregion
@@ -48,7 +49,7 @@ namespace Devinno.Communications.Scheduler
         private Queue<Work> WorkQueue = new Queue<Work>();
         private List<Work> AutoWorkList = new List<Work>();
         private List<Work> ManualWorkList = new List<Work>();
-        private byte[] baResponse = new byte[1024];
+        protected byte[] baResponse = new byte[1024];
         #endregion
 
         #region Abstract Method
@@ -156,6 +157,8 @@ namespace Devinno.Communications.Scheduler
         #region Thread
         void WorkProcess()
         {
+            baResponse = new byte[BufferSize];
+
             bFinished = false;
             IsStartThread = true;
 
@@ -207,7 +210,11 @@ namespace Devinno.Communications.Scheduler
                                             if (len.HasValue)
                                             {
                                                 nRecv += len.Value;
-                                                if (OnCheckCollectComplete(baResponse, nRecv, w)) break;
+                                                if (OnCheckCollectComplete(baResponse, nRecv, w))
+                                                {
+                                                    bRepeat = false;
+                                                    break;
+                                                }
                                             }
                                         }
 

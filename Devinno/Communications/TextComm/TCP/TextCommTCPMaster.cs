@@ -39,12 +39,14 @@ namespace Devinno.Communications.TextComm.TCP
             private Work WorkItem { get; set; }
 
             public int MessageID => WorkItem.MessageID;
-            public byte Slave => WorkItem.Data[0];
-            public byte Command => WorkItem.Data[1];
+            public byte Slave { get; private set; }
+            public byte Command { get; private set; }
             public string Message { get; private set; }
 
-            public ReceivedEventArgs(Work WorkItem, string Message)
+            public ReceivedEventArgs(Work WorkItem, byte Slave, byte Command, string Message)
             {
+                this.Slave = Slave;
+                this.Command = Command;
                 this.WorkItem = WorkItem;
                 this.Message = Message;
             }
@@ -96,7 +98,7 @@ namespace Devinno.Communications.TextComm.TCP
             {
                 while (true)
                 {
-                    if (!IsStartThread)
+                    if (AutoStart && !IsStartThread)
                     {
                         _Start();
                     }
@@ -191,6 +193,7 @@ namespace Devinno.Communications.TextComm.TCP
                     EndPoint ipep = new IPEndPoint(IPAddress.Parse(RemoteIP), RemotePort);
 
                     ret = client.ReceiveFrom(data, offset, count, SocketFlags.None, ref ipep);
+                    System.Diagnostics.Debug.WriteLine(offset + " : " + client.Available);
                 }
                 else ret = 0;
             }
@@ -263,8 +266,10 @@ namespace Devinno.Communications.TextComm.TCP
 
                 if (sum == ls[ls.Count - 1])
                 {
+                    byte slave = ls[0];
+                    byte cmd = ls[1];
                     var msg = MessageEncoding.GetString(ls.GetRange(2, ls.Count - 3).ToArray());
-                    MessageReceived(this, new ReceivedEventArgs(wi, msg));
+                    MessageReceived(this, new ReceivedEventArgs(wi, slave, cmd, msg));
                 }
             }
         }
