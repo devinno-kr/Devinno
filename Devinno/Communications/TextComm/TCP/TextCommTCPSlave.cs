@@ -34,6 +34,7 @@ namespace Devinno.Communications.TextComm.TCP
 
         #region Properties
         public int LocalPort { get; set; } = 7897;
+        public int BufferSize { get; set; } = 8192;
         public bool IsStart { get; private set; }
         public Encoding MessageEncoding { get; set; } = Encoding.ASCII;
         #endregion
@@ -92,7 +93,7 @@ namespace Devinno.Communications.TextComm.TCP
                     try
                     {
                         #region DataRead
-                        if (server.Available > 0)
+                        while (server.Available > 0)
                         {
                             try
                             {
@@ -142,6 +143,9 @@ namespace Devinno.Communications.TextComm.TCP
                                                         }
                                                     }
                                                 }
+
+                                                bValid = false;
+                                                bDLE = false;
                                             }
                                             break;
                                         #endregion
@@ -186,6 +190,8 @@ namespace Devinno.Communications.TextComm.TCP
         {
             try
             {
+                baResponse = new byte[BufferSize];
+
                 th = new Thread(new ThreadStart(WorkProc));
                 th.IsBackground = true;
                 th.Start();

@@ -11,7 +11,7 @@ namespace Devinno.Data
     #region interface : IMemories
     public interface IMemories
     {
-        char Code { get; }
+        string Code { get; }
         byte[] RawData { get; }
         int Size { get; }
     }
@@ -27,7 +27,7 @@ namespace Devinno.Data
     public class BitMemories : IMemories
     {
         #region Properties
-        public char Code { get; private set; }
+        public string Code { get; private set; }
         public byte[] RawData { get; private set; } = new byte[1024];
         public int Size => RawData.Length * 8;
 
@@ -80,13 +80,22 @@ namespace Devinno.Data
         #endregion
 
         #region Constructor
-        public BitMemories(char Code, int Size)
+        public BitMemories(string Code, int Size)
         {
             if (Size < 1) throw new Exception("Size는 1이상");
             if (!Regex.IsMatch(Code.ToString(), "[a-zA-Z]", RegexOptions.IgnoreCase)) throw new Exception("Code는 알파벳으로");
 
             this.RawData = new byte[Convert.ToInt32(Math.Ceiling(Size / 8.0 / 2.0)) * 2];
-            this.Code = char.ToUpper(Code);
+            this.Code = Code.ToUpper();
+        }
+
+        public BitMemories(string Code, byte[] RawData)
+        {
+            if (RawData == null) throw new Exception("RawData는 null일 수 없음");
+            if (!Regex.IsMatch(Code.ToString(), "[a-zA-Z]", RegexOptions.IgnoreCase)) throw new Exception("Code는 알파벳으로");
+
+            this.RawData = RawData;
+            this.Code = Code.ToUpper();
         }
         #endregion
     }
@@ -95,9 +104,9 @@ namespace Devinno.Data
     public class WordMemories : IMemories
     {
         #region Properties
-        public char Code { get; private set; }
+        public string Code { get; private set; }
         public byte[] RawData { get; private set; } = new byte[1024];
-        public int Size => RawData.Length * 2;
+        public int Size => RawData.Length / 2;
 
         public ushort this[int index]
         {
@@ -117,13 +126,26 @@ namespace Devinno.Data
         #endregion
 
         #region Constructor
-        public WordMemories(char Code, int Size)
+        public WordMemories(string Code, int Size)
         {
             if (Size < 1) throw new Exception("Size는 1이상");
             if (!Regex.IsMatch(Code.ToString(), "[a-zA-Z]", RegexOptions.IgnoreCase)) throw new Exception("Code는 알파벳으로");
 
             this.RawData = new byte[Size * 2];
-            this.Code = char.ToUpper(Code);
+            this.Code = Code.ToUpper();
+
+            W = new WORD[Size];
+            for (int i = 0; i < W.Length; i++) W[i] = new WORD(this, i * 2);
+        }
+
+        public WordMemories(string Code, byte[] RawData)
+        {
+            if (RawData == null) throw new Exception("RawData는 null일 수 없음");
+            if (RawData.Length % 2 != 0) throw new Exception("RawData의 크기는 2의 배수이어야 함");
+            if (!Regex.IsMatch(Code.ToString(), "[a-zA-Z]", RegexOptions.IgnoreCase)) throw new Exception("Code는 알파벳으로");
+
+            this.RawData = RawData;
+            this.Code = Code.ToUpper();
 
             W = new WORD[Size];
             for (int i = 0; i < W.Length; i++) W[i] = new WORD(this, i * 2);
@@ -131,6 +153,62 @@ namespace Devinno.Data
         #endregion
     }
     #endregion
+    #region class : RealMemories
+    public class RealMemories : IMemories
+    {
+        #region Properties
+        public string Code { get; private set; }
+        public byte[] RawData { get; private set; } = new byte[1024];
+        public int Size => RawData.Length / 4;
+
+        public float this[int index]
+        {
+            get
+            {
+                if (index >= 0 && index < R.Length) return R[index].Value;
+                else throw new Exception("인덱스 범위 초과");
+            }
+            set
+            {
+                if (index >= 0 && index < R.Length) R[index].Value = value;
+                else throw new Exception("인덱스 범위 초과");
+            }
+        }
+
+        public REAL[] R { get; private set; }
+        #endregion
+
+        #region Constructor
+        public RealMemories(string Code, int Size)
+        {
+            if (Size < 1) throw new Exception("Size는 1이상");
+            if (!Regex.IsMatch(Code.ToString(), "[a-zA-Z]", RegexOptions.IgnoreCase)) throw new Exception("Code는 알파벳으로");
+
+            this.RawData = new byte[Size * 4];
+            this.Code = Code.ToUpper();
+
+            R = new REAL[Size];
+            for (int i = 0; i < R.Length; i++) R[i] = new REAL(this, i * 4);
+        }
+
+        public RealMemories(string Code, byte[] RawData)
+        {
+            if (RawData == null) throw new Exception("RawData는 null일 수 없음");
+            if (RawData.Length % 2 != 0) throw new Exception("RawData의 크기는 4의 배수이어야 함");
+            if (!Regex.IsMatch(Code.ToString(), "[a-zA-Z]", RegexOptions.IgnoreCase)) throw new Exception("Code는 알파벳으로");
+
+            this.RawData = RawData;
+            this.Code = Code.ToUpper();
+
+            R = new REAL[Size];
+            for (int i = 0; i < R.Length; i++) R[i] = new REAL(this, i * 4);
+        }
+        #endregion
+    }
+    #endregion
+
+    #region Remark
+    /*
     #region class : PlcMemories
     public class PlcMemories : IMemories
     {
@@ -563,6 +641,8 @@ namespace Devinno.Data
         }
         #endregion
     }
+    #endregion
+    */
     #endregion
 
     #region class : BYTE
