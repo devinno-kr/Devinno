@@ -206,7 +206,7 @@ namespace Devinno.Communications.Modbus.TCP
         /// <summary>
         /// 소켓 상태
         /// </summary>        
-        public override bool IsOpen => NetworkTool.IsSocketConnected(client);
+        public override bool IsOpen => bIsOpen;
         
         /// <summary>
         /// 자동 시작
@@ -214,11 +214,16 @@ namespace Devinno.Communications.Modbus.TCP
         public bool AutoStart { get; set; }
 
         protected override int Available { get => client != null ? client.Available : 0; }
+        public int DisconnectCheckTime { get; set; } = 500;
         #endregion
 
         #region Member Variable
         private Socket client;
         private Thread thAutoStart;
+        private Thread thCommCheck;
+
+        private bool bIsOpen = false;
+        private DateTime? dtDiscon = null;
         #endregion
 
         #region Event
@@ -242,7 +247,7 @@ namespace Devinno.Communications.Modbus.TCP
             {
                 while (true)
                 {
-                    if (!IsStartThread)
+                    if (AutoStart && !IsStartThread)
                     {
                         _Start();
                     }
@@ -251,6 +256,34 @@ namespace Devinno.Communications.Modbus.TCP
             }))
             { IsBackground = true };
             thAutoStart.Start();
+
+            thCommCheck = new Thread(new ThreadStart(() =>
+            {
+                while (true)
+                {
+                    if (client != null && IsStart)
+                    {
+                        var b = NetworkTool.IsSocketConnected(client);
+                        if (b)
+                        {
+                            bIsOpen = b;
+                            dtDiscon = null;
+                        }
+                        else
+                        {
+                            if (!dtDiscon.HasValue) dtDiscon = DateTime.Now;
+
+                            if (dtDiscon.HasValue && (DateTime.Now - dtDiscon.Value).TotalMilliseconds > DisconnectCheckTime)
+                            {
+                                bIsOpen = false;
+                            }
+                        }
+                    }
+                    Thread.Sleep(100);
+                }
+            }))
+            { IsBackground = true };
+            thCommCheck.Start();
         }
         #endregion
 
@@ -289,6 +322,8 @@ namespace Devinno.Communications.Modbus.TCP
                     client.Connect(RemoteIP, RemotePort);
                     SocketConnected?.Invoke(this, new SocketEventArgs(client));
 
+                    bIsOpen = client.Connected;
+                    
                     ret = StartThread();
                     if (!ret && IsOpen) client.Close();
                 }

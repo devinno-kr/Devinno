@@ -162,7 +162,7 @@ namespace Devinno.Tools
             {
                 if (s != null)
                 {
-                    return !(s.Poll(PollTime, SelectMode.SelectRead) && s.Available == 0);
+                    return !((s.Poll(PollTime, SelectMode.SelectRead) && (s.Available == 0)) || !s.Connected);
                 }
                 else return false;
             }

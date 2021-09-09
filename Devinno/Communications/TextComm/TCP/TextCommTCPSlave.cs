@@ -37,6 +37,8 @@ namespace Devinno.Communications.TextComm.TCP
         public int BufferSize { get; set; } = 8192;
         public bool IsStart { get; private set; }
         public Encoding MessageEncoding { get; set; } = Encoding.ASCII;
+
+        public int DisconnectCheckTime { get; set; } = 500;
         #endregion
 
         #region Event
@@ -83,6 +85,9 @@ namespace Devinno.Communications.TextComm.TCP
                 #region SocketConnected
                 SocketConnected?.Invoke(this, new SocketEventArgs(server));
                 #endregion
+
+                bool bIsOpen = true;
+                DateTime? dtDiscon = null;
 
                 var lstResponse = new List<byte>();
                 var prev = DateTime.Now;
@@ -172,14 +177,32 @@ namespace Devinno.Communications.TextComm.TCP
                         if ((DateTime.Now - prev).TotalMilliseconds >= 50 && lstResponse.Count > 0) lstResponse.Clear();
                         #endregion
 
-                        IsThStart = NetworkTool.IsSocketConnected(server);
+                        #region Disconnect Check
+                        var b = NetworkTool.IsSocketConnected(server);
+                        if (b)
+                        {
+                            bIsOpen = b;
+                            dtDiscon = null;
+                        }
+                        else
+                        {
+                            if (!dtDiscon.HasValue) dtDiscon = DateTime.Now;
+
+                            if (dtDiscon.HasValue && (DateTime.Now - dtDiscon.Value).TotalMilliseconds > DisconnectCheckTime)
+                            {
+                                bIsOpen = false;
+                            }
+                        }
+
+                        IsThStart = bIsOpen;
+                        #endregion
                     }
                     catch (Exception) { }
                     Thread.Sleep(1);
                 }
 
                 #region Socket Closed
-                if (NetworkTool.IsSocketConnected(server)) server.Close();
+                if (server.Connected) server.Close();
                 SocketDisconnected?.Invoke(this, new SocketEventArgs(server));
                 #endregion
             }

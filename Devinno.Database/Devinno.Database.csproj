@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Authors>Devinno</Authors>
+    <Description>Database Library</Description>
+    <PackageIcon>ico.png</PackageIcon>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,9 +13,17 @@
       <PackagePath></PackagePath>
       <Pack>True</Pack>
     </None>
+    <None Include="..\..\..\ico.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\LICENSE.md" Link="LICENSE.md">
       <PackagePath></PackagePath>
       <Pack>True</Pack>
+    </None>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 

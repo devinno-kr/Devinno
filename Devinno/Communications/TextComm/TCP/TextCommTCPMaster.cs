@@ -73,14 +73,19 @@ namespace Devinno.Communications.TextComm.TCP
         public string RemoteIP { get; set; } = "127.0.0.1";
         public int RemotePort { get; set; } = 7897;
         protected override int Available { get => client != null ? client.Available : 0; }
-        public override bool IsOpen => client != null ? NetworkTool.IsSocketConnected(client) : false;
+        public override bool IsOpen => bIsOpen;
         public bool AutoStart { get; set; }
         public Encoding MessageEncoding { get; set; } = Encoding.ASCII;
+        public int DisconnectCheckTime { get; set; } = 500;
         #endregion
 
         #region Member Variable
         private Socket client;
         private Thread thAutoStart;
+        private Thread thCommCheck;
+
+        private bool bIsOpen = false;
+        private DateTime? dtDiscon = null;
         #endregion
 
         #region Event
@@ -107,6 +112,34 @@ namespace Devinno.Communications.TextComm.TCP
             }))
             { IsBackground = true };
             thAutoStart.Start();
+
+            thCommCheck = new Thread(new ThreadStart(() =>
+            {
+                while (true)
+                {
+                    if (client != null && IsStart)
+                    {
+                        var b = NetworkTool.IsSocketConnected(client);
+                        if (b)
+                        {
+                            bIsOpen = b;
+                            dtDiscon = null;
+                        }
+                        else
+                        {
+                            if (!dtDiscon.HasValue) dtDiscon = DateTime.Now;
+
+                            if (dtDiscon.HasValue && (DateTime.Now - dtDiscon.Value).TotalMilliseconds > DisconnectCheckTime)
+                            {
+                                bIsOpen = false;
+                            }
+                        }
+                    }
+                    Thread.Sleep(100);
+                }
+            }))
+            { IsBackground = true };
+            thCommCheck.Start();
         }
         #endregion
 
@@ -136,6 +169,8 @@ namespace Devinno.Communications.TextComm.TCP
                     client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
                     client.Connect(RemoteIP, RemotePort);
                     SocketConnected?.Invoke(this, new SocketEventArgs(client));
+
+                    bIsOpen = client.Connected;
 
                     ret = StartThread();
                     if (!ret && IsOpen) client.Close();
