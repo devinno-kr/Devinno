@@ -514,7 +514,7 @@ namespace Devinno.Communications.Modbus.TCP
                         #endregion
 
                         #region Buffer Clear
-                        if ((DateTime.Now - prev).TotalMilliseconds >= 20 && lstResponse.Count > 0) lstResponse.Clear();
+                        if ((DateTime.Now - prev).TotalMilliseconds >= 50 && lstResponse.Count > 0) lstResponse.Clear();
                         #endregion
 
                         IsThStart = NetworkTool.IsSocketConnected(server);

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace Devinno.PLC.Ladder
+namespace Devinno.Timers
 {
     public class HiResTimer
     {

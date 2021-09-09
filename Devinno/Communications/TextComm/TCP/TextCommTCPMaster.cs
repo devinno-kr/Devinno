@@ -73,7 +73,7 @@ namespace Devinno.Communications.TextComm.TCP
         public string RemoteIP { get; set; } = "127.0.0.1";
         public int RemotePort { get; set; } = 7897;
         protected override int Available { get => client != null ? client.Available : 0; }
-        public override bool IsOpen => NetworkTool.IsSocketConnected(client);
+        public override bool IsOpen => client != null ? NetworkTool.IsSocketConnected(client) : false;
         public bool AutoStart { get; set; }
         public Encoding MessageEncoding { get; set; } = Encoding.ASCII;
         #endregion
@@ -145,7 +145,11 @@ namespace Devinno.Communications.TextComm.TCP
             return ret;
         }
 
-        private void _Stop() => StopThread();
+        private void _Stop()
+        {
+            StopThread();
+            client = null;
+        }
         #endregion
 
         #region Auto

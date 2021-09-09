@@ -1594,11 +1594,12 @@
             </summary>
             <returns>NIC Description 배열</returns>
         </member>
-        <member name="M:Devinno.Tools.NetworkTool.IsSocketConnected(System.Net.Sockets.Socket)">
+        <member name="M:Devinno.Tools.NetworkTool.IsSocketConnected(System.Net.Sockets.Socket,System.Int32)">
             <summary>
             해당 소켓이 접속중인지 확인
             </summary>
             <param name="s">소켓</param>
+            <param name="PollTime">Poll 타임아웃시간</param>
             <returns>접속 여부</returns>
         </member>
         <member name="M:Devinno.Tools.WindowsTool.PreventSleep">

@@ -89,8 +89,8 @@ namespace Devinno.Communications.Scheduler
                             if (len.HasValue)
                             {
                                 for (int i = 0; i < len.Value; i++) lstResponse.Add(baResponse[i]);
-                                prev = DateTime.Now;
                             }
+                            prev = DateTime.Now;
                         }
                         #endregion
 

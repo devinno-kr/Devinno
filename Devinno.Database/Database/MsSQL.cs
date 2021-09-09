@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Devinno.Database
 {
-    #region class : MySQL
+    #region class : MsSQL
     public class MsSQL
     {
         #region Properties

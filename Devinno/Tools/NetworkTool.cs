@@ -154,8 +154,23 @@ namespace Devinno.Tools
         /// 해당 소켓이 접속중인지 확인
         /// </summary>
         /// <param name="s">소켓</param>
+        /// <param name="PollTime">Poll 타임아웃시간</param>
         /// <returns>접속 여부</returns>
-        public static bool IsSocketConnected(Socket s) => s == null ? false : !((s.Poll(1000, SelectMode.SelectRead) && (s.Available == 0)) || !s.Connected);
+        public static bool IsSocketConnected(Socket s, int PollTime = 1000) {
+
+            try
+            {
+                if (s != null)
+                {
+                    return !(s.Poll(PollTime, SelectMode.SelectRead) && s.Available == 0);
+                }
+                else return false;
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+        }
         #endregion
     }
 }

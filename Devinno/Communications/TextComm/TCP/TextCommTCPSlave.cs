@@ -146,6 +146,7 @@ namespace Devinno.Communications.TextComm.TCP
 
                                                 bValid = false;
                                                 bDLE = false;
+                                                lstResponse.Clear();
                                             }
                                             break;
                                         #endregion
@@ -163,11 +164,12 @@ namespace Devinno.Communications.TextComm.TCP
                                 }
                             }
                             catch (TimeoutException) { }
+                            prev = DateTime.Now;
                         }
                         #endregion
 
                         #region Buffer Clear
-                        if ((DateTime.Now - prev).TotalMilliseconds >= 20 && lstResponse.Count > 0) lstResponse.Clear();
+                        if ((DateTime.Now - prev).TotalMilliseconds >= 50 && lstResponse.Count > 0) lstResponse.Clear();
                         #endregion
 
                         IsThStart = NetworkTool.IsSocketConnected(server);
