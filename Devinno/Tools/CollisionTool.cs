@@ -174,6 +174,20 @@ namespace Devinno.Tools
             var cpT = MathTool.CenterPoint(ellipse2);
             return e.Collide(cp.X, cp.Y, ellipse1.Width / 2F, ellipse1.Height / 2, cpT.X, cpT.Y, ellipse2.Width / 2F, ellipse2.Height / 2F);
         }
+
+        /// <summary>
+        /// 서로 다른 두 타원간의 충돌 체크 
+        /// </summary>
+        /// <param name="ellipse1">타원1</param>
+        /// <param name="ellipse2">타원2</param>
+        /// <returns>충돌 여부</returns>
+        public static bool CheckEllipse(RectangleF ellipse1, RectangleF ellipse2)
+        {
+            EllipseCollision e = new EllipseCollision(10);
+            var cp = MathTool.CenterPoint(ellipse1);
+            var cpT = MathTool.CenterPoint(ellipse2);
+            return e.Collide(cp.X, cp.Y, ellipse1.Width / 2F, ellipse1.Height / 2, cpT.X, cpT.Y, ellipse2.Width / 2F, ellipse2.Height / 2F);
+        }
         #endregion
         #region CheckVertical
         /// <summary>

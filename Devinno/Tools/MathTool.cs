@@ -367,8 +367,8 @@ namespace Devinno.Tools
             int maxx = Math.Max(pt1.X, pt2.X);
             int maxy = Math.Max(pt1.Y, pt2.Y);
 
-            int rx = maxx - minx - 1; if (rx < 0) rx = 0;
-            int ry = maxy - miny - 1; if (ry < 0) ry = 0;
+            int rx = maxx - minx - 0; if (rx < 0) rx = 0;
+            int ry = maxy - miny - 0; if (ry < 0) ry = 0;
 
             return new Rectangle(minx, miny, rx, ry);
         }
@@ -385,8 +385,8 @@ namespace Devinno.Tools
             var maxx = Math.Max(pt1.X, pt2.X);
             var maxy = Math.Max(pt1.Y, pt2.Y);
 
-            var rx = maxx - minx - 1F; if (rx < 0F) rx = 0F;
-            var ry = maxy - miny - 1F; if (ry < 0F) ry = 0F;
+            var rx = maxx - minx - 0; if (rx < 0F) rx = 0F;
+            var ry = maxy - miny - 0; if (ry < 0F) ry = 0F;
 
             return new RectangleF(minx, miny, rx, ry);
         }
@@ -406,8 +406,8 @@ namespace Devinno.Tools
                 float maxx = pts.Max(x => x.X);
                 float maxy = pts.Max(x => x.Y);
 
-                float rx = maxx - minx - 1F; if (rx < 0F) rx = 0F;
-                float ry = maxy - miny - 1F; if (ry < 0F) ry = 0F;
+                float rx = maxx - minx - 0; if (rx < 0F) rx = 0F;
+                float ry = maxy - miny - 0; if (ry < 0F) ry = 0F;
 
                 return new RectangleF(minx, miny, rx, ry);
             }

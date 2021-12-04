@@ -1024,6 +1024,14 @@
             <param name="ellipse2">타원2</param>
             <returns>충돌 여부</returns>
         </member>
+        <member name="M:Devinno.Tools.CollisionTool.CheckEllipse(System.Drawing.RectangleF,System.Drawing.RectangleF)">
+            <summary>
+            서로 다른 두 타원간의 충돌 체크 
+            </summary>
+            <param name="ellipse1">타원1</param>
+            <param name="ellipse2">타원2</param>
+            <returns>충돌 여부</returns>
+        </member>
         <member name="M:Devinno.Tools.CollisionTool.CheckVertical(System.Drawing.Rectangle,System.Drawing.Rectangle)">
             <summary>
             두 사각형간 Y좌표만 기준으로 충돌 체크
