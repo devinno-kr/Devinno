@@ -4,6 +4,7 @@ using System.Linq;
 using System.Management;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
@@ -156,8 +157,8 @@ namespace Devinno.Tools
         /// <param name="s">소켓</param>
         /// <param name="PollTime">Poll 타임아웃시간</param>
         /// <returns>접속 여부</returns>
-        public static bool IsSocketConnected(Socket s, int PollTime = 1000) {
-
+        public static bool IsSocketConnected(Socket s, int PollTime = 100)
+        {
             try
             {
                 if (s != null)

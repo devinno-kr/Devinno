@@ -183,6 +183,12 @@ namespace Devinno.Data
             if (cs != null) foreach (var v in cs) set.Converters.Add(v);
             return JsonConvert.SerializeObject(obj, set);
         }
+
+        public static string JsonSerialize(object obj, JsonSerializerSettings set)
+        {
+            return JsonConvert.SerializeObject(obj, set);
+        }
+
         public static object JsonDeserialize(string json, Type type, List<JsonConverter> cs = null)
         {
             JsonSerializerSettings set = new JsonSerializerSettings();
