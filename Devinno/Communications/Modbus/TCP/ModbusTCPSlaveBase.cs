@@ -1,4 +1,5 @@
 ﻿using Devinno.Extensions;
+using Devinno.Measure;
 using Devinno.Tools;
 using System;
 using System.Collections.Generic;
@@ -144,7 +145,7 @@ namespace Devinno.Communications.Modbus.TCP
         public int LocalPort { get; set; } = 502;
         public bool IsStart { get; private set; }
 
-        public int DisconnectCheckTime { get; set; } = 500;
+        public int DisconnectCheckTime { get; set; } = 1000;
         #endregion
 
         #region Event
@@ -199,13 +200,13 @@ namespace Devinno.Communications.Modbus.TCP
                 SocketConnected?.Invoke(this, new SocketEventArgs(server));
                 #endregion
 
-                bool bIsOpen = true;
-                DateTime? dtDiscon = null;
-
                 List<byte> lstResponse = new List<byte>();
                 var prev = DateTime.Now;
+                var chr = new Chattering() { ChatteringTime = DisconnectCheckTime };
 
                 bool IsThStart = true;
+
+                chr.StateChanged += (o, s) => { if (!s.Value) IsThStart = false; };
                 while (IsThStart)
                 {
                     try
@@ -522,28 +523,16 @@ namespace Devinno.Communications.Modbus.TCP
                         if ((DateTime.Now - prev).TotalMilliseconds >= 50 && lstResponse.Count > 0) lstResponse.Clear();
                         #endregion
 
-                        #region Disconnect Check
-                        var b = NetworkTool.IsSocketConnected(server);
-                        if (b)
-                        {
-                            bIsOpen = b;
-                            dtDiscon = null;
-                        }
-                        else
-                        {
-                            if (!dtDiscon.HasValue) dtDiscon = DateTime.Now;
-
-                            if (dtDiscon.HasValue && (DateTime.Now - dtDiscon.Value).TotalMilliseconds > DisconnectCheckTime)
-                            {
-                                bIsOpen = false;
-                            }
-                        }
-
-                        IsThStart = bIsOpen;
-                        #endregion
+                        chr.Set(NetworkTool.IsSocketConnected(server));
                     }
-                    catch (Exception) { }
-                    Thread.Sleep(1);
+                    catch(SocketException ex)
+                    {
+                        if (ex.SocketErrorCode == SocketError.TimedOut) { }
+                        else if (ex.SocketErrorCode == SocketError.ConnectionReset) { }
+                        else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { IsThStart = false; }
+                    }
+                    catch { }
+                    Thread.Sleep(10);
                 }
 
                 #region Socket Closed

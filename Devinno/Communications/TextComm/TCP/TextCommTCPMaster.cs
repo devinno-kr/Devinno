@@ -72,20 +72,17 @@ namespace Devinno.Communications.TextComm.TCP
         #region Properties
         public string RemoteIP { get; set; } = "127.0.0.1";
         public int RemotePort { get; set; } = 7897;
-        protected override int Available { get => client != null ? client.Available : 0; }
+        public Encoding MessageEncoding { get; set; } = Encoding.ASCII;
         public override bool IsOpen => bIsOpen;
         public bool AutoStart { get; set; }
-        public Encoding MessageEncoding { get; set; } = Encoding.ASCII;
-        public int DisconnectCheckTime { get; set; } = 500;
+        protected override int Available { get => client != null ? client.Available : 0; }
         #endregion
 
         #region Member Variable
         private Socket client;
         private Thread thAutoStart;
-        private Thread thCommCheck;
 
         private bool bIsOpen = false;
-        private DateTime? dtDiscon = null;
         #endregion
 
         #region Event
@@ -112,39 +109,6 @@ namespace Devinno.Communications.TextComm.TCP
             }))
             { IsBackground = true };
             thAutoStart.Start();
-
-            thCommCheck = new Thread(new ThreadStart(() =>
-            {
-                while (true)
-                {
-                    if (client != null && IsStart)
-                    {
-                        var b = NetworkTool.IsSocketConnected(client);
-                        if (b)
-                        {
-                            bIsOpen = b;
-                            dtDiscon = null;
-                        }
-                        else
-                        {
-                            if (!dtDiscon.HasValue) dtDiscon = DateTime.Now;
-
-                            if (dtDiscon.HasValue && (DateTime.Now - dtDiscon.Value).TotalMilliseconds > DisconnectCheckTime)
-                            {
-                                bIsOpen = false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        bIsOpen = false;
-                        dtDiscon = null;
-                    }
-                    Thread.Sleep(100);
-                }
-            }))
-            { IsBackground = true };
-            thCommCheck.Start();
         }
         #endregion
 
@@ -221,6 +185,12 @@ namespace Devinno.Communications.TextComm.TCP
                 EndPoint ipep = new IPEndPoint(IPAddress.Parse(RemoteIP), RemotePort);
                 client.SendTo(data, ipep);
             }
+            catch (SocketException ex)
+            {
+                if (ex.SocketErrorCode == SocketError.TimedOut) { }
+                else if (ex.SocketErrorCode == SocketError.ConnectionReset) { }
+                else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { bIsOpen = false; }
+            }
             catch { }
 
             if (!IsOpen) throw new SchedulerStopException();
@@ -241,9 +211,16 @@ namespace Devinno.Communications.TextComm.TCP
                     EndPoint ipep = new IPEndPoint(IPAddress.Parse(RemoteIP), RemotePort);
 
                     ret = client.ReceiveFrom(data, offset, count, SocketFlags.None, ref ipep);
-                    System.Diagnostics.Debug.WriteLine(offset + " : " + client.Available);
                 }
                 else ret = 0;
+
+                if (ret.HasValue) bIsOpen = ret.Value <= 0;
+            }
+            catch (SocketException ex)
+            {
+                if (ex.SocketErrorCode == SocketError.TimedOut) { }
+                else if (ex.SocketErrorCode == SocketError.ConnectionReset) { }
+                else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { bIsOpen = false; }
             }
             catch { }
 

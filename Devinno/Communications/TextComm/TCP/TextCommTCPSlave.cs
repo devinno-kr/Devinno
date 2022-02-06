@@ -1,4 +1,5 @@
-﻿using Devinno.Tools;
+﻿using Devinno.Measure;
+using Devinno.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace Devinno.Communications.TextComm.TCP
         public bool IsStart { get; private set; }
         public Encoding MessageEncoding { get; set; } = Encoding.ASCII;
 
-        public int DisconnectCheckTime { get; set; } = 500;
+        public int DisconnectCheckTime { get; set; } = 1000;
         #endregion
 
         #region Event
@@ -86,13 +87,15 @@ namespace Devinno.Communications.TextComm.TCP
                 SocketConnected?.Invoke(this, new SocketEventArgs(server));
                 #endregion
 
-                bool bIsOpen = true;
-                DateTime? dtDiscon = null;
-
                 var lstResponse = new List<byte>();
                 var prev = DateTime.Now;
-                bool bDLE = false, bValid = false;
-                bool IsThStart = true;
+                var chr = new Chattering() { ChatteringTime = DisconnectCheckTime };
+
+                var bDLE = false;
+                var bValid = false;
+                var IsThStart = true;
+
+                chr.StateChanged += (o, s) => { if (!s.Value) IsThStart = false; };
                 while (IsThStart)
                 {
                     try
@@ -177,28 +180,16 @@ namespace Devinno.Communications.TextComm.TCP
                         if ((DateTime.Now - prev).TotalMilliseconds >= 50 && lstResponse.Count > 0) lstResponse.Clear();
                         #endregion
 
-                        #region Disconnect Check
-                        var b = NetworkTool.IsSocketConnected(server);
-                        if (b)
-                        {
-                            bIsOpen = b;
-                            dtDiscon = null;
-                        }
-                        else
-                        {
-                            if (!dtDiscon.HasValue) dtDiscon = DateTime.Now;
-
-                            if (dtDiscon.HasValue && (DateTime.Now - dtDiscon.Value).TotalMilliseconds > DisconnectCheckTime)
-                            {
-                                bIsOpen = false;
-                            }
-                        }
-
-                        IsThStart = bIsOpen;
-                        #endregion
+                        chr.Set(NetworkTool.IsSocketConnected(server));
                     }
-                    catch (Exception) { }
-                    Thread.Sleep(1);
+                    catch (SocketException ex)
+                    {
+                        if (ex.SocketErrorCode == SocketError.TimedOut) { }
+                        else if (ex.SocketErrorCode == SocketError.ConnectionReset) { }
+                        else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { IsThStart = false; }
+                    }
+                    catch { }
+                    Thread.Sleep(10);
                 }
 
                 #region Socket Closed
