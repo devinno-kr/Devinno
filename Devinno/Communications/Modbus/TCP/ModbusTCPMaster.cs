@@ -689,7 +689,7 @@ namespace Devinno.Communications.Modbus.TCP
                 }
                 else ret = 0;
 
-                if (ret.HasValue) bIsOpen = ret.Value <= 0;
+                if (ret.HasValue) bIsOpen = ret.Value > 0;
             }
             catch (SocketException ex)
             {
@@ -713,6 +713,7 @@ namespace Devinno.Communications.Modbus.TCP
         protected override void OnThreadEnd()
         {
             if (IsOpen) client.Close();
+            bIsOpen = false;
             SocketDisconnected?.Invoke(this, new SocketEventArgs(client));
         }
         #endregion
