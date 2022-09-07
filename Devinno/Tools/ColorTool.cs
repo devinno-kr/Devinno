@@ -9,6 +9,31 @@ namespace Devinno.Tools
 {
     public class ColorTool
     {
+        #region Member Variable
+        static Dictionary<Color, List<string>> dic = new Dictionary<Color, List<string>>();
+        #endregion
+
+        #region Constructor
+        static ColorTool()
+        {
+
+            var vals = typeof(Color).GetProperties();
+            foreach (var v in vals.Where(x=>x.PropertyType == typeof(Color)))
+            {
+                try
+                {
+                    var color = (Color)v.GetValue(null);
+                    var name = v.Name;
+                    if (!dic.ContainsKey(color)) dic.Add(color, new List<string>());
+                    dic[color].Add(name);
+                }
+                catch (Exception ex) { }
+            }
+
+        }
+        #endregion
+
+        #region MixColorAlpha
         /// <summary>
         /// 원본 색상에 투명도가 적용된 색상을 덧씌웠을 때 색상
         /// </summary>
@@ -24,5 +49,23 @@ namespace Devinno.Tools
 
             return Color.FromArgb(r, g, b);
         }
+        #endregion
+        #region GetName
+        public static string GetName(Color c, ColorCodeType code)
+        {
+            var ret = "";
+            if (dic.ContainsKey(c)) ret = dic[c].First();
+            else
+            {
+                if (code == ColorCodeType.ARGB) ret = c.A.ToString() + "," + c.R.ToString() + "," + c.G.ToString() + "," + c.B.ToString();
+                else if (code == ColorCodeType.RGB) ret = c.R.ToString() + "," + c.G.ToString() + "," + c.B.ToString();
+                else if (code == ColorCodeType.CodeARGB) ret = "#" + c.A.ToString("X2") + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+                else if (code == ColorCodeType.CodeRGB) ret = "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+            }
+            return ret;
+        }
+        #endregion
     }
+
+    public enum ColorCodeType { ARGB, RGB, CodeRGB, CodeARGB }
 }

@@ -137,9 +137,9 @@ namespace Devinno.Communications.TextComm.TCP
                     client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, Timeout);
                     client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
                     client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-                    client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 2000);
-                    client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 1000);
-                    client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 3);
+                    //client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 2000);
+                    //client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 1000);
+                    //client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 3);
                     client.Connect(RemoteIP, RemotePort);
                     SocketConnected?.Invoke(this, new SocketEventArgs(client));
 
