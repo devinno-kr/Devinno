@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -24,7 +26,10 @@ namespace Devinno.Database
         #region Properties
         public string FileName { get; set; }
         public bool Lock { get; private set; }
-        public string ConnectString { get { return string.Format(@"Data Source={0};Version=3;Pooling=false;Compress=false", FileName); } }
+        public string ConnectStringOptions { get; set; } = "";
+        public string KeyName { get; set; } = "Id";
+
+        public string ConnectString { get { return string.Format(@"Data Source={0};Version=3;Pooling=false;Compress=false;", FileName) + ConnectStringOptions; } }
         #endregion
 
         #region Constructor
@@ -36,20 +41,20 @@ namespace Devinno.Database
 
         #region Method
         #region Table
-        public void CreateTable<T>(string TableName) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.CreateTable<T>(cmd, TableName); }); }
+        public void CreateTable<T>(string TableName) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.CreateTable<T>(cmd, TableName, KeyName); }); }
         public void DropTable(string TableName) { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.DropTable(cmd, TableName); }); }
         public bool ExistTable(string TableName) { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.ExistTable(cmd, TableName); }); return ret; }
         #endregion
         #region Command
-        public bool Exist(string TableName, int Id) { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Exist(cmd, TableName, Id); }); return ret; }
-        public bool Exist<T>(string TableName, T Data) where T : SQLiteData { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Exist<T>(cmd, TableName, Data); }); return ret; }
+        public bool Exist(string TableName, int Id) { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Exist(cmd, TableName, KeyName, Id); }); return ret; }
+        public bool Exist<T>(string TableName, T Data) where T : SQLiteData { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Exist<T>(cmd, TableName, KeyName, Data); }); return ret; }
         public bool Check(string TableName, string Where) { bool ret = false; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Check(cmd, TableName, Where); }); return ret; }
         public List<T> Select<T>(string TableName) where T : SQLiteData { return Select<T>(TableName, null); }
-        public List<T> Select<T>(string TableName, string Where) where T : SQLiteData { List<T> ret = null; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Select<T>(cmd, TableName, Where); }); return ret; }
-        public void Update<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Update<T>(cmd, TableName, Datas); }); }
+        public List<T> Select<T>(string TableName, string Where) where T : SQLiteData { List<T> ret = null; ExecuteWaiting((conn, cmd, trans) => { ret = SQLiteCommandTool.Select<T>(cmd, TableName, KeyName, Where); }); return ret; }
+        public void Update<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Update<T>(cmd, TableName, KeyName, Datas); }); }
         public void Insert<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Insert<T>(cmd, TableName, Datas); }); }
-        public void Delete<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Delete<T>(cmd, TableName, Datas); }); }
-        public void Delete(string TableName, List<int> Ids) { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, Ids); }); }
+        public void Delete<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Delete<T>(cmd, TableName, KeyName, Datas); }); }
+        public void Delete(string TableName, List<int> Ids) { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, KeyName, Ids); }); }
         public void Delete(string TableName, string Where) { ExecuteWaiting((conn, cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, Where); }); }
         #endregion
         #region Execute
@@ -92,7 +97,10 @@ namespace Devinno.Database
     {
         #region Properties
         public bool Lock { get; private set; }
-        public string ConnectString { get { return string.Format(@"Data Source=:memory:;Version=3;"); } }
+        public string ConnectStringOptions { get; set; } = "";
+        public string KeyName { get; set; } = "Id";
+
+        public string ConnectString { get { return string.Format(@"Data Source=:memory:;Version=3;") + ConnectStringOptions; } }
         public SqliteConnection Connection { get; private set; }
         #endregion
 
@@ -126,20 +134,20 @@ namespace Devinno.Database
         #endregion
 
         #region Table
-        public void CreateTable<T>(string TableName) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.CreateTable<T>(cmd, TableName); }); }
+        public void CreateTable<T>(string TableName) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.CreateTable<T>(cmd, TableName, KeyName); }); }
         public void DropTable(string TableName) { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.DropTable(cmd, TableName); }); }
         public bool ExistTable(string TableName) { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.ExistTable(cmd, TableName); }); return ret; }
         #endregion
         #region Command
-        public bool Exist(string TableName, int Id) { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Exist(cmd, TableName, Id); }); return ret; }
-        public bool Exist<T>(string TableName, T Data) where T : SQLiteData { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Exist<T>(cmd, TableName, Data); }); return ret; }
+        public bool Exist(string TableName, int Id) { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Exist(cmd, TableName, KeyName, Id); }); return ret; }
+        public bool Exist<T>(string TableName, T Data) where T : SQLiteData { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Exist<T>(cmd, TableName, KeyName, Data); }); return ret; }
         public bool Check(string TableName, string Where) { bool ret = false; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Check(cmd, TableName, Where); }); return ret; }
         public List<T> Select<T>(string TableName) where T : SQLiteData { return Select<T>(TableName, null); }
-        public List<T> Select<T>(string TableName, string Where) where T : SQLiteData { List<T> ret = null; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Select<T>(cmd, TableName, Where); }); return ret; }
-        public void Update<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Update<T>(cmd, TableName, Datas); }); }
+        public List<T> Select<T>(string TableName, string Where) where T : SQLiteData { List<T> ret = null; ExecuteWaiting((cmd, trans) => { ret = SQLiteCommandTool.Select<T>(cmd, TableName, KeyName, Where); }); return ret; }
+        public void Update<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Update<T>(cmd, TableName, KeyName, Datas); }); }
         public void Insert<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Insert<T>(cmd, TableName, Datas); }); }
-        public void Delete<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Delete<T>(cmd, TableName, Datas); }); }
-        public void Delete(string TableName, List<int> Ids) { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, Ids); }); }
+        public void Delete<T>(string TableName, params T[] Datas) where T : SQLiteData { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Delete<T>(cmd, TableName, KeyName, Datas); }); }
+        public void Delete(string TableName, List<int> Ids) { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, KeyName, Ids); }); }
         public void Delete(string TableName, string Where) { ExecuteWaiting((cmd, trans) => { SQLiteCommandTool.Delete(cmd, TableName, Where); }); }
         #endregion
         #region Execute
@@ -178,7 +186,7 @@ namespace Devinno.Database
     {
         #region Command
         #region CreateTable
-        public static void CreateTable<T>(SqliteCommand cmd, string TableName) where T : SQLiteData
+        public static void CreateTable<T>(SqliteCommand cmd, string TableName, string KeyName) where T : SQLiteData
         {
             var props = typeof(T).GetProperties().Where(x => x.Name != "Id" && x.CanRead && x.CanWrite && !Attribute.IsDefined(x, typeof(SqlIgnoreAttribute))).ToList();
 
@@ -188,7 +196,7 @@ namespace Devinno.Database
                 var sb2 = new StringBuilder();
                 sb.AppendLine("CREATE TABLE IF NOT EXISTS `" + TableName + "`");
                 sb.AppendLine("(");
-                sb.AppendLine("     `Id` INTEGER PRIMARY KEY AUTOINCREMENT,");
+                sb.AppendLine("     `" + KeyName + "` INTEGER PRIMARY KEY AUTOINCREMENT,");
                 foreach (var p in props) sb2.AppendLine("     `" + p.Name + "` " + GetTypeText(p) + ",");
 
                 var vs = sb2.ToString();
@@ -222,10 +230,10 @@ namespace Devinno.Database
         }
         #endregion
         #region Exists
-        public static bool Exist(SqliteCommand cmd, string TableName, int Id)
+        public static bool Exist(SqliteCommand cmd, string TableName, string KeyName, int Id)
         {
             bool ret = false;
-            string sql = "SELECT * FROM `" + TableName + "` WHERE `Id`=" + Id;
+            string sql = "SELECT * FROM `" + TableName + "` WHERE `" + KeyName + "`=" + Id;
             cmd.CommandText = sql;
             using (var rd = cmd.ExecuteReader())
             {
@@ -234,10 +242,10 @@ namespace Devinno.Database
             return ret;
         }
 
-        public static bool Exist<T>(SqliteCommand cmd, string TableName, T Data) where T : SQLiteData
+        public static bool Exist<T>(SqliteCommand cmd, string TableName, string KeyName, T Data) where T : SQLiteData
         {
             bool ret = false;
-            string sql = "SELECT * FROM `" + TableName + "` WHERE `Id`=" + Data.Id;
+            string sql = "SELECT * FROM `" + TableName + "` WHERE `" + KeyName + "`=" + Data.Id;
             cmd.CommandText = sql;
             using (var rd = cmd.ExecuteReader())
             {
@@ -264,7 +272,7 @@ namespace Devinno.Database
         #endregion
         #region Select
         static byte[] ba = new byte[5 * 1024 * 1024];
-        public static List<T> Select<T>(SqliteCommand cmd, string TableName, string Where) where T : SQLiteData
+        public static List<T> Select<T>(SqliteCommand cmd, string TableName, string KeyName, string Where) where T : SQLiteData
         {
             List<T> ret = null;
 
@@ -277,7 +285,7 @@ namespace Devinno.Database
                 ret = new List<T>();
                 while (rd.Read())
                 {
-                    var id = rd.GetInt32(rd.GetOrdinal("Id"));
+                    var id = rd.GetInt32(rd.GetOrdinal(KeyName));
                     var v = (T)Activator.CreateInstance(typeof(T));
                     var props = typeof(T).GetProperties().Where(x => x.Name != "Id" && x.CanRead && x.CanWrite && !Attribute.IsDefined(x, typeof(SqlIgnoreAttribute)));
 
@@ -290,7 +298,7 @@ namespace Devinno.Database
 
                         try
                         {
-                            #region Bool
+                            #region bool
                             if (tp == typeof(bool))
                             {
                                 pi.SetValue(v, rd.GetBoolean(idx), null);
@@ -301,7 +309,17 @@ namespace Devinno.Database
                                 else pi.SetValue(v, rd.GetBoolean(idx), null);
                             }
                             #endregion
-                            #region Integer
+                            #region sbyte
+                            else if (tp == typeof(sbyte))
+                            {
+                                pi.SetValue(v, Convert.ToSByte(rd.GetInt16(idx)), null);
+                            }
+                            else if (tp == typeof(sbyte?))
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null, null);
+                                else pi.SetValue(v, Convert.ToSByte(rd.GetInt16(idx)), null);
+                            }
+                            #endregion
                             #region byte
                             else if (tp == typeof(byte))
                             {
@@ -379,8 +397,6 @@ namespace Devinno.Database
                                 else pi.SetValue(v, Convert.ToUInt64(rd.GetInt64(idx)), null);
                             }
                             #endregion
-                            #endregion
-                            #region Real
                             #region float
                             else if (tp == typeof(float))
                             {
@@ -414,8 +430,18 @@ namespace Devinno.Database
                                 else pi.SetValue(v, rd.GetDecimal(idx), null);
                             }
                             #endregion
+                            #region char
+                            else if (tp == typeof(char))
+                            {
+                                pi.SetValue(v, rd.GetChar(idx), null);
+                            }
+                            else if (tp == typeof(char?))
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null, null);
+                                else pi.SetValue(v, rd.GetChar(idx), null);
+                            }
                             #endregion
-                            #region Text
+                            #region string
                             else if (tp == typeof(string))
                             {
                                 if (rd.IsDBNull(idx)) pi.SetValue(v, null, null);
@@ -452,16 +478,21 @@ namespace Devinno.Database
                                     pi.SetValue(v, Enum.ToObject(tp, rd.GetInt32(idx)), null);
                                 }
                             }
+                            else if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>) && tp.GetGenericArguments()[0].IsEnum)
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null, null);
+                                else pi.SetValue(v, Enum.ToObject(tp.GetGenericArguments()[0], rd.GetInt32(idx)), null);
+                            }
                             #endregion
                             #region Int[]
                             if (tp == typeof(int[]))
                             {
                                 if (!rd.IsDBNull(idx))
                                 {
-                                    var len = rd.GetBytes(idx, 0, ba, 0, ba.Length);
+                                    var ba = Convert.FromBase64String(rd.GetString(idx));
 
                                     var ls = new List<int>();
-                                    for (int i = 0; i < len; i += 4) ls.Add(BitConverter.ToInt32(ba, i));
+                                    for (int i = 0; i < ba.Length; i += 4) ls.Add(BitConverter.ToInt32(ba, i));
 
                                     pi.SetValue(v, ls.ToArray(), null);
                                 }
@@ -472,10 +503,10 @@ namespace Devinno.Database
                             {
                                 if (!rd.IsDBNull(idx))
                                 {
-                                    var len = rd.GetBytes(idx, 0, ba, 0, ba.Length);
+                                    var ba = Convert.FromBase64String(rd.GetString(idx));
 
                                     var ls = new List<uint>();
-                                    for (int i = 0; i < len; i += 4) ls.Add(BitConverter.ToUInt32(ba, i));
+                                    for (int i = 0; i < ba.Length; i += 4) ls.Add(BitConverter.ToUInt32(ba, i));
 
                                     pi.SetValue(v, ls.ToArray(), null);
                                 }
@@ -486,10 +517,32 @@ namespace Devinno.Database
                             {
                                 if (!rd.IsDBNull(idx))
                                 {
-                                    var len = rd.GetBytes(idx, 0, ba, 0, ba.Length);
-
-                                    var r = new byte[len]; Array.Copy(ba, 0, r, 0, Convert.ToInt32(len));
-                                    pi.SetValue(v, r, null);
+                                    var ba = Convert.FromBase64String(rd.GetString(idx));
+                                    pi.SetValue(v, ba, null);
+                                }
+                            }
+                            #endregion
+                            #region Bitmap
+                            else if (tp == typeof(System.Drawing.Bitmap))
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null);
+                                else
+                                {
+                                    using (var m = new MemoryStream(Convert.FromBase64String(rd.GetString(idx))))
+                                    {
+                                        pi.SetValue(v, (Bitmap)Bitmap.FromStream(m));
+                                    }
+                                }
+                            }
+                            else if (tp == typeof(System.Drawing.Image))
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null);
+                                else
+                                {
+                                    using (var m = new MemoryStream(Convert.FromBase64String(rd.GetString(idx))))
+                                    {
+                                        pi.SetValue(v, (Image)Image.FromStream(m));
+                                    }
                                 }
                             }
                             #endregion
@@ -505,14 +558,14 @@ namespace Devinno.Database
         }
         #endregion
         #region Update
-        public static void Update<T>(SqliteCommand cmd, string TableName, params T[] Datas) where T : SQLiteData
+        public static void Update<T>(SqliteCommand cmd, string TableName, string KeyName, params T[] Datas) where T : SQLiteData
         {
             foreach (var Data in Datas)
             {
                 if (Data != null)
                 {
                     string sql = "UPDATE `" + TableName + "` SET ";
-                    string where = " WHERE `Id`=" + Data.Id;
+                    string where = " WHERE `" + KeyName + "`=" + Data.Id;
 
                     var props = typeof(T).GetProperties().Where(x => x.Name != "Id" && x.CanRead && x.CanWrite && !Attribute.IsDefined(x, typeof(SqlIgnoreAttribute)));
                     foreach (var pi in props) sql += " `" + pi.Name + "` = @" + pi.Name + ",";
@@ -548,24 +601,24 @@ namespace Devinno.Database
         }
         #endregion
         #region Delete
-        public static void Delete<T>(SqliteCommand cmd, string TableName, params T[] Datas) where T : SQLiteData
+        public static void Delete<T>(SqliteCommand cmd, string TableName, string KeyName, params T[] Datas) where T : SQLiteData
         {
             if (Datas.Length > 0)
             {
                 string sql = "DELETE FROM `" + TableName + "`\r\nWHERE ";
-                for (int i = 0; i < Datas.Length; i++) sql += "ID = " + Datas[i].Id + (i < Datas.Length - 1 ? " OR " : "");
+                for (int i = 0; i < Datas.Length; i++) sql += KeyName + " = " + Datas[i].Id + (i < Datas.Length - 1 ? " OR " : "");
 
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public static void Delete(SqliteCommand cmd, string TableName, List<int> Ids)
+        public static void Delete(SqliteCommand cmd, string TableName, string KeyName, List<int> Ids)
         {
             if (Ids.Count > 0)
             {
                 string sql = "DELETE FROM `" + TableName + "`\r\nWHERE ";
-                for (int i = 0; i < Ids.Count; i++) sql += "ID = " + Ids[i] + (i < Ids.Count - 1 ? " OR " : "");
+                for (int i = 0; i < Ids.Count; i++) sql += KeyName + " = " + Ids[i] + (i < Ids.Count - 1 ? " OR " : "");
 
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
@@ -588,6 +641,7 @@ namespace Devinno.Database
             var tp = pi.PropertyType;
             if (tp == typeof(bool)) ret = "INTEGER NOT NULL DEFAULT 0";
             else if (tp == typeof(bool?)) ret = "INTEGER DEFAULT NULL";
+            else if (tp == typeof(sbyte)) ret = "INTEGER NOT NULL DEFAULT 0";
             else if (tp == typeof(byte)) ret = "INTEGER NOT NULL DEFAULT 0";
             else if (tp == typeof(short)) ret = "INTEGER NOT NULL DEFAULT 0";
             else if (tp == typeof(ushort)) ret = "INTEGER NOT NULL DEFAULT 0";
@@ -609,12 +663,15 @@ namespace Devinno.Database
             else if (tp == typeof(float?)) ret = "REAL DEFAULT NULL";
             else if (tp == typeof(double?)) ret = "REAL DEFAULT NULL";
             else if (tp == typeof(decimal?)) ret = "REAL DEFAULT NULL";
+            else if (tp == typeof(char)) ret = "TEXT NOT NULL DEFAULT ''";
+            else if (tp == typeof(char?)) ret = "TEXT DEFAULT NULL";
             else if (tp == typeof(string)) ret = "TEXT DEFAULT NULL";
             else if (tp == typeof(DateTime)) ret = "TEXT NOT NULL DEFAULT '2000-01-01 00:00:00'";
             else if (tp == typeof(DateTime?)) ret = "TEXT DEFAULT NULL";
             else if (tp == typeof(TimeSpan)) ret = "TEXT NOT NULL DEFAULT '00:00:00'";
             else if (tp == typeof(TimeSpan?)) ret = "TEXT DEFAULT NULL";
             else if (tp.IsEnum) ret = "INTEGER NOT NULL DEFAULT 0";
+            else if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>) && tp.GetGenericArguments()[0].IsEnum) ret = "INTEGER DEFAULT NULL";
             else if (tp == typeof(int[])) ret = "BLOB DEFAULT NUL";
             else if (tp == typeof(uint[])) ret = "BLOB DEFAULT NUL";
             else if (tp == typeof(byte[])) ret = "BLOB DEFAULT NUL";
@@ -630,6 +687,8 @@ namespace Devinno.Database
 
             if (tp == typeof(bool)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(bool?)) ret = pi.GetValue(Data, null);
+            else if (tp == typeof(sbyte)) ret = pi.GetValue(Data, null);
+            else if (tp == typeof(sbyte?)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(byte)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(byte?)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(short)) ret = pi.GetValue(Data, null);
@@ -650,6 +709,8 @@ namespace Devinno.Database
             else if (tp == typeof(double?)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(decimal)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(decimal?)) ret = pi.GetValue(Data, null);
+            else if (tp == typeof(char)) ret = pi.GetValue(Data, null);
+            else if (tp == typeof(char?)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(string)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(DateTime))
             {
@@ -676,6 +737,11 @@ namespace Devinno.Database
                 var v = pi.GetValue(Data, null);
                 ret = Convert.ToInt32(v).ToString();
             }
+            else if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>) && tp.GetGenericArguments()[0].IsEnum)
+            {
+                var v = pi.GetValue(Data, null);
+                ret = v != null ? Convert.ToInt32(v).ToString() : null;
+            }
             else if (tp == typeof(int[]))
             {
                 var v = (int[])pi.GetValue(Data, null);
@@ -699,15 +765,49 @@ namespace Devinno.Database
                     foreach (var vv in v.Select(x => BitConverter.GetBytes(x))) ls.AddRange(vv);
                 }
             }
-            else if (tp == typeof(byte[])) ret = pi.GetValue(Data, null);
-
+            else if (tp == typeof(byte[]))
+            {
+                var v = (byte[])pi.GetValue(Data, null);
+                if (v == null) ret = null;
+                else
+                {
+                    ret = Convert.ToBase64String(v);
+                }
+            }
+            else if (tp == typeof(System.Drawing.Bitmap))
+            {
+                var v = (Bitmap)pi.GetValue(Data);
+                if (v != null)
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        v.Save(m, System.Drawing.Imaging.ImageFormat.Png);
+                        ret = Convert.ToBase64String(m.ToArray());
+                    }
+                }
+            }
+            else if (tp == typeof(System.Drawing.Image))
+            {
+                var v = (Image)pi.GetValue(Data);
+                if (v != null)
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        v.Save(m, System.Drawing.Imaging.ImageFormat.Png);
+                        ret = Convert.ToBase64String(m.ToArray());
+                    }
+                }
+            }
             return ret;
         }
         #endregion
     }
     #endregion
     #region class : SQLiteData
-    public class SQLiteData { public int Id { get; set; } }
+    public class SQLiteData
+    {
+        public int Id { get; set; }
+    }
     #endregion
 
 }

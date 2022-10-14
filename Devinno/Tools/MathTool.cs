@@ -51,6 +51,35 @@ namespace Devinno.Tools
         /// <param name="min">최소값</param>
         /// <param name="max">최대값</param>
         /// <returns>제한값</returns>
+
+
+        public static byte Constrain(byte val, byte min, byte max)
+        {
+            byte ret = val;
+            if (ret < min) ret = min;
+            if (ret > max) ret = max;
+            if (min > max) ret = min;
+            return ret;
+        }
+
+        public static short Constrain(short val, short min, short max)
+        {
+            short ret = val;
+            if (ret < min) ret = min;
+            if (ret > max) ret = max;
+            if (min > max) ret = min;
+            return ret;
+        }
+
+        public static int Constrain(int val, int min, int max)
+        {
+            int ret = val;
+            if (ret < min) ret = min;
+            if (ret > max) ret = max;
+            if (min > max) ret = min;
+            return ret;
+        }
+
         public static long Constrain(long val, long min, long max)
         {
             long ret = val;
@@ -59,6 +88,43 @@ namespace Devinno.Tools
             if (min > max) ret = min;
             return ret;
         }
+
+        public static sbyte Constrain(sbyte val, sbyte min, sbyte max)
+        {
+            sbyte ret = val;
+            if (ret < min) ret = min;
+            if (ret > max) ret = max;
+            if (min > max) ret = min;
+            return ret;
+        }
+
+        public static ushort Constrain(ushort val, ushort min, ushort max)
+        {
+            ushort ret = val;
+            if (ret < min) ret = min;
+            if (ret > max) ret = max;
+            if (min > max) ret = min;
+            return ret;
+        }
+
+        public static uint Constrain(uint val, uint min, uint max)
+        {
+            uint ret = val;
+            if (ret < min) ret = min;
+            if (ret > max) ret = max;
+            if (min > max) ret = min;
+            return ret;
+        }
+
+        public static ulong Constrain(ulong val, ulong min, ulong max)
+        {
+            ulong ret = val;
+            if (ret < min) ret = min;
+            if (ret > max) ret = max;
+            if (min > max) ret = min;
+            return ret;
+        }
+
 
         /// <summary>
         /// 제한값 구하기
@@ -70,6 +136,24 @@ namespace Devinno.Tools
         public static double Constrain(double val, double min, double max)
         {
             double ret = val;
+            if (ret < min) ret = min;
+            if (ret > max) ret = max;
+            if (min > max) ret = min;
+            return ret;
+        }
+
+        public static float Constrain(float val, float min, float max)
+        {
+            float ret = val;
+            if (ret < min) ret = min;
+            if (ret > max) ret = max;
+            if (min > max) ret = min;
+            return ret;
+        }
+
+        public static decimal Constrain(decimal val, decimal min, decimal max)
+        {
+            decimal ret = val;
             if (ret < min) ret = min;
             if (ret > max) ret = max;
             if (min > max) ret = min;

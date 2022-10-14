@@ -663,7 +663,7 @@ namespace Devinno.Communications.Modbus.TCP
             catch (SocketException ex)
             {
                 if (ex.SocketErrorCode == SocketError.TimedOut) { }
-                else if (ex.SocketErrorCode == SocketError.ConnectionReset) { }
+                else if (ex.SocketErrorCode == SocketError.ConnectionReset) { bIsOpen = false; }
                 else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { bIsOpen = false; }
             }
             catch { }
@@ -694,7 +694,7 @@ namespace Devinno.Communications.Modbus.TCP
             catch (SocketException ex)
             {
                 if (ex.SocketErrorCode == SocketError.TimedOut) { }
-                else if (ex.SocketErrorCode == SocketError.ConnectionReset) { }
+                else if (ex.SocketErrorCode == SocketError.ConnectionReset) { bIsOpen = false; }
                 else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { bIsOpen = false; }
             }
             catch { }

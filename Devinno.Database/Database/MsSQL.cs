@@ -15,16 +15,18 @@ namespace Devinno.Database
     {
         #region Properties
         public string Host { get; set; } = "localhost";
-        public int Port { get; set; } = 3306;
         public string ID { get; set; } = "root";
         public string Password { get; set; } = "1234";
         public string DatabaseName { get; set; }
         public bool IntegratedSecurity { get; set; }
+        public string ConnectStringOptions { get; set; } = "";
+        public string KeyName { get; set; } = "Id";
 
         private string ConnectString => (IntegratedSecurity
-            ? $"server={Host};Port={Port};database={DatabaseName};Integrated Security=True;CHARSET=utf8"
-            : $"Server={Host};Port={Port};Database={DatabaseName};Uid={ID};pwd={Password};CHARSET=utf8");
+            ? $"Server={Host};Database={DatabaseName};Integrated Security=True;" + ConnectStringOptions
+            : $"Server={Host};Database={DatabaseName};Uid={ID};pwd={Password};" + ConnectStringOptions);
         #endregion
+
         #region Constructor
         public MsSQL()
         {
@@ -34,20 +36,20 @@ namespace Devinno.Database
 
         #region Method
         #region Table
-        public void CreateTable<T>(string TableName) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.CreateTable<T>(cmd, TableName); }); }
+        public void CreateTable<T>(string TableName) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.CreateTable<T>(cmd, TableName, KeyName); }); }
         public void DropTable(string TableName) { Execute((conn, cmd, trans) => { MsSqlCommandTool.DropTable(cmd, TableName); }); }
         public bool ExistTable(string TableName) { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.ExistTable(cmd, TableName); }); return ret; }
         #endregion
         #region Command
-        public bool Exist(string TableName, int Id) { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Exist(cmd, TableName, Id); }); return ret; }
-        public bool Exist<T>(string TableName, T Data) where T : MsData { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Exist<T>(cmd, TableName, Data); }); return ret; }
+        public bool Exist(string TableName, int Id) { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Exist(cmd, TableName, KeyName, Id); }); return ret; }
+        public bool Exist<T>(string TableName, T Data) where T : MsData { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Exist<T>(cmd, TableName, KeyName, Data); }); return ret; }
         public bool Check(string TableName, string Where) { bool ret = false; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Check(cmd, TableName, Where); }); return ret; }
         public List<T> Select<T>(string TableName) where T : MsData { return Select<T>(TableName, null); }
-        public List<T> Select<T>(string TableName, string Where) where T : MsData { List<T> ret = null; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Select<T>(cmd, TableName, Where); }); return ret; }
-        public void Update<T>(string TableName, params T[] Datas) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.Update<T>(cmd, TableName, Datas); }); }
+        public List<T> Select<T>(string TableName, string Where) where T : MsData { List<T> ret = null; Execute((conn, cmd, trans) => { ret = MsSqlCommandTool.Select<T>(cmd, TableName, KeyName, Where); }); return ret; }
+        public void Update<T>(string TableName, params T[] Datas) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.Update<T>(cmd, TableName, KeyName, Datas); }); }
         public void Insert<T>(string TableName, params T[] Datas) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.Insert<T>(cmd, TableName, Datas); }); }
-        public void Delete<T>(string TableName, params T[] Datas) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.Delete<T>(cmd, TableName, Datas); }); }
-        public void Delete(string TableName, List<int> Ids) { Execute((conn, cmd, trans) => { MsSqlCommandTool.Delete(cmd, TableName, Ids); }); }
+        public void Delete<T>(string TableName, params T[] Datas) where T : MsData { Execute((conn, cmd, trans) => { MsSqlCommandTool.Delete<T>(cmd, TableName, KeyName, Datas); }); }
+        public void Delete(string TableName, List<int> Ids) { Execute((conn, cmd, trans) => { MsSqlCommandTool.Delete(cmd, TableName, KeyName, Ids); }); }
         public void Delete(string TableName, string Where) { Execute((conn, cmd, trans) => { MsSqlCommandTool.Delete(cmd, TableName, Where); }); }
         #endregion
         #region Execute
@@ -87,7 +89,7 @@ namespace Devinno.Database
     {
         #region Command
         #region CreateTable
-        public static void CreateTable<T>(SqlCommand cmd, string TableName) where T : MsData
+        public static void CreateTable<T>(SqlCommand cmd, string TableName, string KeyName) where T : MsData
         {
             var props = typeof(T).GetProperties().Where(x => x.Name != "Id" && x.CanRead && x.CanWrite && !Attribute.IsDefined(x, typeof(SqlIgnoreAttribute))).ToList();
 
@@ -98,7 +100,7 @@ namespace Devinno.Database
                 sb.AppendLine("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '" + TableName + "')");
                 sb.AppendLine("CREATE TABLE [" + TableName + "]");
                 sb.AppendLine("(");
-                sb.AppendLine("     [ID] [uniqueidentifier] NOT NULL PRIMARY KEY,");
+                sb.AppendLine("     [" + KeyName + "] [uniqueidentifier] NOT NULL PRIMARY KEY,");
                 foreach (var p in props) sb.AppendLine("     [" + p.Name + "] " + GetTypeText(p) + ",");
                 sb.AppendLine(")");
 
@@ -127,10 +129,10 @@ namespace Devinno.Database
         }
         #endregion
         #region Exists
-        public static bool Exist(SqlCommand cmd, string TableName, int Id)
+        public static bool Exist(SqlCommand cmd, string TableName, string KeyName, int Id)
         {
             bool ret = false;
-            string sql = "SELECT * FROM [" + TableName + "] WHERE [Id]=" + Id;
+            string sql = "SELECT * FROM [" + TableName + "] WHERE [" + KeyName + "]=" + Id;
             cmd.CommandText = sql;
             using (var rd = cmd.ExecuteReader())
             {
@@ -139,10 +141,10 @@ namespace Devinno.Database
             return ret;
         }
 
-        public static bool Exist<T>(SqlCommand cmd, string TableName, T Data) where T : MsData
+        public static bool Exist<T>(SqlCommand cmd, string TableName, string KeyName, T Data) where T : MsData
         {
             bool ret = false;
-            string sql = "SELECT * FROM [" + TableName + "] WHERE [Id]=" + Data.Id;
+            string sql = "SELECT * FROM [" + TableName + "] WHERE [" + KeyName + "]=" + Data.Id;
             cmd.CommandText = sql;
             using (var rd = cmd.ExecuteReader())
             {
@@ -168,7 +170,7 @@ namespace Devinno.Database
         }
         #endregion
         #region Select
-        public static List<T> Select<T>(SqlCommand cmd, string TableName, string Where) where T : MsData
+        public static List<T> Select<T>(SqlCommand cmd, string TableName, string KeyName, string Where) where T : MsData
         {
             List<T> ret = null;
 
@@ -181,7 +183,7 @@ namespace Devinno.Database
                 ret = new List<T>();
                 while (rd.Read())
                 {
-                    var id = rd.GetInt32(rd.GetOrdinal("Id"));
+                    var id = rd.GetInt32(rd.GetOrdinal(KeyName));
                     var v = (T)Activator.CreateInstance(typeof(T));
                     var props = typeof(T).GetProperties().Where(x => x.Name != "Id" && x.CanRead && x.CanWrite && !Attribute.IsDefined(x, typeof(SqlIgnoreAttribute)));
 
@@ -203,6 +205,17 @@ namespace Devinno.Database
                             {
                                 if (rd.IsDBNull(idx)) pi.SetValue(v, null, null);
                                 else pi.SetValue(v, rd.GetBoolean(idx), null);
+                            }
+                            #endregion
+                            #region sbyte
+                            else if (tp == typeof(sbyte))
+                            {
+                                pi.SetValue(v, Convert.ToSByte(rd.GetInt16(idx)), null);
+                            }
+                            else if (tp == typeof(sbyte?))
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null, null);
+                                else pi.SetValue(v, Convert.ToSByte(rd.GetInt16(idx)), null);
                             }
                             #endregion
                             #region byte
@@ -315,6 +328,17 @@ namespace Devinno.Database
                                 else pi.SetValue(v, rd.GetDecimal(idx), null);
                             }
                             #endregion
+                            #region char
+                            else if (tp == typeof(char))
+                            {
+                                pi.SetValue(v, rd.GetChar(idx), null);
+                            }
+                            else if (tp == typeof(char?))
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null, null);
+                                else pi.SetValue(v, rd.GetChar(idx), null);
+                            }
+                            #endregion
                             #region string
                             else if (tp == typeof(string))
                             {
@@ -351,6 +375,11 @@ namespace Devinno.Database
                                 {
                                     pi.SetValue(v, Enum.ToObject(tp, rd.GetInt32(idx)), null);
                                 }
+                            }
+                            else if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>) && tp.GetGenericArguments()[0].IsEnum)
+                            {
+                                if (rd.IsDBNull(idx)) pi.SetValue(v, null, null);
+                                else pi.SetValue(v, Enum.ToObject(tp.GetGenericArguments()[0], rd.GetInt32(idx)), null);
                             }
                             #endregion
                             #region Int[]
@@ -427,14 +456,14 @@ namespace Devinno.Database
         }
         #endregion
         #region Update
-        public static void Update<T>(SqlCommand cmd, string TableName, params T[] Datas) where T : MsData
+        public static void Update<T>(SqlCommand cmd, string TableName, string KeyName, params T[] Datas) where T : MsData
         {
             foreach (var Data in Datas)
             {
                 if (Data != null)
                 {
                     string sql = "UPDATE [" + TableName + "] SET ";
-                    string where = " WHERE [Id]=" + Data.Id;
+                    string where = " WHERE [" + KeyName + "]=" + Data.Id;
 
                     var props = typeof(T).GetProperties().Where(x => x.Name != "Id" && x.CanRead && x.CanWrite && !Attribute.IsDefined(x, typeof(SqlIgnoreAttribute)));
                     foreach (var pi in props) sql += " [" + pi.Name + "] = @" + pi.Name + ",";
@@ -470,24 +499,24 @@ namespace Devinno.Database
         }
         #endregion
         #region Delete
-        public static void Delete<T>(SqlCommand cmd, string TableName, params T[] Datas) where T : MsData
+        public static void Delete<T>(SqlCommand cmd, string TableName, string KeyName, params T[] Datas) where T : MsData
         {
             if (Datas.Length > 0)
             {
                 string sql = "DELETE FROM [" + TableName + "]\r\nWHERE ";
-                for (int i = 0; i < Datas.Length; i++) sql += "ID = " + Datas[i].Id + (i < Datas.Length - 1 ? " OR " : "");
+                for (int i = 0; i < Datas.Length; i++) sql += KeyName + " = " + Datas[i].Id + (i < Datas.Length - 1 ? " OR " : "");
 
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public static void Delete(SqlCommand cmd, string TableName, List<int> Ids)
+        public static void Delete(SqlCommand cmd, string TableName, string KeyName, List<int> Ids)
         {
             if (Ids.Count > 0)
             {
                 string sql = "DELETE FROM [" + TableName + "]\r\nWHERE ";
-                for (int i = 0; i < Ids.Count; i++) sql += "ID = " + Ids[i] + (i < Ids.Count - 1 ? " OR " : "");
+                for (int i = 0; i < Ids.Count; i++) sql += KeyName + " = " + Ids[i] + (i < Ids.Count - 1 ? " OR " : "");
 
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
@@ -510,6 +539,7 @@ namespace Devinno.Database
             var tp = pi.PropertyType;
             if (tp == typeof(bool)) ret = "bit(1) NOT NULL DEFAULT 0";
             else if (tp == typeof(bool?)) ret = "bit(1) DEFAULT NULL";
+            else if (tp == typeof(sbyte)) ret = "tinyint(3) NOT NULL DEFAULT '0'";
             else if (tp == typeof(byte)) ret = "tinyint(3) unsigned NOT NULL DEFAULT '0'";
             else if (tp == typeof(short)) ret = "smallint(6) NOT NULL DEFAULT '0'";
             else if (tp == typeof(ushort)) ret = "smallint(6) unsigned NOT NULL DEFAULT '0'";
@@ -517,6 +547,7 @@ namespace Devinno.Database
             else if (tp == typeof(uint)) ret = "int(11) unsigned NOT NULL DEFAULT '0'";
             else if (tp == typeof(long)) ret = "bigint(20) NOT NULL DEFAULT '0'";
             else if (tp == typeof(ulong)) ret = "bigint(20) unsigned NOT NULL DEFAULT '0'";
+            else if (tp == typeof(sbyte?)) ret = "tinyint(3) DEFAULT NULL";
             else if (tp == typeof(byte?)) ret = "tinyint(3) unsigned DEFAULT NULL";
             else if (tp == typeof(short?)) ret = "smallint(6) DEFAULT NULL";
             else if (tp == typeof(ushort?)) ret = "smallint(6) unsigned DEFAULT NULL";
@@ -530,12 +561,15 @@ namespace Devinno.Database
             else if (tp == typeof(float?)) ret = "float DEFAULT NULL";
             else if (tp == typeof(double?)) ret = "double DEFAULT NULL";
             else if (tp == typeof(decimal?)) ret = "decimal DEFAULT NULL";
+            else if (tp == typeof(char)) ret = "char(1) NOT NULL DEFAULT ''";
+            else if (tp == typeof(char?)) ret = "char(1) DEFAULT NULL";
             else if (tp == typeof(string)) ret = "text DEFAULT NULL";
             else if (tp == typeof(DateTime)) ret = "datetime NOT NULL DEFAULT '1970-01-01 00:00:00'";
             else if (tp == typeof(DateTime?)) ret = "datetime DEFAULT NULL";
             else if (tp == typeof(TimeSpan)) ret = "text NOT NULL DEFAULT '00:00:00'";
             else if (tp == typeof(TimeSpan?)) ret = "text DEFAULT NULL";
             else if (tp.IsEnum) ret = "int(11) NOT NULL DEFAULT '0'";
+            else if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>) && tp.GetGenericArguments()[0].IsEnum) ret = "int(11) DEFAULT NULL";
             else if (tp == typeof(int[])) ret = "longtext DEFAULT NULL";
             else if (tp == typeof(uint[])) ret = "longtext DEFAULT NULL";
             else if (tp == typeof(byte[])) ret = "longtext DEFAULT NULL";
@@ -551,6 +585,8 @@ namespace Devinno.Database
 
             if (tp == typeof(bool)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(bool?)) ret = pi.GetValue(Data, null);
+            else if (tp == typeof(sbyte)) ret = pi.GetValue(Data, null);
+            else if (tp == typeof(sbyte?)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(byte)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(byte?)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(short)) ret = pi.GetValue(Data, null);
@@ -571,6 +607,8 @@ namespace Devinno.Database
             else if (tp == typeof(double?)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(decimal)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(decimal?)) ret = pi.GetValue(Data, null);
+            else if (tp == typeof(char)) ret = pi.GetValue(Data, null);
+            else if (tp == typeof(char?)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(string)) ret = pi.GetValue(Data, null);
             else if (tp == typeof(DateTime))
             {
@@ -596,6 +634,11 @@ namespace Devinno.Database
             {
                 var v = pi.GetValue(Data, null);
                 ret = Convert.ToInt32(v).ToString();
+            }
+            else if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>) && tp.GetGenericArguments()[0].IsEnum)
+            {
+                var v = pi.GetValue(Data, null);
+                ret = v != null ? Convert.ToInt32(v).ToString() : null;
             }
             else if (tp == typeof(int[]))
             {

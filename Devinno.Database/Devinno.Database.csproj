@@ -6,6 +6,7 @@
     <Description>Database Library</Description>
     <PackageIcon>ico.png</PackageIcon>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Version>1.0.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

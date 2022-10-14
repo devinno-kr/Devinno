@@ -1210,7 +1210,7 @@
             <param name="convert_max">비례 최대값</param>
             <returns>비례값</returns>
         </member>
-        <member name="M:Devinno.Tools.MathTool.Constrain(System.Int64,System.Int64,System.Int64)">
+        <member name="M:Devinno.Tools.MathTool.Constrain(System.Byte,System.Byte,System.Byte)">
             <summary>
             제한값 구하기
             </summary>

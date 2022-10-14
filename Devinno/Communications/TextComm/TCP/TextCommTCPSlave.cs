@@ -185,7 +185,7 @@ namespace Devinno.Communications.TextComm.TCP
                     catch (SocketException ex)
                     {
                         if (ex.SocketErrorCode == SocketError.TimedOut) { }
-                        else if (ex.SocketErrorCode == SocketError.ConnectionReset) { }
+                        else if (ex.SocketErrorCode == SocketError.ConnectionReset) { IsThStart = false; }
                         else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { IsThStart = false; }
                     }
                     catch { }
