@@ -58,12 +58,19 @@ namespace Devinno.Communications.TextComm.TCP
             private Work WorkItem { get; set; }
 
             public int MessageID => WorkItem.MessageID;
-            public byte Slave => WorkItem.Data[0];
-            public byte Command => WorkItem.Data[1];
+            public byte Slave { get; private set; }
+            public byte Command { get; private set; }
 
             public TimeoutEventArgs(Work WorkItem)
             {
                 this.WorkItem = WorkItem;
+
+                var ba = TextComm.ParsePacket(WorkItem.Data);
+                if (ba != null)
+                {
+                    Slave = ba[0];
+                    Command = ba[1];
+                }
             }
         }
         #endregion

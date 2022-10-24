@@ -34,6 +34,7 @@ namespace Devinno.Communications.TextComm.RTU
 
         #region Member Variable
         private SerialPort ser = new SerialPort() { PortName = "COM1", BaudRate = 115200 };
+        private List<byte> ls = new List<byte>();
         #endregion
 
         #region Properties
@@ -139,6 +140,7 @@ namespace Devinno.Communications.TextComm.RTU
             {
                 ser.DiscardInBuffer();
                 ser.BaseStream.Flush();
+                ls.Clear();
             }
             catch (IOException) { throw new SchedulerStopException(); }
             catch (UnauthorizedAccessException) { throw new SchedulerStopException(); }
@@ -156,7 +158,8 @@ namespace Devinno.Communications.TextComm.RTU
         protected override bool OnParsePacket(List<byte> lstResponse)
         {
             bool bDLE = false, bValid = false, bComplete = false;
-            foreach(var d in lstResponse)
+
+            foreach (var d in lstResponse)
             {
                 var v = d;
                 if (bDLE)
@@ -170,7 +173,7 @@ namespace Devinno.Communications.TextComm.RTU
                 {
                     #region STX
                     case 0x02:
-                        lstResponse.Clear();
+                        ls.Clear();
                         bValid = true;
                         break;
                     #endregion
@@ -179,14 +182,14 @@ namespace Devinno.Communications.TextComm.RTU
                         {
                             if (bValid)
                             {
-                                if (lstResponse.Count >= 3)
+                                if (ls.Count >= 3)
                                 {
-                                    var sum = (byte)(lstResponse.GetRange(0, lstResponse.Count - 1).Select(x => (int)x).Sum() & 0xFF);
-                                    if (sum == lstResponse[lstResponse.Count - 1])
+                                    var sum = (byte)(ls.GetRange(0, ls.Count - 1).Select(x => (int)x).Sum() & 0xFF);
+                                    if (sum == ls[ls.Count - 1])
                                     {
-                                        byte slave = lstResponse[0];
-                                        byte cmd = lstResponse[1];
-                                        string msg = MessageEncoding.GetString(lstResponse.ToArray(), 2, lstResponse.Count - 3);
+                                        byte slave = ls[0];
+                                        byte cmd = ls[1];
+                                        string msg = MessageEncoding.GetString(ls.ToArray(), 2, ls.Count - 3);
 
                                         if (MessageRequest != null)
                                         {
@@ -214,7 +217,7 @@ namespace Devinno.Communications.TextComm.RTU
                     #endregion
                     #region Default
                     default:
-                        lstResponse.Add(v);
+                        ls.Add(v);
                         break;
                         #endregion
                 }

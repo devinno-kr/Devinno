@@ -40,12 +40,12 @@ namespace Devinno.Communications.Redis
 
         #region Method
         #region Set
-        public void Set(string key, int value) => Set(key, value);
-        public void Set(string key, long value) => Set(key, value);
-        public void Set(string key, string value) => Set(key, value);
-        public void Set(string key, byte[] value) => Set(key, value);
+        public void Set(string key, int value) => SetValue(key, value);
+        public void Set(string key, long value) => SetValue(key, value);
+        public void Set(string key, string value) => SetValue(key, value);
+        public void Set(string key, byte[] value) => SetValue(key, value);
 
-        public void Set(string key, RedisValue value)
+        public void SetValue(string key, RedisValue value)
         {
             if (conn != null && conn.IsConnected && db != null)
             {
@@ -54,12 +54,12 @@ namespace Devinno.Communications.Redis
         }
         #endregion
         #region Get
-        public long GetInt64(string key) => (long)Get(key);
-        public int GetInt32(string key) => (int)Get(key);
-        public string GetString(string key) => (string)Get(key);
-        public  byte[] GetBytes(string key) => (byte[])Get(key);
+        public long GetInt64(string key) => (long)GetValue(key);
+        public int GetInt32(string key) => (int)GetValue(key);
+        public string GetString(string key) => (string)GetValue(key);
+        public  byte[] GetBytes(string key) => (byte[])GetValue(key);
 
-        public RedisValue Get(string key)
+        public RedisValue GetValue(string key)
         {
             string ret = null;
             if (conn != null && conn.IsConnected && db != null)
@@ -69,7 +69,17 @@ namespace Devinno.Communications.Redis
             return ret;
         }
         #endregion
-
+        #region KeyExists
+        public bool? KeyExists(string key)
+        {
+            bool? ret = null;
+            if (conn != null && conn.IsConnected && db != null)
+            {
+                ret = db.KeyExists(key);
+            }
+            return ret;
+        }
+        #endregion
         #region Open
         public void Open()
         {

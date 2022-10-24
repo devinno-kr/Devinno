@@ -37,12 +37,14 @@ namespace Devinno.Communications.TextComm.RTU
             private Work WorkItem { get; set; }
 
             public int MessageID => WorkItem.MessageID;
-            public byte Slave => WorkItem.Data[0];
-            public byte Command => WorkItem.Data[1];
+            public byte Slave { get; private set; }
+            public byte Command { get; private set; }
             public string Message { get; private set; }
 
-            public ReceivedEventArgs(Work WorkItem, string Message)
+            public ReceivedEventArgs(Work WorkItem, byte Slave, byte Command, string Message)
             {
+                this.Slave = Slave;
+                this.Command = Command;
                 this.WorkItem = WorkItem;
                 this.Message = Message;
             }
@@ -54,12 +56,19 @@ namespace Devinno.Communications.TextComm.RTU
             private Work WorkItem { get; set; }
 
             public int MessageID => WorkItem.MessageID;
-            public byte Slave => WorkItem.Data[0];
-            public byte Command => WorkItem.Data[1];
+            public byte Slave { get; private set; }
+            public byte Command { get; private set; }
 
             public TimeoutEventArgs(Work WorkItem)
             {
                 this.WorkItem = WorkItem;
+
+                var ba = TextComm.ParsePacket(WorkItem.Data);
+                if (ba != null)
+                {
+                    Slave = ba[0];
+                    Command = ba[1];
+                }
             }
         }
         #endregion
@@ -276,8 +285,10 @@ namespace Devinno.Communications.TextComm.RTU
 
                 if (sum == ls[ls.Count - 1])
                 {
+                    byte slave = ls[0];
+                    byte cmd = ls[1];
                     var msg = MessageEncoding.GetString(ls.GetRange(2, ls.Count - 3).ToArray());
-                    MessageReceived(this, new ReceivedEventArgs(wi, msg));
+                    MessageReceived(this, new ReceivedEventArgs(wi, slave, cmd, msg));
                 }
             }
         }
