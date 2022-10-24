@@ -1,5 +1,6 @@
-> # Devinno [![NuGet stable version](https://badgen.net/nuget/v/devinno)](https://nuget.org/packages/devinno)
-> **[Devinno.Database &#10148;](#Devinno.Database)**
+<br />  
+
+># Devinno [![NuGet stable version](https://badgen.net/nuget/v/devinno)](https://nuget.org/packages/devinno)
 
 > ### 개요
   * 산업용 프로그램에 개발에 필요한 통신 및 기타 기능들을 정리한 라이브러리
