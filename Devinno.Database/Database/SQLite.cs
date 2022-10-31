@@ -487,7 +487,7 @@ namespace Devinno.Database
         {
             bool ret = false;
 
-            string sql = $"SELECT * FROM `TableName` {GetWhere<T>(Data)}";
+            string sql = $"SELECT * FROM `{TableName}` {GetWhere<T>(Data)}";
             cmd.CommandText = sql;
             using (var rd = cmd.ExecuteReader())
             {
