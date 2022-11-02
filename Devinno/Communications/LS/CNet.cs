@@ -271,7 +271,8 @@ namespace Devinno.Communications.LS
         /// <param name="id">메시지 ID</param>
         /// <param name="slave">국번</param>
         /// <param name="device">주소</param>
-        public void AutoRSS(int id, int slave, string device)
+        /// <param name="timeout">타임아웃</param>
+        public void AutoRSS(int id, int slave, string device, int? timeout = null)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
@@ -296,7 +297,7 @@ namespace Devinno.Communications.LS
             data[data.Length - 2] = (byte)bcc[0];
             data[data.Length - 1] = (byte)bcc[1];
 
-            AddAuto(new WorkCN(id, data) { Devices = new string[] { device } });
+            AddAuto(new WorkCN(id, data) { Devices = new string[] { device }, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -307,7 +308,8 @@ namespace Devinno.Communications.LS
         /// <param name="id">메시지 ID</param>
         /// <param name="slave">국번</param>
         /// <param name="devices">복수개 주소</param>
-        public void AutoRSS(int id, int slave, string[] devices)
+        /// <param name="timeout">타임아웃</param>
+        public void AutoRSS(int id, int slave, string[] devices, int? timeout = null)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
@@ -335,7 +337,7 @@ namespace Devinno.Communications.LS
             data[data.Length - 2] = (byte)bcc[0];
             data[data.Length - 1] = (byte)bcc[1];
 
-            AddAuto(new WorkCN(id, data) { Devices = devices });
+            AddAuto(new WorkCN(id, data) { Devices = devices, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -347,7 +349,8 @@ namespace Devinno.Communications.LS
         /// <param name="slave">국번</param>
         /// <param name="device">주소</param>
         /// <param name="length">개수</param>
-        public void AutoRSB(int id, int slave, string device, int length)
+        /// <param name="timeout">타임아웃</param>
+        public void AutoRSB(int id, int slave, string device, int length, int? timeout = null)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
@@ -376,7 +379,7 @@ namespace Devinno.Communications.LS
             int n = Convert.ToInt32(device.Substring(3));
             for (int i = 0; i < length; i++) d.Add(device.Substring(0, 3) + (n + i));
 
-            AddAuto(new WorkCN(id, data) { Devices = d.ToArray() });
+            AddAuto(new WorkCN(id, data) { Devices = d.ToArray(), Timeout = timeout });
             data = null;
         }
         #endregion
@@ -388,7 +391,9 @@ namespace Devinno.Communications.LS
         /// <param name="id">메시지 ID</param>
         /// <param name="slave">국번</param>
         /// <param name="device">주소</param>
-        public void ManualRSS(int id, int slave, string device)
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void ManualRSS(int id, int slave, string device, int? repeatCount = null, int? timeout = null)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
@@ -413,7 +418,7 @@ namespace Devinno.Communications.LS
             data[data.Length - 2] = (byte)bcc[0];
             data[data.Length - 1] = (byte)bcc[1];
 
-            AddManual(new WorkCN(id, data) { Devices = new string[] { device } });
+            AddManual(new WorkCN(id, data) { Devices = new string[] { device }, RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -422,9 +427,11 @@ namespace Devinno.Communications.LS
         /// 지정한 국번의 복수개 주소에 값을 읽어오는 기능
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
+        /// <param name="slave">국번</param>
         /// <param name="devices">복수개 주소</param>
-        public void ManualRSS(int id, int slave, string[] devices)
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void ManualRSS(int id, int slave, string[] devices, int? repeatCount = null, int? timeout = null)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
@@ -452,7 +459,7 @@ namespace Devinno.Communications.LS
             data[data.Length - 2] = (byte)bcc[0];
             data[data.Length - 1] = (byte)bcc[1];
 
-            AddManual(new WorkCN(id, data) { Devices = devices });
+            AddManual(new WorkCN(id, data) { Devices = devices, RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -464,7 +471,9 @@ namespace Devinno.Communications.LS
         /// <param name="slave">국번</param>
         /// <param name="device">주소</param>
         /// <param name="length">개수</param>
-        public void ManualRSB(int id, int slave, string device, int length)
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void ManualRSB(int id, int slave, string device, int length, int? repeatCount = null, int? timeout = null)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
@@ -494,7 +503,7 @@ namespace Devinno.Communications.LS
             for (int i = 0; i < length; i++)
                 d.Add(device.Substring(0, 3) + (n + i));
 
-            AddManual(new WorkCN(id, data) { Devices = d.ToArray() });
+            AddManual(new WorkCN(id, data) { Devices = d.ToArray(), RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -507,7 +516,8 @@ namespace Devinno.Communications.LS
         /// <param name="device">주소</param>
         /// <param name="value">값</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualWSS(int id, int slave, string device, int value, int? repeatCount = null)
+        /// <param name="timeout">타임아웃</param>
+        public void ManualWSS(int id, int slave, string device, int value, int? repeatCount = null, int? timeout = null)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
@@ -540,7 +550,7 @@ namespace Devinno.Communications.LS
             data[data.Length - 2] = (byte)bcc[0];
             data[data.Length - 1] = (byte)bcc[1];
 
-            AddManual(new WorkCN(id, data) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new WorkCN(id, data) { RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -552,7 +562,8 @@ namespace Devinno.Communications.LS
         /// <param name="slave">국번</param>
         /// <param name="values">복수개 주소와 값</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualWSS(int id, int slave, CNetValue[] values, int? repeatCount = null)
+        /// <param name="timeout">타임아웃</param>
+        public void ManualWSS(int id, int slave, CNetValue[] values, int? repeatCount = null, int? timeout = null)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
@@ -582,7 +593,7 @@ namespace Devinno.Communications.LS
             data[data.Length - 2] = (byte)bcc[0];
             data[data.Length - 1] = (byte)bcc[1];
 
-            AddManual(new WorkCN(id, data) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new WorkCN(id, data) { RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -595,7 +606,8 @@ namespace Devinno.Communications.LS
         /// <param name="device">주소</param>
         /// <param name="values">복수개 값</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualWSB(int id, int slave, string device, int[] values, int? repeatCount = null)
+        /// <param name="timeout">타임아웃</param>
+        public void ManualWSB(int id, int slave, string device, int[] values, int? repeatCount = null, int? timeout = null)
         {
             StringBuilder strbul = new StringBuilder();
             strbul.Append((char)ENQ);
@@ -621,7 +633,7 @@ namespace Devinno.Communications.LS
             data[data.Length - 2] = (byte)bcc[0];
             data[data.Length - 1] = (byte)bcc[1];
 
-            AddManual(new WorkCN(id, data) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new WorkCN(id, data) { RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion

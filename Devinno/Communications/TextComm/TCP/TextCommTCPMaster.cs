@@ -29,6 +29,8 @@ namespace Devinno.Communications.TextComm.TCP
                 this.Slave = Slave;
                 this.Command = Command;
                 this.Message = Message;
+                this.RepeatCount = RepeatCount;
+                this.Timeout = RepeatCount;
             }
         }
         #endregion
@@ -168,17 +170,17 @@ namespace Devinno.Communications.TextComm.TCP
         #endregion
 
         #region Auto
-        public void AutoSend(int MessageID, byte Slave, byte Command, string Message)
+        public void AutoSend(int MessageID, byte Slave, byte Command, string Message, int? timeout = null)
         {
             var ba = TextComm.MakePacket(MessageEncoding, Slave, Command, Message);
-            AddAuto(new WorkTC(MessageID, ba, Slave, Command, Message));
+            AddAuto(new WorkTC(MessageID, ba, Slave, Command, Message) { Timeout = timeout });
         }
         #endregion
         #region Manual
-        public void ManualSend(int MessageID, byte Slave, byte Command, string Message)
+        public void ManualSend(int MessageID, byte Slave, byte Command, string Message, int? repeatCount = null, int? timeout = null)
         {
             var ba = TextComm.MakePacket(MessageEncoding, Slave, Command, Message);
-            AddManual(new WorkTC(MessageID, ba, Slave, Command, Message));
+            AddManual(new WorkTC(MessageID, ba, Slave, Command, Message) { RepeatCount = repeatCount, Timeout = timeout });
         }
         #endregion
         #endregion

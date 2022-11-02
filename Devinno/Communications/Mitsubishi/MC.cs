@@ -281,7 +281,8 @@ namespace Devinno.Communications.Mitsubishi
         /// <param name="device">주소</param>
         /// <param name="length">개수</param>
         /// <param name="waitTime">응답 대기 시간</param>
-        public void AutoBitRead(int id, int slave, string device, int length, int waitTime = 0)
+        /// <param name="timeout">타임아웃</param>
+        public void AutoBitRead(int id, int slave, string device, int length, int waitTime = 0, int? timeout = null)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
 
@@ -323,7 +324,7 @@ namespace Devinno.Communications.Mitsubishi
                     data[data.Length - 1] = (byte)bcc[1];
                 }
             }
-            AddAuto(new Work(id, data));
+            AddAuto(new Work(id, data) { Timeout = timeout });
             data = null;
         }
         #endregion
@@ -336,7 +337,8 @@ namespace Devinno.Communications.Mitsubishi
         /// <param name="device">주소</param>
         /// <param name="length">개수</param>
         /// <param name="waitTime">응답 대기 시간</param>
-        public void AutoWordRead(int id, int slave, string device, int length, int waitTime = 0)
+        /// <param name="timeout">타임아웃</param>
+        public void AutoWordRead(int id, int slave, string device, int length, int waitTime = 0, int? timeout = null)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
 
@@ -379,7 +381,7 @@ namespace Devinno.Communications.Mitsubishi
                     data[data.Length - 1] = (byte)bcc[1];
                 }
             }
-            AddAuto(new Work(id, data));
+            AddAuto(new Work(id, data) { Timeout = timeout });
             data = null;
         }
         #endregion
@@ -393,7 +395,9 @@ namespace Devinno.Communications.Mitsubishi
         /// <param name="device">주소</param>
         /// <param name="length">개수</param>
         /// <param name="waitTime">응답 대기 시간</param>
-        public void ManualBitRead(int id, int slave, string device, int length, int waitTime = 0)
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void ManualBitRead(int id, int slave, string device, int length, int waitTime = 0, int? repeatCount = null, int? timeout = null)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
 
@@ -437,7 +441,7 @@ namespace Devinno.Communications.Mitsubishi
                 }
             }
 
-            AddManual(new Work(id, data));
+            AddManual(new Work(id, data) { RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -451,7 +455,8 @@ namespace Devinno.Communications.Mitsubishi
         /// <param name="value">값</param>
         /// <param name="waitTime">응답 대기 시간</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualBitWrite(int id, int slave, string device, bool value, int waitTime = 0, int? repeatCount = null) => ManualBitWrite(id, slave, device, new bool[] { value }, waitTime, repeatCount);
+        /// <param name="timeout">타임아웃</param>
+        public void ManualBitWrite(int id, int slave, string device, bool value, int waitTime = 0, int? repeatCount = null, int? timeout = null) => ManualBitWrite(id, slave, device, new bool[] { value }, waitTime, repeatCount, timeout);
 
         /// <summary>
         /// 지정한 국번의 연속되는 주소에 비트값을 쓰는 기능
@@ -462,7 +467,8 @@ namespace Devinno.Communications.Mitsubishi
         /// <param name="value">값</param>
         /// <param name="waitTime">응답 대기 시간</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualBitWrite(int id, int slave, string device, bool[] value, int waitTime = 0, int? repeatCount = null)
+        /// <param name="timeout">타임아웃</param>
+        public void ManualBitWrite(int id, int slave, string device, bool[] value, int waitTime = 0, int? repeatCount = null, int? timeout = null)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
             int Length = value.Length;
@@ -510,7 +516,7 @@ namespace Devinno.Communications.Mitsubishi
                 }
             }
 
-            AddManual(new Work(id, data) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new Work(id, data) { RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -523,7 +529,7 @@ namespace Devinno.Communications.Mitsubishi
         /// <param name="device">주소</param>
         /// <param name="length">개수</param>
         /// <param name="waitTime">응답 대기 시간</param>
-        public void ManualWordRead(int id, int slave, string device, int length, int waitTime = 0)
+        public void ManualWordRead(int id, int slave, string device, int length, int waitTime = 0, int? repeatCount = null, int? timeout = null)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
 
@@ -567,7 +573,7 @@ namespace Devinno.Communications.Mitsubishi
                 }
             }
 
-            AddManual(new Work(id, data));
+            AddManual(new Work(id, data) { RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -581,7 +587,8 @@ namespace Devinno.Communications.Mitsubishi
         /// <param name="value">값</param>
         /// <param name="waitTime">응답 대기 시간</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualWordWrite(int id, int slave, string device, int value, int waitTime = 0, int? repeatCount = null) { ManualWordWrite(id, slave, device, new int[] { value }, waitTime, repeatCount); }
+        /// <param name="timeout">타임아웃</param>
+        public void ManualWordWrite(int id, int slave, string device, int value, int waitTime = 0, int? repeatCount = null, int? timeout = null) { ManualWordWrite(id, slave, device, new int[] { value }, waitTime, repeatCount, timeout); }
 
         /// <summary>
         /// 지정한 국번의 연속되는 주소에 워드값을 쓰는 기능
@@ -592,7 +599,8 @@ namespace Devinno.Communications.Mitsubishi
         /// <param name="value">값</param>
         /// <param name="waitTime">응답 대기 시간</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualWordWrite(int id, int slave, string device, int[] value, int waitTime = 0, int? repeatCount = null)
+        /// <param name="timeout">타임아웃</param>
+        public void ManualWordWrite(int id, int slave, string device, int[] value, int waitTime = 0, int? repeatCount = null, int? timeout = null)
         {
             device = device.Substring(0, 1) + Convert.ToInt32(device.Substring(1)).ToString("0000");
             int Length = value.Length;
@@ -643,7 +651,7 @@ namespace Devinno.Communications.Mitsubishi
                 }
             }
 
-            AddManual(new Work(id, data) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new Work(id, data) { RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion

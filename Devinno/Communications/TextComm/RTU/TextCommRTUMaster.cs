@@ -172,17 +172,17 @@ namespace Devinno.Communications.TextComm.RTU
         #endregion
 
         #region Auto
-        public void AutoSend(int MessageID, byte Slave, byte Command, string Message)
+        public void AutoSend(int MessageID, byte Slave, byte Command, string Message, int? timeout = null)
         {
             var ba = TextComm.MakePacket(MessageEncoding, Slave, Command, Message);
-            AddAuto(new WorkTC(MessageID, ba, Slave, Command, Message));
+            AddAuto(new WorkTC(MessageID, ba, Slave, Command, Message) { Timeout = timeout });
         }
         #endregion
         #region Manual
-        public void ManualSend(int MessageID, byte Slave, byte Command, string Message, int? repeatCount = null)
+        public void ManualSend(int MessageID, byte Slave, byte Command, string Message, int? repeatCount = null, int? timeout = null)
         {
             var ba = TextComm.MakePacket(MessageEncoding, Slave, Command, Message);
-            AddManual(new WorkTC(MessageID, ba, Slave, Command, Message) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new WorkTC(MessageID, ba, Slave, Command, Message) { RepeatCount = repeatCount, Timeout = timeout });
         }
         #endregion
         #endregion

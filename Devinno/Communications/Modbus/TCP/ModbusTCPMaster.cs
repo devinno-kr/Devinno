@@ -314,21 +314,23 @@ namespace Devinno.Communications.Modbus.TCP
         /// 지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어오는 기능 ( Read Coil Status )
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Length">개수</param>
-        public void AutoBitRead_FC1(int id, int Slave, int StartAddr, int Length) => AutoBitRead(id, Slave, 1, StartAddr, Length);
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="length">개수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void AutoBitRead_FC1(int id, int slave, int startAddr, int length, int? timeout = null) => AutoBitRead(id, slave, 1, startAddr, length, timeout);
 
         /// <summary>
         /// 지정한 국번의 연속되는 주소에 비트값을 자동으로 읽어오는 기능 ( Read Input Status )
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Length">개수</param>
-        public void AutoBitRead_FC2(int id, int Slave, int StartAddr, int Length) => AutoBitRead(id, Slave, 2, StartAddr, Length);
-        
-        private void AutoBitRead(int id, int Slave, byte fn, int StartAddr, int Length)
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="length">개수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void AutoBitRead_FC2(int id, int slave, int startAddr, int length, int? timeout = null) => AutoBitRead(id, slave, 2, startAddr, length, timeout);
+
+        private void AutoBitRead(int id, int slave, byte fn, int startAddr, int length, int? timeout)
         {
             byte[] data = new byte[12];
 
@@ -338,16 +340,16 @@ namespace Devinno.Communications.Modbus.TCP
             data[3] = 0;
             data[4] = 0x00;                                             // Length (for Next Frame)
             data[5] = 0x06;
-            data[6] = Convert.ToByte(Slave);
+            data[6] = Convert.ToByte(slave);
             data[7] = fn;
-            data[8] = StartAddr.Byte1();
-            data[9] = StartAddr.Byte0();
-            data[10] = Length.Byte1();
-            data[11] = Length.Byte0();
+            data[8] = startAddr.Byte1();
+            data[9] = startAddr.Byte0();
+            data[10] = length.Byte1();
+            data[11] = length.Byte0();
 
-            int nResCount = Length / 8;
-            if (Length % 8 != 0) nResCount++;
-            AddAuto(new WorkMD(id, data, nResCount + 9));
+            int nResCount = length / 8;
+            if (length % 8 != 0) nResCount++;
+            AddAuto(new WorkMD(id, data, nResCount + 9) { Timeout = timeout });
         }
         #endregion
         #region AutoWordRead
@@ -355,21 +357,23 @@ namespace Devinno.Communications.Modbus.TCP
         /// 지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능 ( Read Holding Registers )  
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Length">개수</param>
-        public void AutoWordRead_FC3(int id, int Slave, int StartAddr, int Length) => AutoWordRead(id, Slave, 3, StartAddr, Length);
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="length">개수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void AutoWordRead_FC3(int id, int slave, int startAddr, int length, int? timeout = null) => AutoWordRead(id, slave, 3, startAddr, length, timeout);
 
         /// <summary>
         /// 지정한 국번의 연속되는 주소에 워드값을 자동으로 읽어오는 기능 ( Read Input Registers )
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Length">개수</param>
-        public void AutoWordRead_FC4(int id, int Slave, int StartAddr, int Length) => AutoWordRead(id, Slave, 4, StartAddr, Length);
-        
-        private void AutoWordRead(int id, int Slave, byte fn, int StartAddr, int Length)
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="length">개수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void AutoWordRead_FC4(int id, int slave, int startAddr, int length, int? timeout = null) => AutoWordRead(id, slave, 4, startAddr, length, timeout);
+
+        private void AutoWordRead(int id, int slave, byte fn, int startAddr, int length, int? timeout)
         {
             byte[] data = new byte[12];
 
@@ -379,14 +383,14 @@ namespace Devinno.Communications.Modbus.TCP
             data[3] = 0;
             data[4] = 0x00;                                             // Length (for Next Frame)
             data[5] = 0x06;
-            data[6] = Convert.ToByte(Slave);
+            data[6] = Convert.ToByte(slave);
             data[7] = fn;
-            data[8] = StartAddr.Byte1();
-            data[9] = StartAddr.Byte0();
-            data[10] = Length.Byte1();
-            data[11] = Length.Byte0();
+            data[8] = startAddr.Byte1();
+            data[9] = startAddr.Byte0();
+            data[10] = length.Byte1();
+            data[11] = length.Byte0();
 
-            AddAuto(new WorkMD(id, data, Length * 2 + 9));
+            AddAuto(new WorkMD(id, data, length * 2 + 9) { Timeout = timeout });
         }
         #endregion
 
@@ -395,21 +399,25 @@ namespace Devinno.Communications.Modbus.TCP
         /// 지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능 ( Read Coil Status )
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Length">개수</param>
-        public void ManualBitRead_FC1(int id, int Slave, int StartAddr, int Length) => ManualBitRead(id, Slave, 1, StartAddr, Length);
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="length">개수</param>
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void ManualBitRead_FC1(int id, int slave, int startAddr, int length, int? repeatCount = null, int? timeout = null) => ManualBitRead(id, slave, 1, startAddr, length, repeatCount, timeout);
 
         /// <summary>
         /// 지정한 국번의 연속되는 주소에 비트값을 읽어오는 기능 ( Read Input Status )
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Length">개수</param>
-        public void ManualBitRead_FC2(int id, int Slave, int StartAddr, int Length) => ManualBitRead(id, Slave, 2, StartAddr, Length);
-        
-        private void ManualBitRead(int id, int Slave, byte fn, int StartAddr, int Length)
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="length">개수</param>
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void ManualBitRead_FC2(int id, int slave, int startAddr, int length, int? repeatCount = null, int? timeout = null) => ManualBitRead(id, slave, 2, startAddr, length, repeatCount, timeout);
+
+        private void ManualBitRead(int id, int slave, byte fn, int startAddr, int length, int? repeatCount, int? timeout)
         {
             byte[] data = new byte[12];
 
@@ -419,16 +427,16 @@ namespace Devinno.Communications.Modbus.TCP
             data[3] = 0;
             data[4] = 0x00;                                             // Length (for Next Frame)
             data[5] = 0x06;
-            data[6] = Convert.ToByte(Slave);
+            data[6] = Convert.ToByte(slave);
             data[7] = fn;
-            data[8] = StartAddr.Byte1();
-            data[9] = StartAddr.Byte0();
-            data[10] = Length.Byte1();
-            data[11] = Length.Byte0();
+            data[8] = startAddr.Byte1();
+            data[9] = startAddr.Byte0();
+            data[10] = length.Byte1();
+            data[11] = length.Byte0();
 
-            int nResCount = Length / 8;
-            if (Length % 8 != 0) nResCount++;
-            AddManual(new WorkMD(id, data, nResCount + 9));
+            int nResCount = length / 8;
+            if (length % 8 != 0) nResCount++;
+            AddManual(new WorkMD(id, data, nResCount + 9) { RepeatCount = repeatCount, Timeout = timeout });
         }
         #endregion
         #region ManualWordRead
@@ -436,21 +444,25 @@ namespace Devinno.Communications.Modbus.TCP
         /// 지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능 ( Read Holding Registers ) 
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Length">개수</param>
-        public void ManualWordRead_FC3(int id, int Slave, int StartAddr, int Length) => ManualWordRead(id, Slave, 3, StartAddr, Length);
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="length">개수</param>
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void ManualWordRead_FC3(int id, int slave, int startAddr, int length, int? repeatCount = null, int? timeout = null) => ManualWordRead(id, slave, 3, startAddr, length, repeatCount, timeout);
 
         /// <summary>
         /// 지정한 국번의 연속되는 주소에 워드값을 읽어오는 기능 ( Read Input Registers ) 
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Length">개수</param>
-        public void ManualWordRead_FC4(int id, int Slave, int StartAddr, int Length) => ManualWordRead(id, Slave, 4, StartAddr, Length);
-        
-        private void ManualWordRead(int id, int Slave, byte fn, int StartAddr, int Length)
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="length">개수</param>
+        /// <param name="repeatCount">실패 시 반복횟수</param>
+        /// <param name="timeout">타임아웃</param>
+        public void ManualWordRead_FC4(int id, int slave, int startAddr, int length, int? repeatCount = null, int? timeout = null) => ManualWordRead(id, slave, 4, startAddr, length, repeatCount, timeout);
+
+        private void ManualWordRead(int id, int slave, byte fn, int startAddr, int length, int? repeatCount, int? timeout)
         {
             byte[] data = new byte[12];
 
@@ -460,14 +472,14 @@ namespace Devinno.Communications.Modbus.TCP
             data[3] = 0;
             data[4] = 0x00;                                             // Length (for Next Frame)
             data[5] = 0x06;
-            data[6] = Convert.ToByte(Slave);
+            data[6] = Convert.ToByte(slave);
             data[7] = fn;
-            data[8] = StartAddr.Byte1();
-            data[9] = StartAddr.Byte0();
-            data[10] = Length.Byte1();
-            data[11] = Length.Byte0();
+            data[8] = startAddr.Byte1();
+            data[9] = startAddr.Byte0();
+            data[10] = length.Byte1();
+            data[11] = length.Byte0();
 
-            AddManual(new WorkMD(id, data, Length * 2 + 9));
+            AddManual(new WorkMD(id, data, length * 2 + 9) { RepeatCount = repeatCount, Timeout = timeout });
         }
         #endregion
         #region ManualBitWrite
@@ -475,14 +487,15 @@ namespace Devinno.Communications.Modbus.TCP
         /// 지정한 국번의 주소에 비트값을 쓰는 기능 ( Force Single Coil )
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="val">값</param>
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="value">값</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualBitWrite_FC5(int id, int Slave, int StartAddr, bool val, int? repeatCount = null)
+        /// <param name="timeout"></param>
+        public void ManualBitWrite_FC5(int id, int slave, int startAddr, bool value, int? repeatCount = null, int? timeout = null)
         {
             byte[] data = new byte[12];
-            int Value = val ? 0xFF00 : 0x0000;
+            int val = value ? 0xFF00 : 0x0000;
 
             data[0] = 0;                                                // TransactionID
             data[1] = 0;
@@ -490,14 +503,14 @@ namespace Devinno.Communications.Modbus.TCP
             data[3] = 0;
             data[4] = 0x00;                                             // Length (for Next Frame)
             data[5] = 0x06;
-            data[6] = Convert.ToByte(Slave);
+            data[6] = Convert.ToByte(slave);
             data[7] = 0x05;
-            data[8] = StartAddr.Byte1();
-            data[9] = StartAddr.Byte0();
-            data[10] = Value.Byte1();
-            data[11] = Value.Byte0();
+            data[8] = startAddr.Byte1();
+            data[9] = startAddr.Byte0();
+            data[10] = val.Byte1();
+            data[11] = val.Byte0();
 
-            AddManual(new WorkMD(id, data, 12) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new WorkMD(id, data, 12) { RepeatCount = repeatCount, Timeout = timeout });
         }
         #endregion
         #region ManualWordWrite
@@ -505,11 +518,12 @@ namespace Devinno.Communications.Modbus.TCP
         /// 지정한 국번의 주소에 워드값을 쓰는 기능 ( Preset Single Register )
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Value">값</param>
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="value">값</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualWordWrite_FC6(int id, int Slave, int StartAddr, int Value, int? repeatCount = null)
+        /// <param name="timeout"></param>
+        public void ManualWordWrite_FC6(int id, int slave, int startAddr, int value, int? repeatCount = null, int? timeout = null)
         {
             byte[] data = new byte[12];
 
@@ -519,14 +533,14 @@ namespace Devinno.Communications.Modbus.TCP
             data[3] = 0;
             data[4] = 0x00;                                             // Length (for Next Frame)
             data[5] = 0x06;
-            data[6] = Convert.ToByte(Slave);
+            data[6] = Convert.ToByte(slave);
             data[7] = 0x06;
-            data[8] = StartAddr.Byte1();
-            data[9] = StartAddr.Byte0();
-            data[10] = Value.Byte1();
-            data[11] = Value.Byte0();
+            data[8] = startAddr.Byte1();
+            data[9] = startAddr.Byte0();
+            data[10] = value.Byte1();
+            data[11] = value.Byte0();
 
-            AddManual(new WorkMD(id, data, 12) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new WorkMD(id, data, 12) { RepeatCount = repeatCount, Timeout = timeout });
             data = null;
         }
         #endregion
@@ -535,14 +549,15 @@ namespace Devinno.Communications.Modbus.TCP
         /// 지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Force Multiple Coils )
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Value">값</param>
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="values">값</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualMultiBitWrite_FC15(int id, int Slave, int StartAddr, bool[] Value, int? repeatCount = null)
+        /// <param name="timeout">타임아웃</param>
+        public void ManualMultiBitWrite_FC15(int id, int slave, int startAddr, bool[] values, int? repeatCount = null, int? timeout = null)
         {
-            int Length = Value.Length / 8;
-            Length += (Value.Length % 8 == 0) ? 0 : 1;
+            int Length = values.Length / 8;
+            Length += (values.Length % 8 == 0) ? 0 : 1;
 
             int LengthEx = Length + 0x07;
 
@@ -554,28 +569,28 @@ namespace Devinno.Communications.Modbus.TCP
             data[3] = 0;
             data[4] = LengthEx.Byte1();                                          // Length (for Next Frame)
             data[5] = LengthEx.Byte0();
-            data[6] = Convert.ToByte(Slave);
+            data[6] = Convert.ToByte(slave);
             data[7] = 0x0F;
-            data[8] = StartAddr.Byte1();
-            data[9] = StartAddr.Byte0();
-            data[10] = Value.Length.Byte1();
-            data[11] = Value.Length.Byte0();
+            data[8] = startAddr.Byte1();
+            data[9] = startAddr.Byte0();
+            data[10] = values.Length.Byte1();
+            data[11] = values.Length.Byte0();
             data[12] = Convert.ToByte(Length);
 
             for (int i = 0; i < Length; i++)
             {
                 byte val = 0;
                 int nTemp = 0;
-                for (int j = (i * 8); j < Value.Length && j < (i * 8) + 8; j++)
+                for (int j = (i * 8); j < values.Length && j < (i * 8) + 8; j++)
                 {
-                    if (Value[j])
+                    if (values[j])
                         val |= Convert.ToByte(Math.Pow(2, nTemp));
                     nTemp++;
                 }
                 data[13 + i] = val;
             }
 
-            AddManual(new WorkMD(id, data, 12) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new WorkMD(id, data, 12) { RepeatCount = repeatCount, Timeout = timeout });
         }
         #endregion
         #region ManualMultiWordWrite
@@ -583,15 +598,16 @@ namespace Devinno.Communications.Modbus.TCP
         /// 지정한 국번의 연속되는 주소에 비트값을 쓰는 기능 ( Preset Multiple Registers )
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="Value">값</param>
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="values">값</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualMultiWordWrite_FC16(int id, int Slave, int StartAddr, int[] Value, int? repeatCount = null)
+        /// <param name="timeout">타임아웃</param>
+        public void ManualMultiWordWrite_FC16(int id, int slave, int startAddr, int[] values, int? repeatCount = null, int? timeout = null)
         {
-            byte[] data = new byte[13 + (Value.Length * 2)];
+            byte[] data = new byte[13 + (values.Length * 2)];
 
-            int LengthEx = Value.Length * 2 + 0x07;
+            int LengthEx = values.Length * 2 + 0x07;
 
             data[0] = 0;                                                // TransactionID
             data[1] = 0;
@@ -599,21 +615,21 @@ namespace Devinno.Communications.Modbus.TCP
             data[3] = 0;
             data[4] = LengthEx.Byte1();                                          // Length (for Next Frame)
             data[5] = LengthEx.Byte0();
-            data[6] = Convert.ToByte(Slave);
+            data[6] = Convert.ToByte(slave);
             data[7] = 0x10;
-            data[8] = StartAddr.Byte1();
-            data[9] = StartAddr.Byte0();
-            data[10] = Value.Length.Byte1();
-            data[11] = Value.Length.Byte0();
-            data[12] = Convert.ToByte(Value.Length * 2);
+            data[8] = startAddr.Byte1();
+            data[9] = startAddr.Byte0();
+            data[10] = values.Length.Byte1();
+            data[11] = values.Length.Byte0();
+            data[12] = Convert.ToByte(values.Length * 2);
 
-            for (int i = 0; i < Value.Length; i++)
+            for (int i = 0; i < values.Length; i++)
             {
-                data[13 + (i * 2)] = Value[i].Byte1();
-                data[14 + (i * 2)] = Value[i].Byte0();
+                data[13 + (i * 2)] = values[i].Byte1();
+                data[14 + (i * 2)] = values[i].Byte0();
             }
 
-            AddManual(new WorkMD(id, data, 12) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new WorkMD(id, data, 12) { RepeatCount = repeatCount, Timeout = timeout });
         }
         #endregion
         #region ManualWordBitSet
@@ -621,16 +637,17 @@ namespace Devinno.Communications.Modbus.TCP
         /// 지정한 국번의 주소에 워드의 특정 비트를 쓰는 기능
         /// </summary>
         /// <param name="id">메시지 ID</param>
-        /// <param name="Slave">국번</param>
-        /// <param name="StartAddr">국번</param>
-        /// <param name="BitIndex">비트 인덱스</param>
-        /// <param name="val">값</param>
+        /// <param name="slave">국번</param>
+        /// <param name="startAddr">국번</param>
+        /// <param name="bitIndex">비트 인덱스</param>
+        /// <param name="value">값</param>
         /// <param name="repeatCount">실패 시 반복횟수</param>
-        public void ManualWordBitSet_FC26(int id, int Slave, int StartAddr, byte BitIndex, bool val, int? repeatCount = null)
+        /// <param name="timeout">타임아웃</param>
+        public void ManualWordBitSet_FC26(int id, int slave, int startAddr, byte bitIndex, bool value, int? repeatCount = null, int? timeout = null)
         {
             byte[] data = new byte[9];
 
-            int Value = val ? 0xFF00 : 0x0000;
+            int val = value ? 0xFF00 : 0x0000;
 
             data[0] = 0;                                                // TransactionID
             data[1] = 0;
@@ -638,15 +655,15 @@ namespace Devinno.Communications.Modbus.TCP
             data[3] = 0;
             data[4] = 0x00;                                             // Length (for Next Frame)
             data[5] = 0x07;
-            data[6] = Convert.ToByte(Slave);
+            data[6] = Convert.ToByte(slave);
             data[7] = 0x1A;
-            data[8] = StartAddr.Byte1();
-            data[9] = StartAddr.Byte0();
-            data[10] = BitIndex;
-            data[11] = Value.Byte1();
-            data[12] = Value.Byte0();
+            data[8] = startAddr.Byte1();
+            data[9] = startAddr.Byte0();
+            data[10] = bitIndex;
+            data[11] = val.Byte1();
+            data[12] = val.Byte0();
 
-            AddManual(new WorkMD(id, data, 12) { UseRepeat = repeatCount.HasValue, RepeatCount = (repeatCount.HasValue ? repeatCount.Value : 0) });
+            AddManual(new WorkMD(id, data, 12) { RepeatCount = repeatCount, Timeout = timeout });
         }
         #endregion
         #endregion

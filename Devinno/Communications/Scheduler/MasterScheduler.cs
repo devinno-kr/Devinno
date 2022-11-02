@@ -14,11 +14,8 @@ namespace Devinno.Communications.Scheduler
             public int MessageID { get; private set; }
             public byte[] Data { get; private set; }
 
-            public bool UseRepeat { get; set; } = false;
-            public int RepeatCount { get; set; } = 3;
-
-            public bool UseTimeout { get; set; } = false;
-            public int Timeout { get; set; } = 100;
+            public int? RepeatCount { get; set; } = null;
+            public int? Timeout { get; set; } = null;
 
             public Work(int ID, byte[] Data)
             {
@@ -183,8 +180,7 @@ namespace Devinno.Communications.Scheduler
                             #region Default Value
                             bool bRepeat = true;
                             int nTimeoutCount = 0;
-                            int Timeout = this.Timeout;
-                            if (w.UseTimeout) Timeout = w.Timeout;
+                            int Timeout = w.Timeout ?? this.Timeout;
                             #endregion
 
                             try
@@ -234,10 +230,10 @@ namespace Devinno.Communications.Scheduler
                                     {
                                         #region Timeout
                                         OnTimeout(w);
-                                        if (w.UseRepeat)
+                                        if (w.RepeatCount.HasValue)
                                         {
                                             nTimeoutCount++;
-                                            if (nTimeoutCount >= w.RepeatCount) bRepeat = false;
+                                            if (nTimeoutCount >= w.RepeatCount.Value) bRepeat = false;
                                         }
                                         else bRepeat = false;
                                         #endregion
