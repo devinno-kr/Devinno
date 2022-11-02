@@ -1,8 +1,7 @@
-﻿using Devinno.Communications.Redis;
-using Devinno.Communications.TextComm.RTU;
-using Devinno.Communications.TextComm.TCP;
-using Devinno.Timers;
+﻿using Devinno.Data;
 using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Sample
@@ -11,18 +10,21 @@ namespace Sample
     {
         static void Main(string[] args)
         {
-            var redis = new RedisClient { Host = "127.0.0.1" };
-            redis.Open();
+    var ba = new byte[1024];
+    var M = new BitMemories("M", ba);
+    var WM = new WordMemories("WM", ba);
 
-            var tmr = new HiResTimer { Interval = 1000, Enabled = true };
-            tmr.Elapsed += (o, s) => redis.Set("Time", DateTime.Now.ToString("HH:mm:ss.fff"));
+    var s = "";
+    WM[0] = 0x1234;
+    for (int i = 0; i < 16; i++) s += (M[i] ? "1" : "0");
 
-            redis.Set("Time", DateTime.Now.ToString("HH:mm:ss.fff"));
-            while (true)
-            {
-                Console.WriteLine(redis.GetString("Time"));
-                System.Threading.Thread.Sleep(500);
-            }
+    Console.WriteLine($" M Count : {M.Size}");
+    Console.WriteLine($"WM Count : {WM.Size}");
+    Console.WriteLine("");
+    Console.WriteLine($"WM000 = {WM[0].ToString("X4")}");
+    Console.WriteLine($"M0:15 = {s}");
+
+    Console.ReadKey();
         }
     }
 }

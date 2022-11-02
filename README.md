@@ -30,7 +30,6 @@
     * [TextCommTCPSlave](#TextCommTCPSlave)
   * Devinno.Data
     * [INI](#INI)
-    * [Memories](#Memories)
     * [Serialize](#Serialize)
   * Devinno.Extensions
     * [BitExtension](#BitExtension)
@@ -624,10 +623,53 @@ MessageRequest 이벤트에서는 요청 메시지를 처리하고 응답 메시
 
 ### 3. Devinno.Data
 #### 3.1. INI  
-      
-#### 3.2. Memories  
-      
-#### 3.3. Serialize  
+INI 파일 읽기/쓰기
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    {
+        var ini = new INI(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.ini"));
+
+        ini.Write("SectionA", "Test1", "1");
+        ini.Write("SectionA", "Test2", "2");
+        ini.Write("SectionB", "Test3", "3");
+        ini.Write("SectionB", "Test4", "4");
+        ini.Write("SectionC", "Test5", "5");
+        ini.Write("SectionC", "Test6", "6");
+
+        Console.WriteLine($"[SectionA] Test1 = {ini.Read("SectionA", "Test1")}");
+        Console.WriteLine($"[SectionA] Test2 = {ini.Read("SectionA", "Test2")}");
+        Console.WriteLine($"[SectionB] Test3 = {ini.Read("SectionB", "Test3")}");
+        Console.WriteLine($"[SectionB] Test4 = {ini.Read("SectionB", "Test4")}");
+        Console.WriteLine($"[SectionC] Test5 = {ini.Read("SectionC", "Test5")}");
+        Console.WriteLine($"[SectionC] Test6 = {ini.Read("SectionC", "Test6")}");
+    }
+
+    Console.ReadKey(); 
+}
+```
+
+* **결과**
+```
+[SectionA] Test1 = 1
+[SectionA] Test2 = 2
+[SectionB] Test3 = 3
+[SectionB] Test4 = 4
+[SectionC] Test5 = 5
+[SectionC] Test6 = 6
+```
+
+* **설명**  
+```
+INI 클래스는 Window 환경에서만 동작
+위 코드는 값을 쓰고 읽어 화면에 표시
+```
+<br />      
+
+#### 3.2. Serialize  
       
 ### 4. Devinno.Extensions
 #### 4.1. BitExtension  
