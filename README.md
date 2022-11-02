@@ -30,6 +30,7 @@
     * [TextCommTCPSlave](#TextCommTCPSlave)
   * Devinno.Data
     * [INI](#INI)
+    * [Memories](#Memories)    
     * [Serialize](#Serialize)
   * Devinno.Extensions
     * [BitExtension](#BitExtension)
@@ -669,13 +670,177 @@ INI 클래스는 Window 환경에서만 동작
 ```
 <br />      
 
-#### 3.2. Serialize  
-      
+#### 3.2. Memories  
+비트영역 / 워드영역
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    var ba = new byte[1024];
+    var M = new BitMemories("M", ba);
+    var WM = new WordMemories("WM", ba);
+
+    WM[0] = 0x1234;
+
+    Console.WriteLine($"  M Count : {M.Size}");
+    Console.WriteLine($" WM Count : {WM.Size}");
+    Console.WriteLine("");
+    Console.WriteLine($" WM0 = {WM[0].ToString("X4")}");
+
+    for (int i = 15; i >= 0; i--) Console.Write($"M{i}".PadLeft(4));
+    Console.WriteLine("");
+    for (int i = 15; i >= 0; i--) Console.Write((M[i] ? "1" : "0").PadLeft(4));
+
+    Console.ReadKey();
+}
+```
+
+* **결과**
+```
+  M Count : 8192
+ WM Count : 512
+
+ WM0 = 1234
+ M15 M14 M13 M12 M11 M10  M9  M8  M7  M6  M5  M4  M3  M2  M1  M0
+   0   0   0   1   0   0   1   0   0   0   1   1   0   1   0   0
+```
+
+* **설명**  
+```
+동일한 메모리를 공유하는 비트영역과 워드영역
+WM0에 0x1234를 대입하면 M0부터 하위비트 매칭 
+```
+<br />      
+
+#### 3.3. Serialize  
+객체 직렬화
+
+* **샘플코드**
+```csharp
+class Test
+{
+    public int Number { get; set; }
+    public float Real { get; set; }
+    public string Text { get; set; }
+
+    public override string ToString() => $"N:{Number};R:{Real};T:{Text}";
+}
+
+static void Main(string[] args)
+{
+    var v = new Test { Number = 25, Real = 36.5F, Text = "Test" };
+
+    var json = Serialize.JsonSerialize(v);
+    var text = Serialize.JsonDeserialize<Test>(json);
+
+    Console.WriteLine("# Json");
+    Console.WriteLine(json);
+    Console.WriteLine("");
+    Console.WriteLine("# Text");
+    Console.WriteLine(text);
+
+    Console.ReadKey();
+}
+```
+
+* **결과**
+```
+# Json
+{"Number":25,"Real":36.5,"Text":"Test"}
+
+# Text
+N:25;R:36.5;T:Test
+```
+
+* **설명**  
+```
+v를 Json으로 직렬화 시키고 출력
+Json을 역직렬화한 객체 출력
+```
+<br />
+
 ### 4. Devinno.Extensions
 #### 4.1. BitExtension  
-      
+비트 확장
+
+* **샘플코드**
+```csharp
+static void PR(bool v) => PR(v ? "1" : "0");
+static void PR(string v) => Console.Write(v);
+
+static void Main(string[] args)
+{
+    int n = 0;
+
+    n.Bit15(false); n.Bit14(false); n.Bit13(false); n.Bit12(true);  //0001
+    n.Bit11(false); n.Bit10(false); n.Bit9(true); n.Bit8(false);    //0010
+    n.Bit7(false); n.Bit6(false); n.Bit5(true); n.Bit4(true);       //0011
+    n.Bit3(false); n.Bit2(true); n.Bit1(false); n.Bit0(false);      //0100
+
+    Console.WriteLine("0001 0010 0011 0100 => ");
+    Console.WriteLine("0x" + n.ToString("X4"));
+    Console.WriteLine(" ");
+
+    n = 0x2580;
+    Console.WriteLine("0x2580 => ");
+    PR(n.Bit15()); PR(n.Bit14()); PR(n.Bit13()); PR(n.Bit12()); PR(" ");
+    PR(n.Bit11()); PR(n.Bit10()); PR(n.Bit9()); PR(n.Bit8()); PR(" ");
+    PR(n.Bit7()); PR(n.Bit6()); PR(n.Bit5()); PR(n.Bit4()); PR(" ");
+    PR(n.Bit3()); PR(n.Bit2()); PR(n.Bit1()); PR(n.Bit0()); PR(" ");
+
+    Console.ReadKey();
+}
+```
+
+* **결과**
+```
+0001 0010 0011 0100 =>
+0x1234
+
+0x2580 =>
+0010 0101 1000 0000
+```
+
+* **설명**  
+```
+확장 메소드 Bit0 ~ Bit15를 이용하여 비트 읽기/쓰기
+```
+<br />
+
 #### 4.2. ColorExtension  
-      
+색상 확장
+
+* **샘플코드**
+```csharp
+static string PER(double v) => v.ToString("0%");
+static void Main(string[] args)
+{
+    var c = Color.LimeGreen;
+    var h = c.ToHSV();
+    Console.WriteLine($"RGB({c.R}, {c.G}, {c.B}) => HSV({h.H}, {PER(h.S)}, {PER(h.V)})");
+
+    var h2 = new HsvColor() { A = 1, H = 200, S = 0.45, V = 0.6 };
+    var c2 = h2.ToRGB();
+    Console.WriteLine($"HSV({h2.H}, {PER(h2.S)}, {PER(h2.V)}) => RGB({c2.R}, {c2.G}, {c2.B})");
+
+    Console.ReadKey();
+}
+```
+
+* **결과**
+```
+RGB(50, 205, 50) => HSV(120, 76%, 80%)
+HSV(200, 45%, 60%) => RGB(84, 130, 153)
+```
+
+* **설명**  
+```
+RGB를 HSV로 변환
+HSV를 RGB로 변화
+```
+<br />
+
 ### 5. Devinno.Measure
 #### 5.1. Chattering  
       
