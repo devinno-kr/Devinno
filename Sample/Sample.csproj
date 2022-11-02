@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Devinno.Database\Devinno.Database.csproj" />
     <ProjectReference Include="..\Devinno\Devinno.csproj" />
   </ItemGroup>
 
