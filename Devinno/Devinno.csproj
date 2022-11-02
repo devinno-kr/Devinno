@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/devinno-kr/Devinno</PackageProjectUrl>
+    <PackageProjectUrl></PackageProjectUrl>
     <PackageTags></PackageTags>
-    <RepositoryUrl></RepositoryUrl>
+    <RepositoryUrl>https://github.com/devinno-kr/Devinno</RepositoryUrl>
     <Version>1.1.0.0</Version>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <Authors>Devinno</Authors>
