@@ -1,4 +1,5 @@
-﻿using Devinno.Data;
+﻿using Devinno.Communications.Modbus.TCP;
+using Devinno.Data;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -10,21 +11,18 @@ namespace Sample
     {
         static void Main(string[] args)
         {
-    var ba = new byte[1024];
-    var M = new BitMemories("M", ba);
-    var WM = new WordMemories("WM", ba);
+            ModbusTCPSlaveBase tcp = new ModbusTCPSlaveBase();
+            ModbusTCPSlaveBase tcp2 = new ModbusTCPSlaveBase();
 
-    var s = "";
-    WM[0] = 0x1234;
-    for (int i = 0; i < 16; i++) s += (M[i] ? "1" : "0");
+            tcp.Start();
+            Thread.Sleep(5000);
+            tcp.Stop();
+            Thread.Sleep(5000);
+            tcp2.Start();
+            Thread.Sleep(5000);
+            tcp2.Stop();
 
-    Console.WriteLine($" M Count : {M.Size}");
-    Console.WriteLine($"WM Count : {WM.Size}");
-    Console.WriteLine("");
-    Console.WriteLine($"WM000 = {WM[0].ToString("X4")}");
-    Console.WriteLine($"M0:15 = {s}");
-
-    Console.ReadKey();
+            Console.ReadKey();
         }
     }
 }

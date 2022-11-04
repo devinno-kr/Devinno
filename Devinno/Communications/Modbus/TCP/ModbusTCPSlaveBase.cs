@@ -184,11 +184,20 @@ namespace Devinno.Communications.Modbus.TCP
 
             while (IsStart)
             {
-                Socket hserver = server.Accept();
-                Thread th = new Thread(new ParameterizedThreadStart(Run));
-                th.IsBackground = true;
-                th.Start(hserver);
+                try
+                {
+                    Socket hserver = server.Accept();
+                    Thread th = new Thread(new ParameterizedThreadStart(Run));
+                    th.IsBackground = true;
+                    th.Start(hserver);
+                }
+                catch { }
+                Thread.Sleep(10);
             }
+
+            server.Close();
+            server.Dispose();
+            server = null;
         }
 
         void Run(object obj)
@@ -207,7 +216,7 @@ namespace Devinno.Communications.Modbus.TCP
                 bool IsThStart = true;
 
                 chr.StateChanged += (o, s) => { if (!s.Value) IsThStart = false; };
-                while (IsThStart)
+                while (IsThStart && IsStart)
                 {
                     try
                     {
@@ -564,6 +573,9 @@ namespace Devinno.Communications.Modbus.TCP
             try
             {
                 IsStart = false;
+                
+                server.Close();
+
                 return true;
             }
             catch (Exception e) { System.IO.File.AppendAllText("er.txt", e.ToString() + "\r\n" + e.StackTrace.ToString()); }
