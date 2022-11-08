@@ -843,7 +843,55 @@ HSV를 RGB로 변화
 
 ### 5. Devinno.Measure
 #### 5.1. Chattering  
-      
+채터링
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    var chat = new Chattering { ChatteringTime = 500 };
+    var rnd = new Random();
+
+    chat.StateChanged += (o, s) => Console.WriteLine(DateTime.Now.ToString("HH:mm:ss") + " : " + (chat.State ? 1 : 0));
+
+    var v = false;
+    var v2 = false;
+    var ch = false;
+    while (true)
+    {
+        var now = DateTime.Now;
+
+        if (now.Second % 2 == 1) { v = !v; ch = true; }
+        else { if (ch) { v2 = !v2; v = v2; ch = false;  } }
+
+        chat.Set(v);
+
+        Thread.Sleep(10);
+    }
+}
+```
+
+* **결과**
+```
+10:41:22 : 0
+10:41:24 : 1
+10:41:26 : 0
+10:41:28 : 1
+10:41:30 : 0
+10:41:32 : 1
+10:41:34 : 0
+10:41:36 : 1
+10:41:38 : 0
+```
+
+* **설명**  
+```
+홀수초에는 값이 반전, 짝수초에는 진입 시 반전 후 유지
+채터링 상태 변화 시 출력
+출력 결과를 보면 짝수 초에만 출력됨
+```
+<br />
+
 #### 5.2. StableMeasure  
       
 ### 6. Devinno.Timers

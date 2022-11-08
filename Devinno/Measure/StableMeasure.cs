@@ -51,7 +51,7 @@ namespace Devinno.Measure
                 if (!IsComplete)
                 {
                     #region Complete Start
-                    if (Math.Abs(Value - old) < ErrorRange)
+                    if (Math.Abs(Value - old) <= ErrorRange)
                     {
                         IsComplete = true;
                         CompleteTIme = DateTime.Now;
