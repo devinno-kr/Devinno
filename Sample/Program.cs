@@ -15,14 +15,19 @@ namespace Sample
 {
     class Program
     {
+        static void Print(string s, bool v) => Console.WriteLine(s + " : " + (v ? "충돌" : "미충돌"));
         static void Main(string[] args)
         {
-            var tmr = new HiResTimer { Interval = 10, Enabled = true };
-            tmr.Elapsed += (o, s) => Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff"));
+            Print("Rect(0,0,80,20), Point(10,10)", CollisionTool.Check(new Rectangle(0, 0, 80, 20), new Point(10, 10)));
+            Print("Rect(0,0,80,20), Point(100,10)", CollisionTool.Check(new Rectangle(0, 0, 80, 20), new Point(100, 10)));
+            Print("Rect(0,0,80,20), Rect(10,10,30,30)", CollisionTool.Check(new Rectangle(0, 0, 80, 20), new Rectangle(10, 10, 30, 30)));
+            Print("Rect(0,0,80,20), Rect(100,10,30,30)", CollisionTool.Check(new Rectangle(0, 0, 80, 20), new Rectangle(100, 10, 30, 30)));
+            Print("Circle(0,0,80,80), Point(30,30)", CollisionTool.CheckCircle(new Rectangle(0, 0, 80, 80), new Point(30, 30)));
+            Print("Circle(0,0,80,80), Point(10,10)", CollisionTool.CheckCircle(new Rectangle(0, 0, 80, 80), new Point(10, 10)));
+            Print("Ellipse(0,0,80,30), Ellipse(40,15,80,30)", CollisionTool.CheckEllipse(new Rectangle(0, 0, 80, 30), new Rectangle(40, 15, 80, 30)));
+            Print("Ellipse(0,0,80,30), Ellipse(0,0,80,30)", CollisionTool.CheckEllipse(new Rectangle(0, 0, 80, 30), new Rectangle(45, 20, 80, 30)));
 
             Console.ReadKey();
-
-            tmr.Enabled = false;
         }
     }
 }

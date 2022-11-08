@@ -899,7 +899,7 @@ static void Main(string[] args)
 ```csharp
 static void Main(string[] args)
 {
-    var stable = new StableMeasure { MeasureTime = 300, ErrorRange = 0 };
+    var stable = new StableMeasure { MeasureTime = 300, ErrorRange = 1 };
     stable.Measured += (o, s) => Console.WriteLine(DateTime.Now.ToString("HH:mm:ss") + " : " + stable.Value);
 
     var v = 0.0;
@@ -907,7 +907,7 @@ static void Main(string[] args)
     while (true)
     {
         var now = DateTime.Now;
-        if (now.Second % 5 != 0) v = MathTool.Constrain(v + (r.Next() % 2 == 0 ? 1 : -1), -500, 500);
+        if (now.Second % 5 != 0) v = MathTool.Constrain(v + (r.Next() % 2 == 0 ? 3 : -3), -500, 500);
 
         stable.Set(v);
 
@@ -928,8 +928,8 @@ static void Main(string[] args)
 
 * **설명**  
 ```
-상태값을 지속적으로 1씩 변화시키고 5초에 한번씩 상태 유지
-현재값이 300ms 이상 유지되면 출력
+상태값을 지속적으로 3씩 변화시키고 5초에 한번씩 상태 유지
+현재값이 오차값 1이하로 300ms 이상 유지되면 출력
 결과를 보면 5초에 한번씩 출력되는 결과 확인
 ```
 <br />
@@ -942,7 +942,7 @@ static void Main(string[] args)
 ```csharp
 static void Main(string[] args)
 {
-    var tmr = new HiResTimer { Interval = 10, Enabled = true };
+    var tmr = new HiResTimer { Interval = 5, Enabled = true };
     tmr.Elapsed += (o, s) => Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff"));
 
     Console.ReadKey();
@@ -953,24 +953,47 @@ static void Main(string[] args)
 
 * **결과**
 ```
-12:11:37.556
-12:11:37.566
-12:11:37.576
-12:11:37.586
-12:11:37.596
-12:11:37.606
+12:58:26.260
+12:58:26.265
+12:58:26.270
+12:58:26.275
+12:58:26.280
+12:58:26.285
+12:58:26.290
+12:58:26.295
+12:58:26.300
 ```
 
 * **설명**  
 ```
-10ms 단위로 현재 시간 출력
+5ms 단위로 현재 시간 출력
 ```
 <br />
 
       
 ### 7. Devinno.Tools
 #### 7.1. CollisionTool  
-      
+충돌 검사
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+
+}
+```
+
+* **결과**
+```
+
+```
+
+* **설명**  
+```
+
+```
+<br />
+
 #### 7.2. ColorTool  
       
 #### 7.3. CryptoTool  
