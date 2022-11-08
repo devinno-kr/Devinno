@@ -46,8 +46,6 @@
     * [CryptoTool](#CryptoTool)
     * [LauncherTool](#LauncherTool)
     * [MathTool](#MathTool)
-    * [NetworkTool](#NetworkTool)
-    * [WindowsTool](#WindowsTool)
   * Devinno.Utils
     * [ExternalProgram](#ExternalProgram)
     <br />  
@@ -1146,12 +1144,66 @@ static void Main(string[] args)
 <br />
 
 #### 7.5. MathTool  
-      
-#### 7.6. NetworkTool  
-      
-#### 7.7. WindowsTool  
-      
+수학 관련 함수 
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    Console.WriteLine(MathTool.Center(100, 150));
+    Console.WriteLine(MathTool.CenterDist(100, 150));
+    Console.WriteLine(MathTool.CenterPoint(new Rectangle(100, 100, 200, 150)));
+    Console.WriteLine(MathTool.CompareAngle(900, 150, 200));
+    Console.WriteLine(MathTool.Constrain(120, 0, 100));
+    Console.WriteLine(MathTool.GetAngle(new Point(0, 0), new Point(30, 60)));
+    Console.WriteLine(MathTool.GetDistance(new Point(0, 0), new Point(30, 60)));
+    Console.WriteLine(MathTool.GetPointWithAngle(new Point(0, 0), 45, 50));
+    Console.WriteLine(MathTool.LinearEquationX(new Point(0, 0), new Point(30, 20), 10));
+    Console.WriteLine(MathTool.LinearEquationY(new Point(0, 0), new Point(30, 20), 15));
+    Console.WriteLine(MathTool.Map(10, 0, 100, 20, 50));
+    Console.WriteLine(MathTool.RotatePoint(new Point(0, 0), new Point(30, 30), 45));
+
+    Console.ReadKey();
+}
+```
+
+* **결과 및 설명**  
+```
+125                         : 100 부터 150 사이 중간값 
+175                         : 100 부터 150 거리 사이 중간값
+{X=200,Y=175}               : 사각형(100,100,200,150)의 중심점
+True                        : 900도는 150도와 200도 사이 있는가?
+100                         : 120을 0~100 범위로 제한
+63.43494882292201           : Point(0,0)과 Point(30,60) 사이 각 
+67.08203932499369           : Point(0,0)과 Point(30,60) 사이 거리
+{X=35.35534, Y=35.35534}    : Point(0,0)에서 45도 50 거리 위치한 지점 
+15                          : Point(0,0)과 Point(30,20)을 지나는 직선상 Y좌표가 10일 때 X의 값
+10                          : Point(0,0)과 Point(30,20)을 지나는 직선상 X좌표가 15일 때 Y의 값
+23                          : 0~100 사이 값 10은 20~50 일 때
+{X=0, Y=42.426407}          : Point(0,0)을 기준으로 Point(30,30)을 45도 회전 시 위치
+```
+<br />
+
 ### 8. Devinno.Utils
 #### 8.1. ExternalProgram  
-      
+수학 관련 함수 
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    var v = new ExternalProgram("calc.exe");
+    v.Start();
+    Thread.Sleep(5000);
+    v.Stop();
+
+    Console.ReadKey();
+}
+```
+
+* **설명**  
+```
+계산기 프로그램 실행 5초 후 종료
+```
 <br />
+

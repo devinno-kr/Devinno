@@ -581,7 +581,7 @@ namespace Devinno.Tools
         }
 
         /// <summary>
-        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 위치 
+        /// 한 점을 기준으로 각도와 거리를 알 때 점의 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -595,7 +595,7 @@ namespace Devinno.Tools
         }
 
         /// <summary>
-        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 X좌료 위치 
+        /// 한 점을 기준으로 각도와 거리를 알 때 점의 X좌료 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -604,7 +604,7 @@ namespace Devinno.Tools
         public static float GetX_WithAngle(PointF p, float angle, float dist) { return p.X + dist * Convert.ToSingle(Math.Cos(angle * Math.PI / 180.0)); }
 
         /// <summary>
-        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 Y좌표 위치 
+        /// 한 점을 기준으로 각도와 거리를 알 때 점의 Y좌표 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -613,7 +613,7 @@ namespace Devinno.Tools
         public static float GetY_WithAngle(PointF p, float angle, float dist) { return p.Y + dist * Convert.ToSingle(Math.Sin(angle * Math.PI / 180.0)); }
 
         /// <summary>
-        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 X좌료 위치 
+        /// 한 점을 기준으로 각도와 거리를 알 때 점의 X좌료 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -622,7 +622,7 @@ namespace Devinno.Tools
         public static float GetX_WithAngle(Point p, float angle, float dist) { return p.X + dist * Convert.ToSingle(Math.Cos(angle * Math.PI / 180.0)); }
 
         /// <summary>
-        /// 한 점을 기준으로 각도롸 거리를 알 때 점의 Y좌표 위치 
+        /// 한 점을 기준으로 각도와 거리를 알 때 점의 Y좌표 위치 
         /// </summary>
         /// <param name="p">점</param>
         /// <param name="angle">각도</param>
@@ -676,8 +676,11 @@ namespace Devinno.Tools
         public static int StandardAngle(int angle)
         {
             int ret = angle;
-            if (ret > 360) ret -= 360;
-            if (ret < 0) ret += 360;
+
+            var v = Convert.ToInt32(Math.Floor(Math.Abs(ret) / 360.0));
+
+            if (ret > 360) ret -= 360 * v;
+            if (ret < 0) ret += 360 * v;
             return ret;
         }
 
@@ -689,8 +692,11 @@ namespace Devinno.Tools
         public static float StandardAngle(float angle)
         {
             float ret = angle;
-            if (ret > 360) ret -= 360;
-            if (ret < 0) ret += 360;
+
+            var v = Convert.ToInt32(Math.Floor(Math.Abs(ret) / 360.0));
+
+            if (ret > 360) ret -= 360 * v;
+            if (ret < 0) ret += 360 * v;
             return ret;
         }
 
@@ -702,8 +708,11 @@ namespace Devinno.Tools
         public static double StandardAngle(double angle)
         {
             double ret = angle;
-            if (ret > 360) ret -= 360;
-            if (ret < 0) ret += 360;
+
+            var v = Convert.ToInt32(Math.Floor(Math.Abs(ret) / 360.0));
+
+            if (ret > 360) ret -= 360 * v;
+            if (ret < 0) ret += 360 * v;
             return ret;
         }
         #endregion

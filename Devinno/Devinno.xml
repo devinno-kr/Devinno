@@ -1505,7 +1505,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetPointWithAngle(System.Drawing.Point,System.Single,System.Single)">
             <summary>
-            한 점을 기준으로 각도롸 거리를 알 때 점의 위치 
+            한 점을 기준으로 각도와 거리를 알 때 점의 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
@@ -1514,7 +1514,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetX_WithAngle(System.Drawing.PointF,System.Single,System.Single)">
             <summary>
-            한 점을 기준으로 각도롸 거리를 알 때 점의 X좌료 위치 
+            한 점을 기준으로 각도와 거리를 알 때 점의 X좌료 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
@@ -1523,7 +1523,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetY_WithAngle(System.Drawing.PointF,System.Single,System.Single)">
             <summary>
-            한 점을 기준으로 각도롸 거리를 알 때 점의 Y좌표 위치 
+            한 점을 기준으로 각도와 거리를 알 때 점의 Y좌표 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
@@ -1532,7 +1532,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetX_WithAngle(System.Drawing.Point,System.Single,System.Single)">
             <summary>
-            한 점을 기준으로 각도롸 거리를 알 때 점의 X좌료 위치 
+            한 점을 기준으로 각도와 거리를 알 때 점의 X좌료 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
@@ -1541,7 +1541,7 @@
         </member>
         <member name="M:Devinno.Tools.MathTool.GetY_WithAngle(System.Drawing.Point,System.Single,System.Single)">
             <summary>
-            한 점을 기준으로 각도롸 거리를 알 때 점의 Y좌표 위치 
+            한 점을 기준으로 각도와 거리를 알 때 점의 Y좌표 위치 
             </summary>
             <param name="p">점</param>
             <param name="angle">각도</param>
