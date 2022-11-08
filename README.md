@@ -893,9 +893,80 @@ static void Main(string[] args)
 <br />
 
 #### 5.2. StableMeasure  
-      
+상태값이 지정한 오차치 이내로 유지되면 이벤트 발생 
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    var stable = new StableMeasure { MeasureTime = 300, ErrorRange = 0 };
+    stable.Measured += (o, s) => Console.WriteLine(DateTime.Now.ToString("HH:mm:ss") + " : " + stable.Value);
+
+    var v = 0.0;
+    var r = new Random();
+    while (true)
+    {
+        var now = DateTime.Now;
+        if (now.Second % 5 != 0) v = MathTool.Constrain(v + (r.Next() % 2 == 0 ? 1 : -1), -500, 500);
+
+        stable.Set(v);
+
+        Thread.Sleep(10);
+    }
+}
+```
+
+* **결과**
+```
+12:03:35 : 4
+12:03:40 : -12
+12:03:45 : 3
+12:03:50 : -6
+12:03:55 : -37
+12:04:00 : -70
+```
+
+* **설명**  
+```
+상태값을 지속적으로 1씩 변화시키고 5초에 한번씩 상태 유지
+현재값이 300ms 이상 유지되면 출력
+결과를 보면 5초에 한번씩 출력되는 결과 확인
+```
+<br />
+
 ### 6. Devinno.Timers
 #### 6.1. HiResTimer  
+비교적 정확한 타이머
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    var tmr = new HiResTimer { Interval = 10, Enabled = true };
+    tmr.Elapsed += (o, s) => Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff"));
+
+    Console.ReadKey();
+
+    tmr.Enabled = false;
+}
+```
+
+* **결과**
+```
+12:11:37.556
+12:11:37.566
+12:11:37.576
+12:11:37.586
+12:11:37.596
+12:11:37.606
+```
+
+* **설명**  
+```
+10ms 단위로 현재 시간 출력
+```
+<br />
+
       
 ### 7. Devinno.Tools
 #### 7.1. CollisionTool  

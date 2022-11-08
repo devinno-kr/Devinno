@@ -2,6 +2,7 @@
 using Devinno.Data;
 using Devinno.Extensions;
 using Devinno.Measure;
+using Devinno.Timers;
 using Devinno.Tools;
 using System;
 using System.Diagnostics;
@@ -16,23 +17,12 @@ namespace Sample
     {
         static void Main(string[] args)
         {
-            var stable = new StableMeasure { MeasureTime = 300, ErrorRange = 0 };
-            stable.Measured += (o, s) => Console.WriteLine(DateTime.Now.ToString("HH:mm:ss") + " : " + stable.Value);
+            var tmr = new HiResTimer { Interval = 10, Enabled = true };
+            tmr.Elapsed += (o, s) => Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff"));
 
-            var v = 0.0;
-            var r = new Random();
-            while (true)
-            {
-                var now = DateTime.Now;
+            Console.ReadKey();
 
-                if (now.Second % 5 != 0) v = MathTool.Constrain(v + (r.Next() % 2 == 0 ? 1 : -1), -500, 500);
-                stable.Set(v);
-
-                //Console.WriteLine(DateTime.Now.ToString("HH:mm:ss") + " : " + stable.Value);
-
-                Thread.Sleep(10);
-            }
-
+            tmr.Enabled = false;
         }
     }
 }
