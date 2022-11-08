@@ -1214,23 +1214,6 @@
             <param name="srcAlpha">덧씌울 색 투명도</param>
             <returns>최종색</returns>
         </member>
-        <member name="P:Devinno.Tools.LauncherTool.IsAdministrator">
-            <summary>
-            관리자 권한 여부
-            </summary>
-        </member>
-        <member name="M:Devinno.Tools.LauncherTool.Start(System.String,System.Action,System.Action,System.Boolean,System.Boolean,System.Int32)">
-            <summary>
-            프로그램 실행 도움
-            * 디버그시엔 관리자 모드 사용불가
-            </summary>
-            <param name="ProgramName">프로그램 명</param>
-            <param name="run">정상 콜백</param>
-            <param name="faild">비정상 콜백</param>
-            <param name="UseDuplicate">중복실행 여부</param>
-            <param name="UseAdministrator">관리자실행 여부</param>
-            <param name="Delay">지연</param>
-        </member>
         <member name="M:Devinno.Tools.LauncherTool.Start(System.String,System.Action,System.Action,System.Boolean,System.Int32)">
             <summary>
             프로그램 실행 도움

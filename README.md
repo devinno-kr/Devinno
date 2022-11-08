@@ -1015,11 +1015,136 @@ Line(0,0,30,30), Line(40,10,10,40) : 충돌
 <br />
 
 #### 7.2. ColorTool  
-      
+색상 코드값 출력 및 색상 혼합
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    var c = Color.FromArgb(0, 128, 128);
+    Console.WriteLine(ColorTool.GetName(c, ColorCodeType.ARGB));
+    Console.WriteLine(ColorTool.GetName(c, ColorCodeType.CodeARGB));
+    Console.WriteLine(ColorTool.GetName(c, ColorCodeType.RGB));
+    Console.WriteLine(ColorTool.GetName(c, ColorCodeType.CodeRGB));
+
+    var c2 = ColorTool.MixColorAlpha(Color.Red, Color.Blue, 64);
+    Console.WriteLine(ColorTool.GetName(c2, ColorCodeType.RGB));
+    Console.ReadKey();
+}
+```
+
+* **결과**
+```
+255,0,128,128
+#FF008080
+0,128,128
+#008080
+191,0,64
+```
+
+* **설명**  
+```
+RGB(0,128,128)의 색상 코드 출력
+빨간색과 25% (64/256) 투명도가 적용된 파란색 혼합 시 색상 출력 
+```
+<br />
+
 #### 7.3. CryptoTool  
-      
+암/복호화
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    var s = "동해물과 백두산이 마르고 닳도록";
+    var k = "1234567890ABCDEF";
+
+    var p1 = CryptoTool.EncodeBase64String(s);
+    var r1 = CryptoTool.DecodeBase64String<string>(p1);
+    Console.WriteLine("- Base64String");
+    Console.WriteLine(p1);
+    Console.WriteLine(r1);
+    Console.WriteLine("");
+
+    var p2 = CryptoTool.EncryptAES128(s, k);
+    var r2 = CryptoTool.DecryptAES128(p2, k);
+    Console.WriteLine("- AES128");
+    Console.WriteLine(p2);
+    Console.WriteLine(r2);
+    Console.WriteLine("");
+
+    var p3 = CryptoTool.EncryptAES256(s, k);
+    var r3 = CryptoTool.DecryptAES256(p3, k);
+    Console.WriteLine("- AES256");
+    Console.WriteLine(p3);
+    Console.WriteLine(r3);
+    Console.WriteLine("");
+
+    Console.ReadKey();
+}
+```
+
+* **결과**
+```
+- Base64String
+64+Z7ZW066y86rO8IOuwseuRkOyCsOydtCDrp4jrpbTqs6Ag64uz64+E66Gd
+동해물과 백두산이 마르고 닳도록
+
+- AES128
+vm2dKMAhhsQdfZEE6MLfwKUh3l/MBWpgBuTVvFqrO5jzV2cKDm8xcZZ4beGn+s+6
+동해물과 백두산이 마르고 닳도록
+
+- AES256
+zDD5Z33LQ5dTB6idpfoqhuAS9kohe2cD3FHJJlGwwkU++1T4WCz2idB28NPOidga
+동해물과 백두산이 마르고 닳도록
+```
+
+* **설명**  
+```
+문자열 s를 Base64String, AES128, AES256 으로 암복호화 
+```
+<br />
+
 #### 7.4. LauncherTool  
-      
+중복 실행 방지, 지연 실행
+
+* **샘플코드**
+```csharp
+static void Main(string[] args)
+{
+    Console.WriteLine($"시작 시간:{DateTime.Now.ToString()}");
+    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    {
+        LauncherTool.Start("Sample", () =>
+        {
+            Console.WriteLine($"정상 실행:{DateTime.Now.ToString()}");
+        }, () =>
+        {
+            Console.WriteLine($"중복 실행:{DateTime.Now.ToString()}");
+        }, true, 1000);
+
+        Console.ReadKey();
+    }
+}
+```
+
+* **결과**  
+```
+시작 시간:2022-11-08 오후 2:38:31
+정상 실행:2022-11-08 오후 2:38:32
+```
+```
+시작 시간:2022-11-08 오후 2:38:42
+중복 실행:2022-11-08 오후 2:38:42
+```
+
+* **설명**  
+```
+정상 실행시 코드와 중복 실행시 코드 분리
+1초 지연실행 
+```
+<br />
+
 #### 7.5. MathTool  
       
 #### 7.6. NetworkTool  
