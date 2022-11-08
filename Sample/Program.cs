@@ -25,8 +25,9 @@ namespace Sample
             Print("Circle(0,0,80,80), Point(30,30)", CollisionTool.CheckCircle(new Rectangle(0, 0, 80, 80), new Point(30, 30)));
             Print("Circle(0,0,80,80), Point(10,10)", CollisionTool.CheckCircle(new Rectangle(0, 0, 80, 80), new Point(10, 10)));
             Print("Ellipse(0,0,80,30), Ellipse(40,15,80,30)", CollisionTool.CheckEllipse(new Rectangle(0, 0, 80, 30), new Rectangle(40, 15, 80, 30)));
-            Print("Ellipse(0,0,80,30), Ellipse(0,0,80,30)", CollisionTool.CheckEllipse(new Rectangle(0, 0, 80, 30), new Rectangle(45, 20, 80, 30)));
-
+            Print("Ellipse(0,0,80,30), Ellipse(70,15,80,30)", CollisionTool.CheckEllipse(new Rectangle(0, 0, 80, 30), new Rectangle(70, 15, 80, 30)));
+            Print("Line(0,0,30,30), Line(10,10,40,40)", CollisionTool.CheckLine(new Point(0, 0), new Point(30, 30), new Point(10, 10), new Point(40, 40)));
+            Print("Line(0,0,30,30), Line(40,10,10,40)", CollisionTool.CheckLine(new Point(0, 0), new Point(30, 30), new Point(40, 10), new Point(10, 40)));
             Console.ReadKey();
         }
     }
