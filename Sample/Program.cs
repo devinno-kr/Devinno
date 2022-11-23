@@ -1,4 +1,5 @@
 ﻿using Devinno.Communications.Modbus.TCP;
+using Devinno.Communications.Restful;
 using Devinno.Data;
 using Devinno.Extensions;
 using Devinno.Measure;
@@ -18,12 +19,8 @@ namespace Sample
     {
         static void Main(string[] args)
         {
-            var v = new ExternalProgram("calc.exe");
-            v.Start();
-            Thread.Sleep(5000);
-            v.Stop();
-
             Console.ReadKey();
         }
+
     }
 }
