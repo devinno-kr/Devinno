@@ -14,46 +14,46 @@
 
 ## 목차
   * Devinno.Collection
-    * [EventList](#EventList)
+    * [EventList](#1-1-EventList)
   * Devinno.Communications
-    * [CNet](#CNet)
-    * [MC](#MC)
-    * [ModbusRTUMaster](#ModbusRTUMaster)
-    * [ModbusRTUSlave](#ModbusRTUSlave)
-    * [ModbusTCPMaster](#ModbusTCPMaster)
-    * [ModbusTCPSlave](#ModbusTCPSlave)
-    * [MQClient](#MQClient)
-    * [RedisClient](#RedisClient)
-    * [TextCommRTUMaster](#TextCommRTUMaster)
-    * [TextCommRTUSlave](#TextCommRTUSlave)
-    * [TextCommTCPMaster](#TextCommTCPMaster)
-    * [TextCommTCPSlave](#TextCommTCPSlave)
+    * [CNet](#2-1-CNet)
+    * [MC](#2-2-MC)
+    * [ModbusRTUMaster](#2-3-ModbusRTUMaster)
+    * [ModbusRTUSlave](#2-4-ModbusRTUSlave)
+    * [ModbusTCPMaster](#2-5-ModbusTCPMaster)
+    * [ModbusTCPSlave](#2-6-ModbusTCPSlave)
+    * [MQClient](#2-7-MQClient)
+    * [RedisClient](#2-8-RedisClient)
+    * [TextCommRTUMaster](#2-9-TextCommRTUMaster)
+    * [TextCommRTUSlave](#2-10-TextCommRTUSlave)
+    * [TextCommTCPMaster](#2-11-TextCommTCPMaster)
+    * [TextCommTCPSlave](#2-12-TextCommTCPSlave)
   * Devinno.Data
-    * [INI](#INI)
-    * [Memories](#Memories)    
-    * [Serialize](#Serialize)
+    * [INI](#3-1-INI)
+    * [Memories](#3-2-Memories)    
+    * [Serialize](#3-3-Serialize)
   * Devinno.Extensions
-    * [BitExtension](#BitExtension)
-    * [ColorExtension](#ColorExtension)
+    * [BitExtension](#4-1-BitExtension)
+    * [ColorExtension](#4-2-ColorExtension)
   * Devinno.Measure
-    * [Chattering](#Chattering)
-    * [StableMeasure](#StableMeasure)
+    * [Chattering](#5-1-Chattering)
+    * [StableMeasure](#5-2-StableMeasure)
   * Devinno.Timers
-    * [HiResTimer](#HiResTimer)
+    * [HiResTimer](#6-1-HiResTimer)
   * Devinno.Tools
-    * [CollisionTool](#CollisionTool)
-    * [ColorTool](#ColorTool)
-    * [CryptoTool](#CryptoTool)
-    * [LauncherTool](#LauncherTool)
-    * [MathTool](#MathTool)
+    * [CollisionTool](#7-1-CollisionTool)
+    * [ColorTool](#7-2-ColorTool)
+    * [CryptoTool](#7-3-CryptoTool)
+    * [LauncherTool](#7-4-LauncherTool)
+    * [MathTool](#7-5-MathTool)
   * Devinno.Utils
-    * [ExternalProgram](#ExternalProgram)
+    * [ExternalProgram](#8-1-ExternalProgram)
     <br />  
     <br />  
 
 ## 사용법
-### 1. Devinno.Collection
-#### 1.1. EventList
+### 1 Devinno.Collection
+#### 1-1 EventList
 리스트의 변화가 발생시 Changed 이벤트가 발생
 
 * **샘플코드**
@@ -91,8 +91,8 @@ class Node
 ```
 <br />
 
-### 2. Devinno.Communications
-#### 2.1. CNet
+### 2 Devinno.Communications
+#### 2-1. CNet
 LS PLC와 통신할 수 있는 CNET 프로토콜
 
 * **샘플코드**
@@ -137,7 +137,7 @@ Slave:1  0339  0031  0000  0000
 ```
 <br />
 
-#### 2.2. MC
+#### 2-2 MC
 Mitsubishi PLC와 통신할 수 있는 MC 프로토콜
 
 * **샘플코드**
@@ -182,7 +182,7 @@ Slave:1  0030  000E  0000  0000
 ```
 <br />
 
-#### 2.3. ModbusRTUMaster
+#### 2-3 ModbusRTUMaster
 산업용 프로토콜 Modbus. ( RTU, Master )
 
 * **샘플코드**
@@ -227,7 +227,7 @@ Slave:1  0C7D  0003  0000  0000
 ```
 <br />
 
-#### 2.4. ModbusRTUSlave
+#### 2-4 ModbusRTUSlave
 산업용 프로토콜 Modbus. ( RTU, Slave )
 
 * **샘플코드**
@@ -261,7 +261,7 @@ static void Main(string[] args)
 ```      
 <br />
 
-#### 2.5. ModbusTCPMaster  
+#### 2-5 ModbusTCPMaster  
 산업용 프로토콜 Modbus. ( TCP, Master )
       
 * **샘플코드**
@@ -306,7 +306,7 @@ Slave:1  056E  0009  0000  0000
 ```
 <br />
 
-#### 2.6. ModbusTCPSlave  
+#### 2-6 ModbusTCPSlave  
 산업용 프로토콜 Modbus. ( TCP, Slave )
 
 * **샘플코드**
@@ -340,7 +340,7 @@ static void Main(string[] args)
 ```  
 <br />
 
-#### 2.7. MQClient  
+#### 2-7 MQClient  
 MQTT Client 래퍼 ( M2MQTT 기반 )
 
 * **샘플코드**
@@ -385,7 +385,7 @@ S:2022-10-24 오후 4:45:17
 ```
 <br />
 
-#### 2.8. RedisClient  
+#### 2-8 RedisClient  
 Redis Client 래퍼 ( StackExchange.Redis 기반 )
 
 * **샘플코드**
@@ -426,7 +426,7 @@ static void Main(string[] args)
 ```
 <br />
 
-#### 2.9 TextCommRTUMaster  
+#### 2-9 TextCommRTUMaster  
 텍스트 송/수신 프로토콜 ( RTU, Master )
 
 * **샘플코드**
@@ -470,7 +470,7 @@ Slave:1  Command:2  Data:OK
 ```
 <br />
 
-#### 2.10 TextCommRTUSlave  
+#### 2-10 TextCommRTUSlave  
 텍스트 송/수신 프로토콜 ( RTU, Slave )
  
 * **샘플코드**
@@ -523,7 +523,7 @@ MessageRequest 이벤트에서는 요청 메시지를 처리하고 응답 메시
 커맨드 2에서는 수신된 요청을 콘솔에 출력하고 OK 응답  
 ```
 
-#### 2.11. TextCommTCPMaster  
+#### 2-11 TextCommTCPMaster  
 텍스트 송/수신 프로토콜 ( TCP, Master )
 
 * **샘플코드**
@@ -566,7 +566,7 @@ Slave:1  Command:1  Data:Count:23
 ```
 <br />
 
-#### 2.12 TextCommTCPSlave  
+#### 2-12 TextCommTCPSlave  
 텍스트 송/수신 프로토콜 ( TCP, Slave )
  
 * **샘플코드**
@@ -620,8 +620,8 @@ MessageRequest 이벤트에서는 요청 메시지를 처리하고 응답 메시
 ```
 <br />
 
-### 3. Devinno.Data
-#### 3.1. INI  
+### 3 Devinno.Data
+#### 3-1 INI  
 INI 파일 읽기/쓰기
 
 * **샘플코드**
@@ -668,7 +668,7 @@ INI 클래스는 Window 환경에서만 동작
 ```
 <br />      
 
-#### 3.2. Memories  
+#### 3-2 Memories  
 비트영역 / 워드영역
 
 * **샘플코드**
@@ -711,7 +711,7 @@ WM0에 0x1234를 대입하면 M0부터 하위비트 매칭
 ```
 <br />      
 
-#### 3.3. Serialize  
+#### 3-3 Serialize  
 객체 직렬화
 
 * **샘플코드**
@@ -758,8 +758,8 @@ Json을 역직렬화한 객체 출력
 ```
 <br />
 
-### 4. Devinno.Extensions
-#### 4.1. BitExtension  
+### 4 Devinno.Extensions
+#### 4-1 BitExtension  
 비트 확장
 
 * **샘플코드**
@@ -806,7 +806,7 @@ static void Main(string[] args)
 ```
 <br />
 
-#### 4.2. ColorExtension  
+#### 4-2 ColorExtension  
 색상 확장
 
 * **샘플코드**
@@ -839,8 +839,8 @@ HSV를 RGB로 변화
 ```
 <br />
 
-### 5. Devinno.Measure
-#### 5.1. Chattering  
+### 5 Devinno.Measure
+#### 5-1 Chattering  
 채터링
 
 * **샘플코드**
@@ -890,7 +890,7 @@ static void Main(string[] args)
 ```
 <br />
 
-#### 5.2. StableMeasure  
+#### 5-2 StableMeasure  
 상태값이 지정한 오차치 이내로 유지되면 이벤트 발생 
 
 * **샘플코드**
@@ -932,8 +932,8 @@ static void Main(string[] args)
 ```
 <br />
 
-### 6. Devinno.Timers
-#### 6.1. HiResTimer  
+### 6 Devinno.Timers
+#### 6-1 HiResTimer  
 비교적 정확한 타이머
 
 * **샘플코드**
@@ -969,8 +969,8 @@ static void Main(string[] args)
 <br />
 
       
-### 7. Devinno.Tools
-#### 7.1. CollisionTool  
+### 7 Devinno.Tools
+#### 7-1 CollisionTool  
 충돌 검사
 
 * **샘플코드**
@@ -1012,7 +1012,7 @@ Line(0,0,30,30), Line(40,10,10,40) : 충돌
 ```
 <br />
 
-#### 7.2. ColorTool  
+#### 7-2 ColorTool  
 색상 코드값 출력 및 색상 혼합
 
 * **샘플코드**
@@ -1047,7 +1047,7 @@ RGB(0,128,128)의 색상 코드 출력
 ```
 <br />
 
-#### 7.3. CryptoTool  
+#### 7-3 CryptoTool  
 암/복호화
 
 * **샘플코드**
@@ -1103,7 +1103,7 @@ zDD5Z33LQ5dTB6idpfoqhuAS9kohe2cD3FHJJlGwwkU++1T4WCz2idB28NPOidga
 ```
 <br />
 
-#### 7.4. LauncherTool  
+#### 7-4 LauncherTool  
 중복 실행 방지, 지연 실행
 
 * **샘플코드**
@@ -1143,7 +1143,7 @@ static void Main(string[] args)
 ```
 <br />
 
-#### 7.5. MathTool  
+#### 7-5 MathTool  
 수학 관련 함수 
 
 * **샘플코드**
@@ -1184,8 +1184,8 @@ True                        : 900도는 150도와 200도 사이 있는가?
 ```
 <br />
 
-### 8. Devinno.Utils
-#### 8.1. ExternalProgram  
+### 8 Devinno.Utils
+#### 8-1 ExternalProgram  
 수학 관련 함수 
 
 * **샘플코드**
