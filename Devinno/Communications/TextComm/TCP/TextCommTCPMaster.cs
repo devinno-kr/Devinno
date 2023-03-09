@@ -199,10 +199,11 @@ namespace Devinno.Communications.TextComm.TCP
                 if (ex.SocketErrorCode == SocketError.TimedOut) { }
                 else if (ex.SocketErrorCode == SocketError.ConnectionReset) { bIsOpen = false; }
                 else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { bIsOpen = false; }
+                else if (ex.SocketErrorCode == SocketError.Shutdown) { bIsOpen = false; }
             }
             catch { }
 
-            //if (!IsOpen) throw new SchedulerStopException();
+            if (!IsOpen) throw new SchedulerStopException();
         }
         #endregion
         #region OnRead
@@ -230,10 +231,11 @@ namespace Devinno.Communications.TextComm.TCP
                 if (ex.SocketErrorCode == SocketError.TimedOut) { }
                 else if (ex.SocketErrorCode == SocketError.ConnectionReset) { bIsOpen = false; }
                 else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { bIsOpen = false; }
+                else if (ex.SocketErrorCode == SocketError.Shutdown) { bIsOpen = false; }
             }
             catch { }
 
-            //if (!IsOpen) throw new SchedulerStopException();
+            if (!IsOpen) throw new SchedulerStopException();
             return ret;
         }
         #endregion

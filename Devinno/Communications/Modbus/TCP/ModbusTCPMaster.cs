@@ -247,6 +247,8 @@ namespace Devinno.Communications.Modbus.TCP
                     if (AutoStart && !IsStartThread)
                     {
                         _Start();
+                        Console.WriteLine("T");
+
                     }
                     Thread.Sleep(1000);
                 }
@@ -282,6 +284,7 @@ namespace Devinno.Communications.Modbus.TCP
             bool ret = false;
             if (!IsOpen && !IsStart)
             {
+                Console.WriteLine("Connecting..");
                 try
                 {
                     client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -295,13 +298,17 @@ namespace Devinno.Communications.Modbus.TCP
 
                     client.Connect(RemoteIP, RemotePort);
                     SocketConnected?.Invoke(this, new SocketEventArgs(client));
+                    
+                    Console.WriteLine("Connected..");
 
                     bIsOpen = client.Connected;
                     
                     ret = StartThread();
                     if (!ret && IsOpen) client.Close();
+
+
                 }
-                catch (Exception) { }
+                catch (Exception) { Console.WriteLine("Connect faild.."); }
             }
             return ret;
         }
@@ -682,10 +689,11 @@ namespace Devinno.Communications.Modbus.TCP
                 if (ex.SocketErrorCode == SocketError.TimedOut) { }
                 else if (ex.SocketErrorCode == SocketError.ConnectionReset) { bIsOpen = false; }
                 else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { bIsOpen = false; }
+                else if (ex.SocketErrorCode == SocketError.Shutdown) { bIsOpen = false; }
             }
             catch { }
-
-            //if (!IsOpen) throw new SchedulerStopException();
+            Console.WriteLine($"OnWrite:{IsOpen}");
+            if (!IsOpen) throw new SchedulerStopException();
         }
         #endregion
         #region OnRead
@@ -713,10 +721,11 @@ namespace Devinno.Communications.Modbus.TCP
                 if (ex.SocketErrorCode == SocketError.TimedOut) { }
                 else if (ex.SocketErrorCode == SocketError.ConnectionReset) { bIsOpen = false; }
                 else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { bIsOpen = false; }
+                else if (ex.SocketErrorCode == SocketError.Shutdown) { bIsOpen = false; }
             }
             catch { }
            
-            //if (!IsOpen) throw new SchedulerStopException();
+            if (!IsOpen) throw new SchedulerStopException();
             return ret;
         }
         #endregion

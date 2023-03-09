@@ -196,6 +196,7 @@ namespace Devinno.Communications.TextComm.TCP
                         if (ex.SocketErrorCode == SocketError.TimedOut) { }
                         else if (ex.SocketErrorCode == SocketError.ConnectionReset) { IsThStart = false; }
                         else if (ex.SocketErrorCode == SocketError.ConnectionAborted) { IsThStart = false; }
+                        else if (ex.SocketErrorCode == SocketError.Shutdown) { IsThStart = false; }
                     }
                     catch { }
                     Thread.Sleep(10);
