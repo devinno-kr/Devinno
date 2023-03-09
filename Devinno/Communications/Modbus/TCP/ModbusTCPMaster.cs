@@ -247,8 +247,6 @@ namespace Devinno.Communications.Modbus.TCP
                     if (AutoStart && !IsStartThread)
                     {
                         _Start();
-                        Console.WriteLine("T");
-
                     }
                     Thread.Sleep(1000);
                 }
@@ -284,7 +282,6 @@ namespace Devinno.Communications.Modbus.TCP
             bool ret = false;
             if (!IsOpen && !IsStart)
             {
-                Console.WriteLine("Connecting..");
                 try
                 {
                     client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -299,7 +296,6 @@ namespace Devinno.Communications.Modbus.TCP
                     client.Connect(RemoteIP, RemotePort);
                     SocketConnected?.Invoke(this, new SocketEventArgs(client));
                     
-                    Console.WriteLine("Connected..");
 
                     bIsOpen = client.Connected;
                     
@@ -308,7 +304,7 @@ namespace Devinno.Communications.Modbus.TCP
 
 
                 }
-                catch (Exception) { Console.WriteLine("Connect faild.."); }
+                catch (Exception) {  }
             }
             return ret;
         }
@@ -692,7 +688,6 @@ namespace Devinno.Communications.Modbus.TCP
                 else if (ex.SocketErrorCode == SocketError.Shutdown) { bIsOpen = false; }
             }
             catch { }
-            Console.WriteLine($"OnWrite:{IsOpen}");
             if (!IsOpen) throw new SchedulerStopException();
         }
         #endregion
