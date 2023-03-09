@@ -202,7 +202,7 @@ namespace Devinno.Communications.TextComm.TCP
             }
             catch { }
 
-            if (!IsOpen) throw new SchedulerStopException();
+            //if (!IsOpen) throw new SchedulerStopException();
         }
         #endregion
         #region OnRead
@@ -233,7 +233,7 @@ namespace Devinno.Communications.TextComm.TCP
             }
             catch { }
 
-            if (!IsOpen) throw new SchedulerStopException();
+            //if (!IsOpen) throw new SchedulerStopException();
             return ret;
         }
         #endregion
