@@ -594,6 +594,17 @@ namespace Devinno.Tools
             return new PointF(x, y);
         }
 
+        public PointF GetPointWithAngle(RectangleF rt, double angle)
+        {
+            var vangle = Math.PI * angle / 180.0;
+
+            var cp = MathTool.CenterPoint(rt);
+            var pX = Convert.ToSingle(Math.Cos(vangle) * rt.Width / 2F);
+            var pY = Convert.ToSingle(Math.Sin(vangle) * rt.Height / 2F);
+
+            return new PointF(cp.X + pX, cp.Y + pY);
+        }
+
         /// <summary>
         /// 한 점을 기준으로 각도와 거리를 알 때 점의 X좌료 위치 
         /// </summary>
