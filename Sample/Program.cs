@@ -19,11 +19,11 @@ namespace Sample
     {
         static void Main(string[] args)
         {
-            ModbusTCPMaster mb = new ModbusTCPMaster { RemoteIP = "192.168.0.109", AutoStart = true };
-            mb.AutoBitRead_FC1(1, 1, 0x1000, 30);
-            mb.AutoWordRead_FC3(1, 1, 0x7000 + 100, 30);
+            ModbusTCPMaster mb = new ModbusTCPMaster { RemoteIP = "172.30.1.123", AutoStart = true };
+            mb.AutoBitRead_FC1(1, 1, 0x1000, 40);
+            mb.AutoWordRead_FC3(1, 1, 0x7000, 10);
             mb.WordReadReceived += (o, s) => { Console.WriteLine(DateTime.Now.ToString("ss.fff")); };
-
+            mb.ManualWordBitSet_FC26(1, 1, 0x7000, 3, true);
 
             Console.ReadKey();
         }

@@ -648,7 +648,7 @@ namespace Devinno.Communications.Modbus.TCP
         /// <param name="timeout">타임아웃</param>
         public void ManualWordBitSet_FC26(int id, int slave, int startAddr, byte bitIndex, bool value, int? repeatCount = null, int? timeout = null)
         {
-            byte[] data = new byte[9];
+            byte[] data = new byte[13];
 
             int val = value ? 0xFF00 : 0x0000;
 
