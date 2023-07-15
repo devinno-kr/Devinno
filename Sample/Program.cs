@@ -1,5 +1,6 @@
 ﻿using Devinno.Communications.Modbus.TCP;
 using Devinno.Communications.Restful;
+using Devinno.Communications.TextComm.RTU;
 using Devinno.Data;
 using Devinno.Extensions;
 using Devinno.Measure;
@@ -38,6 +39,7 @@ namespace Sample
             }
             */
 
+            /*
             ModbusTCPSlave mb = new ModbusTCPSlave { Slave = 1 };
             BitMemories P = new BitMemories("P", new byte[512]);
             BitMemories M = new BitMemories("M", new byte[512]);
@@ -52,12 +54,41 @@ namespace Sample
             M[0] = true;
             M[2] = true;
             M[4] = true;
+            */
 
+            var comm = new TextCommRTUMaster { Port = "COM13", Baudrate = 115200, AutoStart = true };
+            comm.MessageReceived += (o, s) =>
+            {
+                Console.WriteLine(s.Command + " : " + s.Message);
+            };
+            byte cmd = 1;
             while (true)
             {
-                 
+                if (cmd == 1)
+                {
+                    comm.ManualSend(1, 1, cmd, Serialize.JsonSerialize(new V
+                    {
+                        Data1 = Convert.ToInt16(DateTime.Now.Second),
+                        Data2 = DateTime.Now.ToString("HH:mm:ss"),
+                        Data3 = DateTime.Now.Millisecond / 1000F
+                    }));
+                    cmd = 2;
+                }
+                else if (cmd == 2)
+                {
+                    comm.ManualSend(1, 1, cmd, "");
+                    cmd = 1;
+                }
+
                 Thread.Sleep(1000);
             }
+        }
+
+        class V 
+        {
+            public short Data1;
+            public string Data2;
+            public float Data3;
         }
     }
 }

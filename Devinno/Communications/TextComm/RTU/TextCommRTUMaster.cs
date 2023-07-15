@@ -163,7 +163,7 @@ namespace Devinno.Communications.TextComm.RTU
                     ret = StartThread();
                     if (!ret && IsOpen) ser.Close();
                 }
-                catch (Exception) { }
+                catch (Exception ex) { }
             }
             return ret;
         }
