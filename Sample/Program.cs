@@ -1,4 +1,5 @@
-﻿using Devinno.Communications.Modbus.TCP;
+﻿using Devinno.Collections;
+using Devinno.Communications.Modbus.TCP;
 using Devinno.Communications.Restful;
 using Devinno.Communications.TextComm.RTU;
 using Devinno.Data;
@@ -8,9 +9,11 @@ using Devinno.Timers;
 using Devinno.Tools;
 using Devinno.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -56,31 +59,40 @@ namespace Sample
             M[4] = true;
             */
 
+            /*
             var comm = new TextCommRTUMaster { Port = "COM13", Baudrate = 115200, AutoStart = true };
             comm.MessageReceived += (o, s) =>
             {
                 Console.WriteLine(s.Command + " : " + s.Message);
             };
+            comm.AutoSend(1, 1, 4, "");
             byte cmd = 1;
+            */
+
+            /*
+            var lns = File.ReadAllLines(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "tet.json")).Select(x => x.Trim());
+            var lns2 = lns.Where(x => x.StartsWith("\"type\":")).Select(x => x.Split(':')).ToLookup(x => x[1]);
+            var ks = string.Concat(lns2.Select(X => X.Key + ","));
+
+            var via = new Dictionary<string, object>();
+            via.Add("test1", 10);
+            via.Add("test2", 3.141592);
+            via.Add("test3", true);
+            via.Add("test4", new int[] { 1, 2, 3 });
+            via.Add("test5", "text");
+
+            var s = Serialize.JsonSerialize(via);
+            */
+
+            var dic = new EventDictionary<int, string>();
+            dic.Changed += (o, s) => Console.WriteLine(dic.Count.ToString());
+
+            int i = 0;
             while (true)
             {
-                if (cmd == 1)
-                {
-                    comm.ManualSend(1, 1, cmd, Serialize.JsonSerialize(new V
-                    {
-                        Data1 = Convert.ToInt16(DateTime.Now.Second),
-                        Data2 = DateTime.Now.ToString("HH:mm:ss"),
-                        Data3 = DateTime.Now.Millisecond / 1000F
-                    }));
-                    cmd = 2;
-                }
-                else if (cmd == 2)
-                {
-                    comm.ManualSend(1, 1, cmd, "");
-                    cmd = 1;
-                }
-
+                dic.Add(i, "");
                 Thread.Sleep(1000);
+                i++;
             }
         }
 
