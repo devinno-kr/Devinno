@@ -198,10 +198,10 @@ namespace Devinno.Communications.Mqtt
         /// </summary>
         /// <param name="Topic">토픽</param>
         /// <param name="Data">byte[] 데이터</param>
-        public void Publish(string Topic, byte[] Data)
+        public void Publish(string Topic, byte[] Data, MQQos qos = MQQos.MostOnce, bool retain = false)
         {
             if (client != null && client.IsConnected)
-                client.Publish(Topic, Data);
+                client.Publish(Topic, Data, (byte)qos, retain);
         }
         #endregion
         #region Publish(Topic, String)
@@ -210,9 +210,9 @@ namespace Devinno.Communications.Mqtt
         /// </summary>
         /// <param name="Topic">토픽</param>
         /// <param name="Data">string 데이터</param>
-        public void Publish(string Topic, string Data)
+        public void Publish(string Topic, string Data, MQQos qos = MQQos.MostOnce, bool retain = false)
         {
-            Publish(Topic, Encoding.UTF8.GetBytes(Data));
+            Publish(Topic, Encoding.UTF8.GetBytes(Data), qos, retain);
         }
         #endregion
         #region Publish(Topic, Object)
@@ -221,9 +221,9 @@ namespace Devinno.Communications.Mqtt
         /// </summary>
         /// <param name="Topic">토픽</param>
         /// <param name="Data">Object 데이터</param>
-        public void Publish(string Topic, object Data)
+        public void Publish(string Topic, object Data, MQQos qos = MQQos.MostOnce, bool retain = false)
         {
-            Publish(Topic, Serialize.JsonSerialize(Data));
+            Publish(Topic, Serialize.JsonSerialize(Data), qos, retain);
         }
         #endregion
 
