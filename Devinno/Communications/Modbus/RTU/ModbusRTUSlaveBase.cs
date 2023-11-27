@@ -159,6 +159,8 @@ namespace Devinno.Communications.Modbus.RTU
             }
         }
         public override bool IsOpen => ser.IsOpen;
+
+        public SerialPort NativePort => ser;
         #endregion
 
         #region Event

@@ -242,6 +242,8 @@ namespace Devinno.Communications.Modbus.RTU
                 catch (InvalidOperationException) { throw new SchedulerStopException(); }
             }
         }
+
+        public SerialPort NativePort => ser;
         #endregion
 
         #region Member Variable

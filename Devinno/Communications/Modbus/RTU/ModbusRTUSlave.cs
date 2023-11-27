@@ -3,6 +3,7 @@ using Devinno.Data;
 using Devinno.Extensions;
 using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +47,8 @@ namespace Devinno.Communications.Modbus.RTU
         /// 워드 영역
         /// </summary>
         public Dictionary<int, WordMemories> WordAreas { get; } = new Dictionary<int, WordMemories>();
+
+        public SerialPort NativePort => modbus.NativePort;
         #endregion
 
         #region Event
