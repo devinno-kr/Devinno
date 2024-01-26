@@ -26,12 +26,15 @@ namespace Sample
         {
             var c = new RedisClient { Host = "127.0.0.1" };
             c.Start();
-            Thread.Sleep(1000);
 
-            c.Set("test_byte", new byte[] { 1, 2, 3, 4, 5 });
-            var ba = c.GetBytes("test_byte");
+            while (!c.IsConnected) Thread.Sleep(1000);
+            c.Sub("/sens/message", msg => Console.WriteLine(msg.Message));
 
-            Console.ReadKey();
+            while (true)
+            {
+                c.Pub("/sens/message", DateTime.Now.ToString());
+                Thread.Sleep(1000);
+            }
 
         }
 

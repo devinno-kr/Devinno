@@ -40,6 +40,7 @@ namespace Devinno.Communications.Redis
         ConnectionMultiplexer conn = null;
         IDatabase db;
         IServer svr;
+        ISubscriber mq;
 
         System.Threading.Thread th;
         DateTime prev = DateTime.Now;
@@ -57,6 +58,7 @@ namespace Devinno.Communications.Redis
         #endregion
 
         #region Method
+        #region Value
         #region Set
         public void Set(string key, string value) => SetValue(key, value);
         public void Set(string key, int value) => SetValue(key, value);
@@ -100,7 +102,7 @@ namespace Devinno.Communications.Redis
 
         public T JsonGet<T>(string key) => Serialize.JsonDeserialize<T>(GetString(key));
         #endregion
-
+        #endregion
         #region Hash
         #region Set
         public void HashSet(string key, HashEntry[] values)
@@ -130,9 +132,8 @@ namespace Devinno.Communications.Redis
         }
         #endregion
         #endregion
-
-        #region KeyExists
-        public bool? KeyExists(string key)
+        #region Exists
+        public bool? Exists(string key)
         {
             bool? ret = null;
             if (conn != null && conn.IsConnected && db != null)
@@ -142,6 +143,23 @@ namespace Devinno.Communications.Redis
             return ret;
         }
         #endregion
+        #region Pub/Sub
+        public void Sub(string channel, Action<ChannelMessage> act)
+        {
+            if (mq != null && IsConnected)
+            {
+                var v = mq.Subscribe(RedisChannel.Literal(channel));
+                v.OnMessage(act);
+            }
+        }
+
+        public void Pub(string channel, RedisValue message)
+        {
+            if (mq != null && IsConnected)
+                mq.Publish(RedisChannel.Literal(channel), message);
+        }
+        #endregion
+
 
         #region Start
         public void Start()
@@ -180,6 +198,7 @@ namespace Devinno.Communications.Redis
                         var endpoint = conn.GetEndPoints().Single();
                         svr = conn.GetServer(endpoint);
 
+                        mq = conn.GetSubscriber();
                     }
                     catch (Exception ex) { }
                 }
@@ -204,6 +223,7 @@ namespace Devinno.Communications.Redis
                 catch (Exception ex) { }
             }
 
+            mq = null;
             svr = null;
             db = null;
             conn = null;
