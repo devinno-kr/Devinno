@@ -1,5 +1,6 @@
 ﻿using Devinno.Collections;
 using Devinno.Communications.Modbus.TCP;
+using Devinno.Communications.Mqtt;
 using Devinno.Communications.Redis;
 using Devinno.Communications.Restful;
 using Devinno.Communications.TextComm.RTU;
@@ -24,15 +25,16 @@ namespace Sample
     {
         static void Main(string[] args)
         {
-            var c = new RedisClient { Host = "127.0.0.1" };
-            c.Start();
+            var c = new MQClient { BrokerHostName = "127.0.0.1" };
+
+            c.Start(Guid.NewGuid().ToString());
 
             while (!c.IsConnected) Thread.Sleep(1000);
-            c.Sub("/sens/message", msg => Console.WriteLine(msg.Message));
+            c.Subscribe("/sens/message");
 
             while (true)
             {
-                c.Pub("/sens/message", DateTime.Now.ToString());
+                c.Publish("TAG/DVFjTkacT2hM1LHm/1bf244bd-ad03-47ae-9855-21ecc86e4cd2/Time/SET", DateTime.Now.ToString());
                 Thread.Sleep(1000);
             }
 

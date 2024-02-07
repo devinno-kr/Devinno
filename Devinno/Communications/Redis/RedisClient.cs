@@ -238,5 +238,5 @@ namespace Devinno.Communications.Redis
     #region attribute : RedisIgnore
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
     public sealed class RedisIgnoreAttribute : Attribute { }
-    #endregion}
+    #endregion
 }
