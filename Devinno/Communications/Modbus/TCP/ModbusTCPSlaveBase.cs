@@ -271,8 +271,8 @@ namespace Devinno.Communications.Modbus.TCP
                                                 #endregion
                                                 #region Write
                                                 List<byte> ret = new List<byte>();
-                                                ret.Add(0);
-                                                ret.Add(0);
+                                                ret.Add(lstResponse[0]);
+                                                ret.Add(lstResponse[1]);
                                                 ret.Add(0);
                                                 ret.Add(0);
                                                 ret.Add((byte)(((nlen + 3) & 0xFF00) >> 8));
@@ -316,8 +316,8 @@ namespace Devinno.Communications.Modbus.TCP
                                                 #region Write
                                                 int nlen = Length * 2;
                                                 List<byte> ret = new List<byte>();
-                                                ret.Add(0);
-                                                ret.Add(0);
+                                                ret.Add(lstResponse[0]);
+                                                ret.Add(lstResponse[1]);
                                                 ret.Add(0);
                                                 ret.Add(0);
                                                 ret.Add((byte)(((nlen + 3) & 0xFF00) >> 8));
@@ -351,8 +351,8 @@ namespace Devinno.Communications.Modbus.TCP
                                                 #region Write
                                                 int nv = args.WriteValue ? 0xFF00 : 0;
                                                 List<byte> ret = new List<byte>();
-                                                ret.Add(0);
-                                                ret.Add(0);
+                                                ret.Add(lstResponse[0]);
+                                                ret.Add(lstResponse[1]);
                                                 ret.Add(0);
                                                 ret.Add(0);
                                                 ret.Add(0);
@@ -388,8 +388,8 @@ namespace Devinno.Communications.Modbus.TCP
                                             {
                                                 #region Write
                                                 List<byte> ret = new List<byte>();
-                                                ret.Add(0);
-                                                ret.Add(0);
+                                                ret.Add(lstResponse[0]);
+                                                ret.Add(lstResponse[1]);
                                                 ret.Add(0);
                                                 ret.Add(0);
                                                 ret.Add(0);
@@ -426,8 +426,8 @@ namespace Devinno.Communications.Modbus.TCP
                                                 {
                                                     #region Write
                                                     List<byte> ret = new List<byte>();
-                                                    ret.Add(0);
-                                                    ret.Add(0);
+                                                    ret.Add(lstResponse[0]);
+                                                    ret.Add(lstResponse[1]);
                                                     ret.Add(0);
                                                     ret.Add(0);
                                                     ret.Add(0);
@@ -465,8 +465,8 @@ namespace Devinno.Communications.Modbus.TCP
                                                 {
                                                     #region Write
                                                     List<byte> ret = new List<byte>();
-                                                    ret.Add(0);
-                                                    ret.Add(0);
+                                                    ret.Add(lstResponse[0]);
+                                                    ret.Add(lstResponse[1]);
                                                     ret.Add(0);
                                                     ret.Add(0);
                                                     ret.Add(0);
@@ -502,8 +502,8 @@ namespace Devinno.Communications.Modbus.TCP
                                                 #region Write
                                                 int nv = args.WriteValue ? 0xFF00 : 0;
                                                 List<byte> ret = new List<byte>();
-                                                ret.Add(0);
-                                                ret.Add(0);
+                                                ret.Add(lstResponse[0]);
+                                                ret.Add(lstResponse[1]);
                                                 ret.Add(0);
                                                 ret.Add(0);
                                                 ret.Add(0);
